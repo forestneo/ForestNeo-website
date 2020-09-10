@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="文章地址：标题：Federated Learning in Mobile Edge Networks: A Comprehensive Survey发表会议：  [toc]  Privacy and Security IssuesFL的主要目标之一是保护参与者的隐私，即，参与者只需要共享训练模型的参数，而无需共享他们的实际数据。 但是，最近的一些研究工作表明，当FL参与者或FL服务器本质上是恶意的">
+<meta name="keywords" content="Federated Learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Federated Learning in Mobile Edge Networks A Comprehensive Survey">
+<meta property="og:url" content="http://forestneo.com/2020/05/07/论文阅读-Federated Learning in Mobile Edge Networks A Comprehensive Survey/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="文章地址：标题：Federated Learning in Mobile Edge Networks: A Comprehensive Survey发表会议：  [toc]  Privacy and Security IssuesFL的主要目标之一是保护参与者的隐私，即，参与者只需要共享训练模型的参数，而无需共享他们的实际数据。 但是，最近的一些研究工作表明，当FL参与者或FL服务器本质上是恶意的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200507162543.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200507170729.png">
+<meta property="og:image" content="http://forestneo.com/images/QRcode.png">
+<meta property="og:updated_time" content="2020-05-07T16:13:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Federated Learning in Mobile Edge Networks A Comprehensive Survey">
+<meta name="twitter:description" content="文章地址：标题：Federated Learning in Mobile Edge Networks: A Comprehensive Survey发表会议：  [toc]  Privacy and Security IssuesFL的主要目标之一是保护参与者的隐私，即，参与者只需要共享训练模型的参数，而无需共享他们的实际数据。 但是，最近的一些研究工作表明，当FL参与者或FL服务器本质上是恶意的">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200507162543.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2020/05/07/论文阅读-Federated Learning in Mobile Edge Networks A Comprehensive Survey/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title><span style="background:green;"><font color="#000000">论文阅读</font></span>-Federated Learning in Mobile Edge Networks A Comprehensive Survey | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2020/05/07/论文阅读-Federated Learning in Mobile Edge Networks A Comprehensive Survey/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">论文阅读</font></span>-Federated Learning in Mobile Edge Networks A Comprehensive Survey
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-05-07 15:53:49" itemprop="dateCreated datePublished" datetime="2020-05-07T15:53:49+08:00">2020-05-07</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-05-08 00:13:44" itemprop="dateModified" datetime="2020-05-08T00:13:44+08:00">2020-05-08</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/Federated-Learning/" itemprop="url" rel="index"><span itemprop="name">Federated Learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>文章地址：<br>标题：Federated Learning in Mobile Edge Networks: A Comprehensive Survey<br>发表会议：</p>
+<hr>
+<p>[toc]</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200507162543.png" alt="image-20200507161340542"></p>
+<h1 id="Privacy-and-Security-Issues"><a href="#Privacy-and-Security-Issues" class="headerlink" title="Privacy and Security Issues"></a>Privacy and Security Issues</h1><p>FL的主要目标之一是保护参与者的隐私，即，参与者只需要共享训练模型的参数，而无需共享他们的实际数据。 但是，最近的一些研究工作表明，当FL参与者或FL服务器本质上是恶意的时，可能会引起隐私和安全问题。 尤其是，这会破坏FL的目的，因为生成的全局模型可能会损坏，或者在模型训练期间甚至可能损害参与者的隐私。 在本节中，我们讨论以下问题：</p>
+<ul>
+<li>Privacy: 即使FL不需要为协作模型训练而交换数据，恶意参与者仍可以根据其他参与者的共享模型来推断敏感信息，例如性别，职业和位置。 例如，在[152]中，当在FaceScrub [153]数据集上训练二元性别分类器时，作者表明，他们可以仅通过检查共享模型来推断出某个参与者的输入是否包含在数据集中， 精度高达90％。 因此，在本节中，我们讨论与FL中的共享模型有关的隐私问题，并讨论为保护参与者的隐私而提出的解决方案。</li>
+<li>Security: 在FL中，参与者在本地训练模型并与其他参与者共享训练后的参数，以提高预测的准确性。 但是，此过程容易受到各种攻击，例如数据和模型中毒（data and model poisoning），在这种攻击中，恶意参与者可能会发送不正确的参数或损坏的模型，从而在全局聚合期间伪造学习过程。 因此，全局模型将被错误地更新，并且整个学习系统将被破坏。 本节讨论有关FL中新出现的攻击的更多详细信息，以及一些应对此类攻击的最新对策。</li>
+</ul>
+<h2 id="Privacy-Issues"><a href="#Privacy-Issues" class="headerlink" title="Privacy Issues"></a>Privacy Issues</h2><ul>
+<li>1 Information exploiting attacks in machine learning - A brief overview</li>
+<li>2 Differential privacy-based protection solutions for FL participants</li>
+<li>3 Collaborative training solutions</li>
+<li>4 Encryption-based Solutions</li>
+</ul>
+<p> <strong>1) Information exploiting attacks in machine learning - A brief overview</strong></p>
+<p>最早显示出从经过训练的模型中提取信息的可能性的一项研究是[154]。 在本文中，作者表明，在训练阶段，训练样本中隐含的相关性被收集在训练模型内部。 因此，如果释放训练后的模型，则可能导致攻击者意外泄漏信息。 例如，对手可以从其受过训练的语音识别系统推断出用户的种族或性别。 在[155]中，作者开发了一种模型反演算法，该算法在利用基于决策树或面部识别训练模型的信息中非常有效。 这种方法的思想是将目标特征向量与每个可能的值进行比较，然后得出加权概率估计值，该估计值是正确的值。 实验结果表明，通过使用这种技术，对手可以从其面部标签中非常准确地重建受害者的面部图像。</p>
+<p>最近，[156]中的作者表明，对手甚至有可能通过对预测模型的查询来推断受害者的信息。 特别是，当恶意参与者有权对经过训练的模型进行预测查询时，就会发生这种情况。 然后，恶意参与者可以使用预测查询从数据所有者中提取经过训练的模型。 更重要的是，作者指出，这种攻击可以成功地从广泛的训练模型中提取模型信息，例如决策树，逻辑回归，SVM，甚至包括DNN在内的复杂训练模型。 最近的一些研究工作也证明了基于DNN的训练模型针对模型提取攻击的脆弱性[157]-[159]。 因此，这为共享FL中的训练模型的参与者带来了严重的隐私问题。</p>
+<p><strong>2) Differential privacy-based protection solutions for FL participants</strong></p>
+<p>为了保护DNN训练的参数的私密性，[20]中的作者介绍了一种称为差分私有随机梯度下降的技术，该技术可以在DL算法上有效地实现。 该技术的关键思想是，在将这样的参数发送到服务器之前，通过使用差分隐私保护随机机制[160]（例如，高斯机制），在训练后的参数上添加一些“噪声”。 特别是，在正常FL参与者的梯度平均步骤中，使用高斯分布来近似差分私有随机梯度下降。 然后，在培训阶段，参与者不断计算恶意参与者可以利用其共享参数中的信息的可能性。 一旦达到预定义的阈值，参与者将停止其训练过程。 通过这种方式，参与者可以减轻从其共享参数中泄露私人信息的风险。</p>
+<p>受此想法启发，[161]中的作者开发了一种方法，可以为参与者提供更好的隐私保护解决方案。 在这种方法中，作者提出了两个主要步骤来处理数据，然后再将经过训练的参数发送到服务器。 特别地，对于每个学习回合，聚集服务器首先选择随机数量的参与者以训练全局模型。 然后，如果选择参与者在学习回合中训练全局模型，则参与者将采用[20]中提出的方法，即在将训练后的参数发送到服务器之前，使用高斯分布向训练后的模型添加噪声。这样，恶意参与者无法通过使用共享全局模型的参数来推断其他参与者的信息，因为它没有关于谁在每个学习回合中参加了培训过程的信息。</p>
+<p><strong>3) Collaborative training solutions:</strong></p>
+<p>虽然DP解决方案可以保护诚实参与者的私人信息免受FL中其他恶意参与者的侵害，但它们只有在服务器可信任的情况下才能很好地发挥作用。如果服务器是恶意的，则可能对网络中的所有参与者造成更严重的隐私威胁。因此，在[162]中的作者引入了协作DL框架，以使多个参与者可以学习全局模型，而无需将其明确的训练模型上载到服务器。此技术的关键思想是，与其将整个训练后的参数集上传到服务器并将整个全局参数更新到其本地模型，不如每个参与者明智地选择要上传的梯度数量和全局模型中的参数数量如图12所示进行更新。以这种方式，恶意参与者无法从共享模型中推断出显式信息。本文的一个有趣结果是，即使参与者没有共享所有训练过的参数并且没有从共享模型中更新所有参数，所提出的解决方案的准确性仍接近服务器具有所有训练数据集的情况下的准确性。全局模型。例如，对于MNIST数据集[163]，当参与者同意共享其参数的10％和1％时，预测模型的准确性分别为99.14％和98.71％，而服务器具有全部训练数据的准确性为99.17％。但是，该方法尚未在更复杂的分类任务上进行测试。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200507170729.png" alt="image-20200507170616544"></p>
+<p>尽管选择性参数共享和DP解决方案可以使利用信息的攻击更具挑战性，但[164]中的作者表明，这些解决方案易受基于通用对抗网络（GAN）开发的新型攻击，称为Powerful Attack[165]。  GAN是一类ML技术，它使用两个神经网络，即生成器网络和鉴别器网络，它们相互竞争以训练数据。生成器网络尝试通过向真实数据中添加一些“噪声”来生成伪造数据。然后，将生成的伪造数据传递到鉴别器网络以进行分类。在训练过程之后，GAN可以生成具有与训练数据集相同的统计数据的新数据。受此想法的启发，[164]中的作者开发了一种强大的攻击，该攻击使恶意参与者甚至可以从受害者那里推断出敏感信息，即使受害人只有一部分共享参数，如图13所示。 GAN攻击[166]中的作者介绍了一种使用秘密共享方案和极端增强算法的解决方案。在每次将新训练的模型以明文形式传输到服务器之前，此方法执行轻量级秘密共享协议。因此，网络中的其他参与者无法从共享模型推断信息。但是，这种方法的局限性是依赖于受信任的第三方来生成签名密钥对。</p>
+<p>与上述所有工作不同，[167]中的作者介绍了一种协作培训模型（collaborative training model），其中所有参与者都可以协作来训练联合GAN模型。这种方法的关键思想是，联合GAN模型可以生成可以代替参与者的真实数据的人工数据，从而为诚实的参与者保护真实数据的隐私。特别是，为了保证参与者的数据私密性，同时仍保持训练任务的灵活性，此方法产生了联合生成模型。该模型可以输出特别不属于任何实际用户的人工数据，但来自共同的跨用户数据分布。结果，这种方法可以显着降低从真实数据中恶意利用信息的可能性。但是，这种方法继承了GAN的现有局限性，例如由于生成的虚假数据而导致训练不稳定，这可能会大大降低协作学习模型的性能。</p>
+<p><strong>4) Encryption-based Solutions</strong></p>
+<p>当参与者想要共享FL中经过训练的参数时，加密是保护参与者数据隐私的有效方法。 在[168]中，引入了同态加密技术，以保护来自诚实但好奇的服务器的参与者共享参数的私密性。 诚实但好奇的服务器定义为希望从参与者的共享参数中提取信息，但将FL中的所有操作保持在正常工作状态的用户。 该解决方案的思想是，在将参与者的训练参数发送到服务器之前，将使用同态加密技术对其进行加密。 这种方法可以有效地保护敏感信息免受好奇的服务器的侵扰，并且可以达到与集中式DL算法相同的准确性。 在[84]中也提出了类似的概念，其中包含用于保护FL参与者信息的秘密共享机制。</p>
+<p>尽管[168]和[84]中提出的加密技术都可以防止好奇的服务器提取信息，但它们需要多轮通信，并且不能排除服务器与参与者之间的串通。因此，[169]中的作者提出了一种混合解决方案，该解决方案在FL中集成了加性同态加密和DP。特别是，在将训练后的参数发送到服务器之前，将使用加法同态加密机制以及故意干扰原始参数的加密将它们加密。结果，这种混合方案可以同时防止好奇的服务器利用信息，并解决服务器与恶意参与者之间的串通问题。但是，在本文中，作者没有将所提方法的准确性与没有同态加密和DP的情况进行比较。因此，尚不清楚所提出方法的性能，即就模型准确性而言。</p>
+<h2 id="Secure-Issues"><a href="#Secure-Issues" class="headerlink" title="Secure Issues"></a>Secure Issues</h2><hr>
+<p>本篇内容到这里就结束了，若想知道更多和信息安全有关的技术可在公众号留言。识别以下二维码可以成为本公众号的小粉丝，关注更多前沿技术。</p>
+<p><img src="/images/QRcode.png" alt=""></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Federated-Learning/" rel="tag"><i class="fa fa-tag"></i> Federated Learning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/ML-吴恩达机器学习课程-13-Clustering/" rel="next" title="吴恩达机器学习课程(13)-Clustering">
+                <i class="fa fa-chevron-left"></i> 吴恩达机器学习课程(13)-Clustering
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/14/论文阅读-Hadamard-Response/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Hadamard Response">
+                <span style="background:green;"><font color="#000000">论文阅读</font></span>-Hadamard Response <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">73</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">51</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Privacy-and-Security-Issues"><span class="nav-number">1.</span> <span class="nav-text">Privacy and Security Issues</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Privacy-Issues"><span class="nav-number">1.1.</span> <span class="nav-text">Privacy Issues</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Secure-Issues"><span class="nav-number">1.2.</span> <span class="nav-text">Secure Issues</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

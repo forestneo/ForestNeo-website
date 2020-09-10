@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本章节讲解神经网络，组织结构如下：  Advice for Applying Machine Learning Deciding What to Try Next Evaluating a Hypothesis Model Selection and Train Validation_Test Sets Diagnosing Bias vs. Variance Regularization and">
+<meta name="keywords" content="Machine Learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="吴恩达机器学习课程(10)-Advice for Applying Machine Learning">
+<meta property="og:url" content="http://forestneo.com/2020/04/20/ML-吴恩达机器学习课程-10-Advice for Applying Machine Learning/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="本章节讲解神经网络，组织结构如下：  Advice for Applying Machine Learning Deciding What to Try Next Evaluating a Hypothesis Model Selection and Train Validation_Test Sets Diagnosing Bias vs. Variance Regularization and">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423150354.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423151033.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423151306.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423152417.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423163624.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170043.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170139.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170159.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170505.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170555.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170618.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200424142114.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200424172525.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200424172545.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200424172840.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200424172902.png">
+<meta property="og:updated_time" content="2020-04-24T09:29:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="吴恩达机器学习课程(10)-Advice for Applying Machine Learning">
+<meta name="twitter:description" content="本章节讲解神经网络，组织结构如下：  Advice for Applying Machine Learning Deciding What to Try Next Evaluating a Hypothesis Model Selection and Train Validation_Test Sets Diagnosing Bias vs. Variance Regularization and">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423150354.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2020/04/20/ML-吴恩达机器学习课程-10-Advice for Applying Machine Learning/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>吴恩达机器学习课程(10)-Advice for Applying Machine Learning | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2020/04/20/ML-吴恩达机器学习课程-10-Advice for Applying Machine Learning/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">吴恩达机器学习课程(10)-Advice for Applying Machine Learning
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-04-20 18:22:43" itemprop="dateCreated datePublished" datetime="2020-04-20T18:22:43+08:00">2020-04-20</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-04-24 17:29:46" itemprop="dateModified" datetime="2020-04-24T17:29:46+08:00">2020-04-24</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本章节讲解神经网络，组织结构如下：</p>
+<ul>
+<li>Advice for Applying Machine Learning<ul>
+<li>Deciding What to Try Next</li>
+<li>Evaluating a Hypothesis</li>
+<li>Model Selection and Train Validation_Test Sets</li>
+<li>Diagnosing Bias vs. Variance</li>
+<li>Regularization and Bias_Variance</li>
+<li>Learning Curves</li>
+</ul>
+</li>
+</ul>
+<h1 id="Deciding-What-to-Try-Next"><a href="#Deciding-What-to-Try-Next" class="headerlink" title="Deciding What to Try Next"></a>Deciding What to Try Next</h1><p>到目前为止，已经介绍了不同的算法了，已经可以算是一个了解许多机器学习算法的小专家了。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423150354.png" alt=""></p>
+<p>对于懂机器学习算法的人，不同人之间的差距依然很大。我们仍然以房价预测为例，假设我们的最小化目标为：</p>
+<script type="math/tex; mode=display">
+J(\theta)=\frac{1}{2 m}\left[\sum_{i=1}^{m}\left(h_{\theta}\left(x^{(i)}\right)-y^{(i)}\right)^{2}+\lambda \sum_{j=1}^{m} \theta_{j}^{2}\right]</script><p>我们在学习到了一个模型之后，发现对于新的数据拟合的效果不是很好，这时候我们下一步可以做些什么呢？</p>
+<ul>
+<li>获得更多的训练样本：这通常是有效的，但是代价一般也比较大。</li>
+<li>尝试减少特征的数量</li>
+<li>尝试增加特征的数量</li>
+<li>尝试增加多项式特征</li>
+<li>尝试减少正则化程度 $\lambda$</li>
+<li>尝试增加正则化程度 $\lambda$</li>
+</ul>
+<p>我们不应该随机选择上面的某种方法来改进我们的算法，而是运用一些机器学习诊断法来帮助我们知道上面哪些方法对我们的算法是有效的。</p>
+<p>在接下来的两段视频中，我首先介绍怎样评估机器学习算法的性能，然后在之后的几段视频中，我将开始讨论这些方法，它们也被称为”机器学习诊断法”。“诊断法”的意思是：这是一种测试法，你通过执行这种测试，能够深入了解某种算法到底是否有用。这通常也能够告诉你，要想改进一种算法的效果，什么样的尝试，才是有意义的。在这一系列的视频中我们将介绍具体的诊断法，但我要提前说明一点的是，这些诊断法的执行和实现，是需要花些时间的，有时候确实需要花很多时间来理解和实现，但这样做的确是把时间用在了刀刃上，因为这些方法让你在开发学习算法时，节省了几个月的时间，因此，在接下来几节课中，我将先来介绍如何评价你的学习算法。在此之后，我将介绍一些诊断法，希望能让你更清楚。在接下来的尝试中，如何选择更有意义的方法。</p>
+<h1 id="Evaluating-a-Hypothesis"><a href="#Evaluating-a-Hypothesis" class="headerlink" title="Evaluating a Hypothesis"></a>Evaluating a Hypothesis</h1><p>本节介绍如何用学过的算法来评估假设函数，以后再以此为基础讨论如何避免过拟合和欠拟合的问题。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423151033.png" alt=""></p>
+<p>我们在优化的过程中，考虑的是选择 $\theta$ 使得训练误差最小化。那么训练误差最小是不是就一定好呢，当然不是的，比如上图的例子就是过拟合的。</p>
+<p>那么我们如何判断一个假设函数是过拟合的呢？为了检验算法是否过拟合，我们将数据分成训练集和测试集，通常用70%的数据作为训练集，用剩下30%的数据作为测试集。很重要的一点是训练集和测试集均要含有各种类型的数据，通常我们要对数据进行“洗牌”，然后再分成训练集和测试集。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423151306.png" alt=""></p>
+<p>那么我们有以下几种方法去计算代价函数：</p>
+<ul>
+<li>对于线性回归模型，利用测试数据代入代价函数</li>
+<li>对于逻辑回归模型：<ul>
+<li>用测试数据代入代价函数</li>
+<li>可以计算误分类的比例，即对于每个输入，先对其进行分类，再看分类准确率。</li>
+</ul>
+</li>
+</ul>
+<h1 id="Model-Selection-and-Train-Validation-Test-Sets"><a href="#Model-Selection-and-Train-Validation-Test-Sets" class="headerlink" title="Model Selection and Train Validation_Test Sets"></a>Model Selection and Train Validation_Test Sets</h1><p>依然是房价预测，加入我们要在以下是个二次项模型中进行选择，应该选择哪一个 $d$ 呢？</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423152417.png" alt=""></p>
+<p>我们知道，越高次越能拟合训练集，但是可能对于测试集并不一定有好，那么能不能这么做：</p>
+<ol>
+<li>把数据分为70%训练接和30%测试集。</li>
+<li>用训练集训练10个模型，对于这是个模型，用测试集计算误差，对应 $J_{test}(\Theta^{(1)})… J_{test}(\Theta^{(10)})$</li>
+<li>根据测试集上误差小的选择 $d$。</li>
+</ol>
+<p>以上步骤是有问题的，因为选出来的 $d$ 就是在测试集上选的，所以不能说选出来的 $d$ 就是最好的。就像训练集上训练的模型需要用测试数据去算误差。</p>
+<p>所以我们需要使用交叉验证集来帮助选择模型。即：使用60%的数据作为训练集，使用 20%的数据作为交叉验证集，使用20%的数据作为测试集。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423163624.png" alt=""></p>
+<p>所以现在的模型选择方法为：</p>
+<ol>
+<li><p>使用训练集训练出10个模型</p>
+</li>
+<li><p>用10个模型分别对交叉验证集计算得出交叉验证误差（代价函数的值）</p>
+</li>
+<li><p>选取代价函数值最小的模型</p>
+</li>
+<li><p>用步骤3中选出的模型对测试集计算得出推广误差（代价函数的值）</p>
+</li>
+</ol>
+<p>误差的定义如下：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+J_{train}(\theta) = \frac{1}{2m}\sum_\limits{i=1}^{m}(h_{\theta}(x^{(i)})-y^{(i)})^2\\
+J_{cv}(\theta) = \frac{1}{2m_{cv}}\sum_\limits{i=1}^{m_{cv}}(h_{\theta}(x^{(i)}_{cv})-y^{(i)}_{cv})^2\\
+J_{test}(\theta)=\frac{1}{2m_{test}}\sum_\limits{i=1}^{m_{test}}(h_{\theta}(x^{(i)}_{cv})-y^{(i)}_{cv})^2
+\end{align}</script><h1 id="Diagnosing-Bias-vs-Variance"><a href="#Diagnosing-Bias-vs-Variance" class="headerlink" title="Diagnosing Bias vs. Variance"></a>Diagnosing Bias vs. Variance</h1><p>当我们巡行一个算法的时候，如果结果不好，一般是来那个种情况：要么是偏差（Bias）较大，一种是方差（Variance）较大。换句话说，要么是欠拟合，要么是过拟合。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170043.png" alt=""></p>
+<p>我们通常会通过将训练集和交叉验证集的代价函数误差与多项式的次数绘制在同一张图表上来帮助分析：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170139.png" alt=""></p>
+<p>一般来说有以下两种情况：</p>
+<ul>
+<li>对于训练集，当 $d$ 较小时，模型拟合程度更低，误差较大；随着 $d$ 的增长，拟合程度提高，误差减小。</li>
+<li>对于交叉验证集，当 $d$ 较小时，模型拟合程度低，误差较大；但是随着 $d$ 的增长，误差呈现先减小后增大的趋势，转折点是我们的模型开始过拟合训练数据集的时候。</li>
+</ul>
+<p>那么如果我们的交叉验证集误差较大，我们如何判断是方差还是偏差呢？根据上面的图表，我们知道:</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170159.png" alt=""></p>
+<p>即：</p>
+<ul>
+<li>训练集误差和交叉验证集误差近似时：偏差/欠拟合</li>
+<li>交叉验证集误差远大于训练集误差时：方差/过拟合</li>
+</ul>
+<h1 id="Regularization-and-Bias-Variance"><a href="#Regularization-and-Bias-Variance" class="headerlink" title="Regularization and Bias_Variance"></a>Regularization and Bias_Variance</h1><p>在我们在训练模型的过程中，一般会使用一些正则化方法来防止过拟合。但是我们可能会正则化的程度太高或太小了，即我们在选择λ的值时也需要思考与刚才选择多项式模型次数类似的问题。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170505.png" alt=""></p>
+<p>我们可以选择一系列的想要测试的 $\lambda$ 值，通常是 0-10之间的呈现2倍关系的值（如：$0,0.01,0.02,0.04,0.08,0.15,0.32,0.64,1.28,2.56,5.12,10$共12个）。 我们同样把数据分为训练集、交叉验证集和测试集。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170555.png" alt=""></p>
+<p>选择$\lambda$的方法为：</p>
+<ol>
+<li>使用训练集训练出12个不同程度正则化的模型</li>
+<li>用12个模型分别对交叉验证集计算的出交叉验证误差</li>
+<li>选择得出交叉验证误差<strong>最小</strong>的模型</li>
+<li>运用步骤3中选出模型对测试集计算得出推广误差，我们也可以同时将训练集和交叉验证集模型的代价函数误差与λ的值绘制在一张图表上：</li>
+</ol>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200423170618.png" alt=""></p>
+<ul>
+<li>当 $\lambda$ 较小时，训练集误差较小（过拟合）而交叉验证集误差较大</li>
+<li>随着 $\lambda$ 的增加，训练集误差不断增加（欠拟合），而交叉验证集误差则是先减小后增加</li>
+</ul>
+<p>这样不停地尝试过程中，我们就可以得到更好的参数了。</p>
+<h1 id="Learning-Curves"><a href="#Learning-Curves" class="headerlink" title="Learning Curves"></a>Learning Curves</h1><p>学习曲线可以用来判断某一个学习算法是否处于偏差、方差问题。学习曲线是学习算法的一个很好的<strong>合理检验</strong>（<strong>sanity check</strong>）。学习曲线是将训练集误差和交叉验证集误差作为训练集样本数量（$m$）的函数绘制的图表。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200424142114.png" alt=""></p>
+<p>考虑模型 $h_\theta(x)=\theta_0 + \theta_1 x = \theta_2 x^2$，我们可以画出随着训练数据集误差和交叉验证数据集误差随着训练样本数量 $m$ 的变化。当训练样本为1、2、3时，训练数据集的误差为0，即当训练较少行数据的时候，训练的模型将能够非常完美地适应较少的训练数据，但是训练出来的模型却不能很好地适应交叉验证集数据或测试集数据。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200424172525.png" alt=""></p>
+<p>那么如何利用学习曲线识别高偏差/欠拟合呢：作为例子，我们尝试用一条直线来适应下面的数据，可以看出，无论训练集有多么大误差都不会有太大改观。即：<strong>在高偏差/欠拟合的情况下，增加数据到训练集不一定能有帮助</strong>。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200424172545.png" alt=""></p>
+<p>再看过拟合的情况：假设我们使用一个非常高次的多项式模型，并且正则化非常小，可以看出，当交叉验证集误差远大于训练集误差时，往训练集增加更多数据可以提高模型的效果。即：<strong>在高方差/过拟合的情况下，增加更多数据到训练集可能可以提高算法效果</strong>。</p>
+<h1 id="Deciding-What-to-Do-Next-revisited"><a href="#Deciding-What-to-Do-Next-revisited" class="headerlink" title="Deciding What to Do Next (revisited)"></a>Deciding What to Do Next (revisited)</h1><p>我们已经介绍了怎样评价一个学习算法，我们讨论了模型选择问题，偏差和方差的问题。那么这些诊断法则怎样帮助我们判断，哪些方法可能有助于改进学习算法的效果，而哪些可能是徒劳的呢？</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200424172840.png" alt=""></p>
+<p>让我们再次回到最开始的例子，在那里寻找答案，这就是我们之前的例子。回顾 1.1 中提出的六种可选的下一步，让我们来看一看我们在什么情况下应该怎样选择：</p>
+<ol>
+<li><p>获得更多的训练样本——解决高方差</p>
+</li>
+<li><p>尝试减少特征的数量——解决高方差</p>
+</li>
+<li><p>尝试获得更多的特征——解决高偏差</p>
+</li>
+<li><p>尝试增加多项式特征——解决高偏差</p>
+</li>
+<li><p>尝试减少正则化程度λ——解决高偏差</p>
+</li>
+<li><p>尝试增加正则化程度λ——解决高方差</p>
+</li>
+</ol>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200424172902.png" alt=""></p>
+<p>使用较小的神经网络，类似于参数较少的情况，容易导致高偏差和欠拟合，但计算代价较小使用较大的神经网络，类似于参数较多的情况，容易导致高方差和过拟合，虽然计算代价比较大，但是可以通过正则化手段来调整而更加适应数据。</p>
+<p>通常选择较大的神经网络并采用正则化处理会比采用较小的神经网络效果要好。</p>
+<p>对于神经网络中的隐藏层的层数的选择，通常从一层开始逐渐增加层数，为了更好地作选择，可以把数据分为训练集、交叉验证集和测试集，针对不同隐藏层层数的神经网络训练神经网络，然后选择交叉验证集代价最小的神经网络。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Machine-Learning/" rel="tag"><i class="fa fa-tag"></i> Machine Learning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/02/论文阅读-FedSel-Federated-SGD-under-Local-Differential-Privacy-with-Top-k-Dimension-Selection/" rel="next" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-FedSel Federated SGD under Local Differential Privacy with Top-k Dimension Selection">
+                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">论文阅读</font></span>-FedSel Federated SGD under Local Differential Privacy with Top-k Dimension Selection
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/ML-吴恩达机器学习课程-11-Machine Learning System Design/" rel="prev" title="吴恩达机器学习课程(11)-Machine Learning System Design">
+                吴恩达机器学习课程(11)-Machine Learning System Design <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">73</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">51</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Deciding-What-to-Try-Next"><span class="nav-number">1.</span> <span class="nav-text">Deciding What to Try Next</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Evaluating-a-Hypothesis"><span class="nav-number">2.</span> <span class="nav-text">Evaluating a Hypothesis</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Model-Selection-and-Train-Validation-Test-Sets"><span class="nav-number">3.</span> <span class="nav-text">Model Selection and Train Validation_Test Sets</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Diagnosing-Bias-vs-Variance"><span class="nav-number">4.</span> <span class="nav-text">Diagnosing Bias vs. Variance</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Regularization-and-Bias-Variance"><span class="nav-number">5.</span> <span class="nav-text">Regularization and Bias_Variance</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Learning-Curves"><span class="nav-number">6.</span> <span class="nav-text">Learning Curves</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Deciding-What-to-Do-Next-revisited"><span class="nav-number">7.</span> <span class="nav-text">Deciding What to Do Next (revisited)</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

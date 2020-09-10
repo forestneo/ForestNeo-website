@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="文章标题：The Staircase Mechanism in Differential Privacy作者：Quan Geng, Peter Kairouz, Sewoong Oh, Pramod Viswanath文章地址：https://ieeexplore.ieee.org/document/7093132发表年份：2015  Abstract通常来说我们在实现差分隐私（Different">
+<meta name="keywords" content="Differential Privacy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-The Staircase Mechanism in Differential Privacy">
+<meta property="og:url" content="http://forestneo.com/2019/09/16/论文阅读-The-Staircase-Mechanism-in-Differential-Privacy/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="文章标题：The Staircase Mechanism in Differential Privacy作者：Quan Geng, Peter Kairouz, Sewoong Oh, Pramod Viswanath文章地址：https://ieeexplore.ieee.org/document/7093132发表年份：2015  Abstract通常来说我们在实现差分隐私（Different">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/fig01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/fig02.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/alg01.png">
+<meta property="og:image" content="http://forestneo.com/images/QRcode.png">
+<meta property="og:updated_time" content="2020-09-10T12:17:28.804Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-The Staircase Mechanism in Differential Privacy">
+<meta name="twitter:description" content="文章标题：The Staircase Mechanism in Differential Privacy作者：Quan Geng, Peter Kairouz, Sewoong Oh, Pramod Viswanath文章地址：https://ieeexplore.ieee.org/document/7093132发表年份：2015  Abstract通常来说我们在实现差分隐私（Different">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/fig01.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2019/09/16/论文阅读-The-Staircase-Mechanism-in-Differential-Privacy/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title><span style="background:green;"><font color="#000000">论文阅读</font></span>-The Staircase Mechanism in Differential Privacy | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2019/09/16/论文阅读-The-Staircase-Mechanism-in-Differential-Privacy/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">论文阅读</font></span>-The Staircase Mechanism in Differential Privacy
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-16 14:49:49" itemprop="dateCreated datePublished" datetime="2019-09-16T14:49:49+08:00">2019-09-16</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-09-10 20:17:28" itemprop="dateModified" datetime="2020-09-10T20:17:28+08:00">2020-09-10</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/Differential-Privacy/" itemprop="url" rel="index"><span itemprop="name">Differential Privacy</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>文章标题：The Staircase Mechanism in Differential Privacy<br>作者：Quan Geng, Peter Kairouz, Sewoong Oh, Pramod Viswanath<br>文章地址：<a href="https://ieeexplore.ieee.org/document/7093132" target="_blank" rel="noopener">https://ieeexplore.ieee.org/document/7093132</a><br>发表年份：2015</p>
+<hr>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>通常来说我们在实现差分隐私（Differential Privacy, DP）的时候都是采用的 Laplacian 机制。但是却没人说明采用 Laplace 机制好不好，本文提出了一个叫做 Staircase Mechanism 的机制。提出的 Staircase 机制可以直接替代 Laplacian 机制。</p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>DP是一种隐私框架可以用来保护数据隐私。自从提出以来，DP被广泛用于各个方面。DP可以权衡数据有效性和隐私保护性（data utility and privacy）。最基本的情况可以认为是这样的：考虑一个数据查询者，他想要得到关于这个数据集的聚合信息。如果没有隐私需求的话，直接对这个数据集进行查询就可以了。为了保护隐私，需要对查询的结果进行一定处理，通常是加上一定的噪声。保护隐私的前提下，加的噪声需要满足这样的特性：数据集中任意一条记录的不同不会导致输出结果变化很大。这样即对数据集进行了查询又保护了每条记录的隐私。</p>
+<p>形式化上，对数据集的查询可以认为是这样一个实值查询：</p>
+<script type="math/tex; mode=display">
+q : \mathcal{D} \rightarrow \mathbb{R}^{d}</script><p>其中，$\mathcal{D}$ 表示可能的数据集。</p>
+<p>为了达成保护隐私情况下进行查询，我们需要额外引入一些知识，首先是差分隐私：</p>
+<blockquote>
+<p>机制 $\mathcal{K}$ 是 $\epsilon$-DP 的，如果对于任意相邻数据集 $D_1, D_2$ 以及查询的任意输出 $S \subset \operatorname{Range}(\mathcal{K})$ 有：</p>
+<script type="math/tex; mode=display">
+\operatorname{Pr}\left[\mathcal{K}\left(D_{1}\right) \in S\right] \leq \exp (\epsilon) \operatorname{Pr}\left[\mathcal{K}\left(D_{2}\right) \in S\right]</script></blockquote>
+<p>一组查询可以实际上写成这样的形式：$q(D)=\left(q_{1}(D), q_{2}(D), \ldots, q_{d}(D)\right)$</p>
+<p>为了了解查询的性质，我们还需要了解查询的敏感度，敏感度的定义如下：</p>
+<blockquote>
+<p>对于查询 $q : \mathcal{D} \rightarrow \mathbb{R}^{d}$，其敏感度定义为：</p>
+<script type="math/tex; mode=display">
+\Delta :=\max _{D_{1}, D_{2} \in \mathcal{D}}\left\|q\left(D_{1}\right)-q\left(D_{2}\right)\right\|_{1}</script></blockquote>
+<p>通常来说，最标准的满足DP的方法是再买个查询后面加上一定的噪声，即机制 $\mathcal{K}$ 为：</p>
+<script type="math/tex; mode=display">
+\mathcal{K}(D)=q(D)+X=\left(q_{1}(D)+X_{1}, \dots, q_{d}(D)+X_{d}\right)</script><p>其中，每一个查询后面的 X 表示加如的噪声，通常来说，我们采用拉普拉斯机制作为噪声。结合查询的敏感度，机制 $\mathcal{K}$ 可以写成如下形式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \mathcal{K}(D) & :=q(D)+\operatorname{Lap}\left(\frac{\Delta}{\epsilon}\right)^{d} \\ &=\left(q_{1}(D)+\operatorname{Lap}\left(\frac{\Delta}{\epsilon}\right), \ldots, q_{d}(D)+\operatorname{Lap}\left(\frac{\Delta}{\epsilon}\right)\right) \end{aligned}</script><p>以上的拉普拉斯机制目前被作为DP的最基本方法广为使用。然而并没有对 Laplace 进行优化的相关工作。本文中，我们提出了一种可以替代 Laplace 的方法，满足同样的 DP 保护程度下，我们的方法所添加的噪声更小。</p>
+<h1 id="Staircase-Mechanism"><a href="#Staircase-Mechanism" class="headerlink" title="Staircase Mechanism"></a>Staircase Mechanism</h1><p>我们定义了一个多维对称分布的概率分布，其图像呈阶梯状，因此称为 Staircase 机制。给定 $\gamma \in[0,1]$，我们定义 $\mathcal{P}_ {\gamma}$ 为概率分布，其概率密度函数为 $f_{\gamma}(\cdot)$：</p>
+<script type="math/tex; mode=display">
+f_{\gamma}(\mathbf{x})=\left\{\begin{array}{ll}{e^{-k \epsilon} a(\gamma)} & {\|\mathbf{x}\|_{1} \in[k \Delta,(k+\gamma) \Delta)} \\ {e^{-(k+1) \epsilon} a(\gamma)} & {\|\mathbf{x}\|_{1} \in[(k+\gamma) \Delta,(k+1) \Delta)}\end{array}\right.</script><p>当然，为了满足归一化的需求，需要积分等于1，然后这个参数 $a(\gamma)$ 就可以求出来等于：</p>
+<script type="math/tex; mode=display">
+a(\gamma) \triangleq \frac{d !}{2^{d} \Delta^{d} \sum_{k=1}^{d}\left(\begin{array}{l}{d} \\ {k}\end{array}\right) c_{d-k}\left(b+(1-b) \gamma^{k}\right)}, c_{k} \triangleq \sum_{i=0}^{+\infty} i^{k} b^{i}</script><p>根据这个公式的性质，很显然有：</p>
+<script type="math/tex; mode=display">
+f_{\gamma}(\mathbf{x}) \leq e^{\epsilon} f_{\gamma}(\mathbf{x}+\mathbf{t}), \forall \mathbf{x} \in \mathbb{R}^{d}, \forall \mathbf{t} \in \mathbb{R}^{d} \text { s.t. }\|\mathbf{t}\|_{1} \leq \Delta</script><p>也就是说，这个 Staircase 机制是满足 $\epsilon$-DP的。</p>
+<p>那么这个概率分布到底长啥样呢，下面的图1和 图2就展示了一维和二维情况啊下的一个概率密度函数。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/fig01.png" alt="fig01"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/fig02.png" alt="fig02"></p>
+<p>有了这个概率密度函数之后，究竟如何根据这个概率密度函数生成一个随机噪声呢？作者给出了算法1，如下：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/alg01.png" alt="alg01"></p>
+<p>其中，S决定了这个噪声的符号，G决定了噪声在区间 $[G \Delta,(G+1) \Delta)$ 中，B决定了噪声在区间的前半部分 $[G \Delta,(G+\gamma) \Delta)$ 还是后半部分 $[(G+\gamma) \Delta,(G+1) \Delta)$，然后 U 是用来在区间随机化采样。根据这个过程，我们就产生了一个 Staircase 的噪声分布了。</p>
+<h1 id="Comparison-with-Prior-Work"><a href="#Comparison-with-Prior-Work" class="headerlink" title="Comparison with Prior Work"></a>Comparison with Prior Work</h1><p>在目前现有的工作中，一般采用方差或者噪声的期望来衡量 DP 在数据有效性和隐私性的权衡。我们在之前的文章 [3] 中证明了在最小化代价函数的前提下：</p>
+<ul>
+<li>为每个查询添加独立的噪声是最优的</li>
+<li>Laplacian 分布并不是最优的噪声添加函数，最优的噪声添加函数应该是类似阶梯状的。</li>
+</ul>
+<h1 id="Optimality-of-Staircase-Mechanism"><a href="#Optimality-of-Staircase-Mechanism" class="headerlink" title="Optimality of Staircase Mechanism"></a>Optimality of Staircase Mechanism</h1><p>前面说了，满足隐私保护的查询机制可以表示为：$\mathcal{K}(D)=q(D)+X=\left(q_{1}(D)+X_{1}, \ldots, q_{d}(D)+X_{d}\right)$，其中 X 表示加在查询结果上的噪声，那么在 DP 的要求下，有：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \operatorname{Pr}\left[\mathcal{K}\left(D_{1}\right) \in S\right] & \leq e^{\epsilon} \operatorname{Pr}\left[\mathcal{K}\left(D_{2}\right) \in S\right] \\ \Leftrightarrow \operatorname{Pr}\left[q\left(D_{1}\right)+X \in S\right] & \leq e^{\epsilon} \operatorname{Pr}\left[q\left(D_{2}\right)+X \in S\right] \\ \Leftrightarrow \operatorname{Pr}\left[X \in S-q\left(D_{1}\right)\right] & \leq e^{\epsilon} \operatorname{Pr}\left[X \in S-q\left(D_{2}\right)\right] \\ \Leftrightarrow \operatorname{Pr}\left[X \in S^{\prime}\right] & \leq e^{\epsilon} \operatorname{Pr}\left[X \in S^{\prime}+q\left(D_{1}\right)-q\left(D_{2}\right)\right] \end{aligned}</script><p>其中，$S^{\prime} \triangleq S-q\left(D_{1}\right)=\left\{s-q\left(D_{1}\right) | s \in S\right\}$。因为我们有 $\left|q\left(D_{1}\right)-q\left(D_{2}\right)\right|_{1} \leq \Delta$，所以，根据上式，有：</p>
+<script type="math/tex; mode=display">
+\operatorname{Pr}\left[X \in S^{\prime}\right] \leq e^{\epsilon} \operatorname{Pr}\left[X \in S^{\prime}+\mathbf{t}\right]</script><p>根据给定的概率密度函数，我们有：</p>
+<script type="math/tex; mode=display">
+e^{-\epsilon} \leq \frac{f_{X}(\mathbf{u})}{f_{X}(\mathbf{u}+\mathbf{t})} \leq e^{\epsilon}, \quad \forall \mathbf{u} \in \mathbb{R}^{d}, \mathbf{t} \in \mathbb{R}^{d}</script><p>为了衡量方法的有效性，我们定义了一个 cost 函数，为：$\mathcal{L}(\cdot) : \mathbb{R}^{d} \rightarrow \mathbb{R}$。那么这个 DP 的优化问题就等价于下式：</p>
+<script type="math/tex; mode=display">
+\begin{array}{c}{\underset{\mathcal{P}}{\operatorname{minimize}} \iint \cdots \int_{\mathbb{R}^{d}} \mathcal{L}\left(x_{1}, x_{2}, \ldots, x_{d}\right) \mathcal{P}\left(d x_{1} d x_{2} \ldots d x_{d}\right)} \\ {\text { subject to } \mathcal{P}(S) \leq e^{\epsilon} \mathcal{P}(S+\mathbf{t})} \\ {\quad \quad \forall \text { measurable set } S \subseteq \mathbb{R}^{d}, \forall\|\mathbf{t}\|_{1} \leq \Delta}\end{array}</script><p>其中 $\mathcal{P}(S)$ 表示概率 $\operatorname{Pr}[X \in S]$，上式的意思就是在满足 DP 的前提下最小化给定的代价函数。所以这里当然有一个问题就是代价函数是啥。当然，不同的应用环境可能有不同的代价指标。作者给出了这样一个代价函数：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}\left(x_{1}, x_{2}, \ldots, x_{d}\right)=\sum_{i=1}^{d}\left|x_{i}\right|, \quad \forall\left(x_{1}, x_{2}, \ldots, x_{d}\right) \in \mathbb{R}^{d}</script><p>再假定 $\mathcal{S P}$ 是所有满足条件的概率分布，那么本文的主要贡献就是证明了对于这个 L1 代价函数，我们的 Staircase 机制是最优的。即定理1：</p>
+<blockquote>
+<p>对于 $d=2$ 以及 $\mathcal{L}(\mathbf{x})=|\mathbf{x}|_{1}, \quad \forall \mathbf{x} \in \mathbb{R}^{2}$，那么：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} & \inf _{\mathcal{P} \in \mathcal{S} P} \iint_{\mathbb{R}^{2}} \mathcal{L}(\mathbf{x}) \mathcal{P}\left(d x_{1} d x_{2}\right) \\=& \inf _{\gamma \in[0,1]} \iint_{\mathbb{R}^{2}} \mathcal{L}(\mathbf{x}) f_{\gamma}(\mathbf{x}) d x_{1} d x_{2} \end{aligned}</script></blockquote>
+<p>这个证明的过程就不仔细展开了，我也没有逐一推敲，感兴趣的读者可以参考原文。上述定理只针对了二维的情况，同样作者给出了定理2，说的是对于 $d &gt; 2$，Staircase 依然是最优的。</p>
+<h1 id="Implications"><a href="#Implications" class="headerlink" title="Implications"></a>Implications</h1><p>我们已经知道 Staircase 是最优的了，那么 Staircase 里面有三个参数：$\epsilon, \delta$ 和  $\gamma$。其中 $\epsilon, \delta$ 我们是 DP 要求和查询函数的固有性质，不可更改。那么 $\gamma$ 该怎么取呢？作者沿用了之前自己的论文，说 $d=1$ 的时候该这么取：</p>
+<script type="math/tex; mode=display">
+\gamma^{*}=\frac{1}{1+e^{\epsilon / 2}}</script><p>对应的噪声的 amplitude （这个东西可以理解为平均的误差吧）是：</p>
+<script type="math/tex; mode=display">
+V_{1}^{*}=\Delta \frac{e^{\epsilon / 2}}{e^{\epsilon}-1}</script><p>与之对应，如果采用 Laplace 的化，其 amplitude 为：</p>
+<script type="math/tex; mode=display">
+V_{L a p} \triangleq \int_{-\infty}^{+\infty}|x| f(x) d x=\frac{\Delta}{\epsilon}</script><p>然后作者比较 $V\left(\mathcal{P}_{\gamma^{*}}\right)$（这篇文章目前没有看到这个东西咋算出来的），说很显然当 $\epsilon$ 很小的时候，Laplace 是 asymptotically optimal 的。二者的差是：</p>
+<script type="math/tex; mode=display">
+V_{L a p}-V\left(\mathcal{P}_{\gamma^{*}}\right)=\Delta\left(\frac{\epsilon}{24}-\frac{7 \epsilon^{3}}{5760}+O\left(\epsilon^{5}\right)\right)</script><p>当 $\epsilon$ 较大的时候，有：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} V_{L a p} &=\frac{\Delta}{\epsilon} \\ V\left(\mathcal{P}_{\gamma^{*}}\right) &=\Theta\left(\Delta e^{-\epsilon / 2}\right) \end{aligned}</script><p>这一章节是对 Staircase 机制的一些分析，由于我没有参考给出的引用论文，这里暂且只给出了作者文中的结论了。作者还给出了一些分析，就不细说。</p>
+<h1 id="其他章节"><a href="#其他章节" class="headerlink" title="其他章节"></a>其他章节</h1><p>后面的章节给出了证明的一些细节，在这里就不展示出来了。如果以后有用的话，再来回顾。</p>
+<h1 id="个人总结"><a href="#个人总结" class="headerlink" title="个人总结"></a>个人总结</h1><p>机制的最优性一直广受研究。一般提出一个新的机制的时候，都是和已经存在的机制去比较，发现实验效果更好以此来说明新提出的机制拥有更好的效果。证明机制的最优性，大家其实都想去证，但是更加 challenging。这篇文章的具体证明过程我并没有逐一推敲，但是给了我们一定的启发。</p>
+<p>当然，这么读文章是不够的，本文的主要贡献本就偏理论，这篇文章只是粗读了一下，更应该深入去了解作者对于最优的证明的。</p>
+<hr>
+<p>本篇内容到这里就结束了，若想知道更多和信息安全有关的技术可在公众号留言。识别以下二维码可以成为本公众号的小粉丝，关注更多前沿技术。</p>
+<p><img src="/images/QRcode.png" alt=""></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/20/总结-常用术语介绍/" rel="next" title="总结-常用术语介绍">
+                <i class="fa fa-chevron-left"></i> 总结-常用术语介绍
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/07/系统配置-PyCharm中添加Python文件模板/" rel="prev" title="系统配置-PyCharm中添加Python文件模板">
+                系统配置-PyCharm中添加Python文件模板 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">73</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">51</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Staircase-Mechanism"><span class="nav-number">3.</span> <span class="nav-text">Staircase Mechanism</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Comparison-with-Prior-Work"><span class="nav-number">4.</span> <span class="nav-text">Comparison with Prior Work</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Optimality-of-Staircase-Mechanism"><span class="nav-number">5.</span> <span class="nav-text">Optimality of Staircase Mechanism</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Implications"><span class="nav-number">6.</span> <span class="nav-text">Implications</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他章节"><span class="nav-number">7.</span> <span class="nav-text">其他章节</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#个人总结"><span class="nav-number">8.</span> <span class="nav-text">个人总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

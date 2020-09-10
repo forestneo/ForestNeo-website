@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本章节将逻辑回归，组织结构如下：  Logistic Regression 6.1 Classification 6.2 Hypothesis Representation 6.3 Decision Boundary 6.4 Cost Function 6.5 Simplified Cost Function and Gradient Descent 6.6 Advanced Optimizati">
+<meta name="keywords" content="Machine Learning,Classification,Logistic Regression">
+<meta property="og:type" content="article">
+<meta property="og:title" content="吴恩达机器学习课程(6)-Logistic Regression">
+<meta property="og:url" content="http://forestneo.com/2020/02/27/ML-吴恩达机器学习课程-06-Logistic Regression/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="本章节将逻辑回归，组织结构如下：  Logistic Regression 6.1 Classification 6.2 Hypothesis Representation 6.3 Decision Boundary 6.4 Cost Function 6.5 Simplified Cost Function and Gradient Descent 6.6 Advanced Optimizati">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227181952.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227182719.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227184121.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227184922.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227191845.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227192028.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227192330.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227192509.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227195015.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227204448.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200228103713.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200228104323.png">
+<meta property="og:updated_time" content="2020-05-02T09:00:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="吴恩达机器学习课程(6)-Logistic Regression">
+<meta name="twitter:description" content="本章节将逻辑回归，组织结构如下：  Logistic Regression 6.1 Classification 6.2 Hypothesis Representation 6.3 Decision Boundary 6.4 Cost Function 6.5 Simplified Cost Function and Gradient Descent 6.6 Advanced Optimizati">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227181952.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2020/02/27/ML-吴恩达机器学习课程-06-Logistic Regression/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>吴恩达机器学习课程(6)-Logistic Regression | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2020/02/27/ML-吴恩达机器学习课程-06-Logistic Regression/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">吴恩达机器学习课程(6)-Logistic Regression
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-02-27 16:22:43" itemprop="dateCreated datePublished" datetime="2020-02-27T16:22:43+08:00">2020-02-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-05-02 17:00:18" itemprop="dateModified" datetime="2020-05-02T17:00:18+08:00">2020-05-02</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本章节将逻辑回归，组织结构如下：</p>
+<ul>
+<li>Logistic Regression<ul>
+<li>6.1 Classification</li>
+<li>6.2 Hypothesis Representation</li>
+<li>6.3 Decision Boundary</li>
+<li>6.4 Cost Function</li>
+<li>6.5 Simplified Cost Function and Gradient Descent</li>
+<li>6.6 Advanced Optimization</li>
+<li>6.7 Multiclass Classification: One-vs-all</li>
+</ul>
+</li>
+</ul>
+<h1 id="6-1-Classification"><a href="#6-1-Classification" class="headerlink" title="6.1 Classification"></a>6.1 Classification</h1><p>之前的回归是用来拟合数据  $(x,y)$ 的表达式，这里开始将分类问题，分类中，要预测的变量  $y$ 是离散值。比如给定一封邮件，看是否是垃圾邮件。我们将学习逻辑回归 (<strong>Logistic Regression</strong>) 算法。</p>
+<p>在二分类中，我们将因变量分为两类，我们用 $y \in \{0,1\}$ 表示，其中0表示负类，1表示正类。这个的正负没有绝对含义。比如我们</p>
+<p>在肿瘤检测中，判断是否恶性肿瘤，可以规定1表示恶性肿瘤，0表示良性肿瘤。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227181952.png" style="zoom: 50%;"></p>
+<p>那么能否用线性回归的思路去解决二分类问题呢，比如我们拟合出 $h_{\theta}(x)$，然后以0.5位分界去判断分类结果。看上去可以实际上是会出问题的，比如以下这个数据，我们拟合到的是蓝色的直线，这个时候就会有很多点分类错误。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227182719.png" style="zoom:50%;"></p>
+<p>究其原因，是因为在分类当中，分类结果 $y$ 只能是 $y\in\{0,1\}$。</p>
+<h1 id="6-2-Hypothesis-Representation"><a href="#6-2-Hypothesis-Representation" class="headerlink" title="6.2 Hypothesis Representation"></a>6.2 Hypothesis Representation</h1><p>因此，我们引入一个新的模型，叫做逻辑斯特回归或逻辑回归，这个名字是有点 confusing 的，因为这是一个分类问题。我们想要的是 $0 \leq h_{\theta}(x) \leq 1$ 。线性回归的假设是 $h_\theta(x)=\theta^T x$，为了满足输出在 $[0,1]$中，我们将假设改为：</p>
+<script type="math/tex; mode=display">
+h_{\theta}(x)=g\left(\theta^{T} x\right)</script><p>这个 $g(\cdot)$是什么呢，我们用的是大名鼎鼎的 sigmoid function（也叫 Logistic function），即：</p>
+<script type="math/tex; mode=display">
+g(z)=\frac{1}{1+e^{-z}}</script><p>这个函数是长这样的：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227184121.png" style="zoom:40%;"></p>
+<p>这个时候我们不妨思考 $h_{\theta}(x)$ 干了一件什么事呢，我们可以说，$h_{\theta}(x)$ 是对于给定的输入，输出变量等于1的可能性。即：</p>
+<script type="math/tex; mode=display">
+h_\theta \left( x \right)=P\left( y=1|x;\theta \right)</script><p>再联系上面的 S 型曲线，我们可以认为：</p>
+<ul>
+<li>当 ${h_\theta}\left( x \right) \ge 0.5$ 时，预测 $y=1$；</li>
+<li>当 ${h_\theta}\left( x \right)&lt;0.5$ 时，预测 $y=$0。</li>
+</ul>
+<p>如果我们不看 ${h_\theta}\left( x \right)$，而看 $z$，因为 $z=\theta^T x$ 也可以说：</p>
+<ul>
+<li>${\theta^{T}}x \ge 0$，则 $y=1$</li>
+<li>${\theta^{T}}x &lt; 0$，则 $y=0$</li>
+</ul>
+<h1 id="6-3-Decision-Boundary"><a href="#6-3-Decision-Boundary" class="headerlink" title="6.3 Decision Boundary"></a>6.3 Decision Boundary</h1><p>假设有这样一个数据和逻辑回归模型：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227184922.png" style="zoom: 25%;"></p>
+<p>我们假设学到的参数 $\theta = [-3,1,1]$，也就是说：$-3+x_1+x_2\ge0$时，预测为正类，即：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227191845.png" style="zoom: 25%;"></p>
+<p>中间的这个用于分类的直线就叫做 decision boundary，翻译过来时判定边界，上述的例子是线性的判定边界，我们也可以扩充特征，得到非线性的判定边界，如远行的判定边界。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227192028.png" style="zoom: 25%;"></p>
+<h1 id="6-4-Cost-Function"><a href="#6-4-Cost-Function" class="headerlink" title="6.4 Cost Function"></a>6.4 Cost Function</h1><p>上面介绍了逻辑斯特回归的原理，那么我们怎么去拟合 $\theta$ 呢，即现在的问题为：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227192330.png" style="zoom: 25%;"></p>
+<p>对于线性回归模型，我们定义的代价函数是所有模型误差的平方和。理论上来说，我们也可以对逻辑回归模型沿用这个定义，但是问题在于将${h_\theta}\left( x \right)=\frac{1}{1+{e^{-\theta^{T}x}}}$带入到这样的代价函数中时，我们得到的代价函数将是一个非凸函数（<strong>non-convexfunction</strong>）。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227192509.png" style="zoom: 25%;"></p>
+<p>如果是非凸的，那么在迭代的过程中我们采用梯度下降法，就很难找到全局最小值了。联想线性回归的代价函数为：$J(\theta)=\frac{1}{m} \sum_{i=1}^{m} \frac{1}{2}\left(h_{\theta}\left(x^{(i)}\right)-y^{(i)}\right)^{2}$，我们可以将代价函数写成这样的形式：$J(\theta)=\frac{1}{m} \sum_{i=1}^{m} \operatorname{cost}\left(h_{\theta}\left(x^{(i)}\right), y^{(i)}\right)$，在逻辑回归中，Cost为：</p>
+<script type="math/tex; mode=display">
+\operatorname{Cost}\left(h_{\theta}(x), y\right)=\left\{\begin{aligned}-\log \left(h_{\theta}(x)\right) &\quad \text { if }\quad y=1 \\-\log \left(1-h_{\theta}(x)\right) &\quad \text { if }\quad y=0 \end{aligned}\right.</script><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227195015.png" style="zoom: 25%;"></p>
+<p>我们看一下这个 Cost 函数，如果是负类，那么判断正类的概率越大，cost 就越大，如果是正类，当贝判断为正类的概率越低，则 cost 越大。所以这个 cost 还是很符合直觉的。</p>
+<h1 id="6-5-Simplified-Cost-Function-and-Gradient-Descent"><a href="#6-5-Simplified-Cost-Function-and-Gradient-Descent" class="headerlink" title="6.5 Simplified Cost Function and Gradient Descent"></a>6.5 Simplified Cost Function and Gradient Descent</h1><p>那么当前的任务就可以表示为：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200227204448.png" style="zoom: 25%;"></p>
+<p>我们可以将上述的 Cost 做一个等价的变化，即：</p>
+<script type="math/tex; mode=display">
+\operatorname{Cost}\left( {h_\theta}\left( x \right),y \right)=-y\times \log\left( {h_\theta}\left( x \right) \right)-(1-y)\times \log\left( 1-{h_\theta}\left( x \right) \right)</script><p>带入到代价函数，即：</p>
+<script type="math/tex; mode=display">
+J(\theta)=-\frac{1}{m} \sum_{i=1}^{m}\left[y^{(i)} \log \left(h_{\theta}\left(x^{(i)}\right)\right)+\left(1-y^{(i)}\right) \log \left(1-h_{\theta}\left(x^{(i)}\right)\right)\right]</script><p>再结合假设函数，有：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} h_{\theta}\left(x^{(i)}\right) &=y^{(i)} \log \left(h_{\theta}\left(x^{(i)}\right)\right)+\left(1-y^{(i)}\right) \log \left(1-h_{\theta}\left(x^{(i)}\right)\right) \\ &=-y^{(i)} \log \left(1+e^{-\theta^{T} x^{(i)}}\right)-\left(1-y^{(i)}\right) \log \left(1+e^{\theta^{T} x^{(i)}}\right) \end{aligned}</script><p>再看一下求偏导：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \frac{\partial}{\partial \theta_{j}} J(\theta) &=\frac{\partial}{\partial \theta_{j}}\left[-\frac{1}{m} \sum_{i=1}^{m}\left[-y^{(i)} \log \left(1+e^{-\theta^{T} x^{(i)}}\right)-\left(1-y^{(i)}\right) \log \left(1+e^{\theta^{T} x^{(i)}}\right)\right]\right] \\ &=-\frac{1}{m} \sum_{i=1}^{m}\left[-y^{(i)} \frac{-x_{j}^{(i)} e^{-\theta^{T} x^{(i)}}}{1+e^{-\theta^{T} x^{(i)}}}-\left(1-y^{(i)}\right) \frac{x_{j}^{(i)} e^{\theta^{T} x^{(i)}}}{1+e^{\theta^{T} x^{(i)}}}\right] \\ &=-\frac{1}{m} \sum_{i=1}^{m} y^{(i)} \frac{x_{j}^{(i)}}{1+e^{\theta^{T} x^{(i)}}}-\left(1-y^{(i)}\right) \frac{x_{j}^{(i)} e^{\theta^{T} x^{(i)}}}{1+e^{\theta^{T} x^{(i)}}} \\ &=-\frac{1}{m} \sum_{i=1}^{m}\left(y^{(i)}-\frac{e^{\theta^{T} x^{(i)}}}{1+e^{\theta^{T} x^{(i)}}}\right) x_{j}^{(i)} \\ &=\frac{1}{m} \sum_{i=1}^{m}\left[h_{\theta}\left(x^{(i)}\right)-y^{(i)}\right] x_{j}^{(i)} \end{aligned}</script><p>虽然这个梯度下降推导的结果和线性回归看上去一样的，但是实际上是差别很大的。另外，这里也需要进行特征缩放。有了这个梯度的表达式，就可以很容易地去学习了。</p>
+<h1 id="6-6-Advanced-Optimization"><a href="#6-6-Advanced-Optimization" class="headerlink" title="6.6 Advanced Optimization"></a>6.6 Advanced Optimization</h1><p>对于一个优化算法， 我们的目标是计算 Cost 的全局最优点。之前都是用的梯度下降法去寻找这个最优点，在数学上还有很多其他的方法：</p>
+<ul>
+<li>共轭梯度法</li>
+<li>BFGS（变尺度法）</li>
+<li>L-BFGS（限制变尺度法）</li>
+</ul>
+<p>如果以后接触，在考虑详细学习。</p>
+<h1 id="6-7-Multiclass-Classification-One-vs-all"><a href="#6-7-Multiclass-Classification-One-vs-all" class="headerlink" title="6.7 Multiclass Classification: One-vs-all"></a>6.7 Multiclass Classification: One-vs-all</h1><p>之前讨论的是用逻辑回归解决二分类问题，这里将多分类问题。这个问题在现实中是普遍存在的，比如天气预报，我们可以基本地分为晴天，阴天，雨天。这就是一个四分类问题了。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200228103713.png" style="zoom:25%;"></p>
+<p>上图展示了一个二元分类和三元分类的例子。那么我们如何解决多元分类问题呢？我们把这个方法叫做 One-vs-all 方法。</p>
+<p>我们可以将一个 $n$元分类问题转换为 $n$个二元分类问题，以晴天，阴天，雨天的天气分类来看，我们分为三个二元分类问题：</p>
+<ul>
+<li>是不是晴天：将晴天对应的 $y$ 设为1，其他的天气设为0。</li>
+<li>是不是阴天：…</li>
+<li>是不是雨天：…</li>
+</ul>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200228104323.png" style="zoom:25%;"></p>
+<p>然后我们可以用逻辑回归得到是晴天的概率，是阴天的概率，是雨天的概率（不过这个概率和是不为1的）。然后我们选择概率最大的作为输出结果即可。这样我们就用逻辑回归完成了多元分类问题了。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Machine-Learning/" rel="tag"><i class="fa fa-tag"></i> Machine Learning</a>
+          
+            <a href="/tags/Classification/" rel="tag"><i class="fa fa-tag"></i> Classification</a>
+          
+            <a href="/tags/Logistic-Regression/" rel="tag"><i class="fa fa-tag"></i> Logistic Regression</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/26/ML-吴恩达机器学习课程-04-Linear Regression with Multiple Variables/" rel="next" title="吴恩达机器学习课程(4)-Linear Regression with Multiple Variables">
+                <i class="fa fa-chevron-left"></i> 吴恩达机器学习课程(4)-Linear Regression with Multiple Variables
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/27/ML-吴恩达机器学习课程-07-Regularization/" rel="prev" title="吴恩达机器学习课程(7)-Regularization">
+                吴恩达机器学习课程(7)-Regularization <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">73</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">51</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#6-1-Classification"><span class="nav-number">1.</span> <span class="nav-text">6.1 Classification</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-2-Hypothesis-Representation"><span class="nav-number">2.</span> <span class="nav-text">6.2 Hypothesis Representation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-3-Decision-Boundary"><span class="nav-number">3.</span> <span class="nav-text">6.3 Decision Boundary</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-4-Cost-Function"><span class="nav-number">4.</span> <span class="nav-text">6.4 Cost Function</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-5-Simplified-Cost-Function-and-Gradient-Descent"><span class="nav-number">5.</span> <span class="nav-text">6.5 Simplified Cost Function and Gradient Descent</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-6-Advanced-Optimization"><span class="nav-number">6.</span> <span class="nav-text">6.6 Advanced Optimization</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-7-Multiclass-Classification-One-vs-all"><span class="nav-number">7.</span> <span class="nav-text">6.7 Multiclass Classification: One-vs-all</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
