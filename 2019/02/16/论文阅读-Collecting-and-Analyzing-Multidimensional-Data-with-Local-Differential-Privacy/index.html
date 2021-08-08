@@ -104,16 +104,16 @@
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
 <meta property="og:description" content="标题：Collecting and Analyzing Multidimensional Data with Local Differential Privacy作者：Ning Wang, Xiaokui Xiao, Yin Yang, Jun Zhao, Siu Cheung Hui, Hyejin Shin, Junbum Shin, Ge Ye发表会议：ICDE 2019   1 Intro">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://forestneo.com/2019/02/16/论文阅读-Collecting-and-Analyzing-Multidimensional-Data-with-Local-Differential-Privacy/fig-alg01.png">
-<meta property="og:image" content="http://forestneo.com/2019/02/16/论文阅读-Collecting-and-Analyzing-Multidimensional-Data-with-Local-Differential-Privacy/fig-01.png">
-<meta property="og:image" content="http://forestneo.com/2019/02/16/论文阅读-Collecting-and-Analyzing-Multidimensional-Data-with-Local-Differential-Privacy/fig-02.png">
-<meta property="og:image" content="http://forestneo.com/2019/02/16/论文阅读-Collecting-and-Analyzing-Multidimensional-Data-with-Local-Differential-Privacy/fig-03.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-alg01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-02.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-03.png">
 <meta property="og:image" content="http://forestneo.com/images/QRcode.png">
-<meta property="og:updated_time" content="2019-07-29T08:52:25.000Z">
+<meta property="og:updated_time" content="2021-08-08T11:58:09.577Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Collecting and Analyzing Multidimensional Data with Local Differential Privacy">
 <meta name="twitter:description" content="标题：Collecting and Analyzing Multidimensional Data with Local Differential Privacy作者：Ning Wang, Xiaokui Xiao, Yin Yang, Jun Zhao, Siu Cheung Hui, Hyejin Shin, Junbum Shin, Ge Ye发表会议：ICDE 2019   1 Intro">
-<meta name="twitter:image" content="http://forestneo.com/2019/02/16/论文阅读-Collecting-and-Analyzing-Multidimensional-Data-with-Local-Differential-Privacy/fig-alg01.png">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-alg01.png">
 
 
 
@@ -428,7 +428,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-07-29 16:52:25" itemprop="dateModified" datetime="2019-07-29T16:52:25+08:00">2019-07-29</time>
+                <time title="修改时间：2021-08-08 19:58:09" itemprop="dateModified" datetime="2021-08-08T19:58:09+08:00">2021-08-08</time>
               
             
           </span>
@@ -514,8 +514,8 @@ b_i(t) = \begin{cases}
 0 & \text{otherwise} \\
 \end{cases}</script></blockquote>
 <p>在分析的时候，之前也说过这个公式的本质实际上就是一个映射机制，将 $[0,m]$ 的数据映射到概率空间 $[\frac{1}{e^\epsilon+1}, \frac{e^\epsilon}{e^\epsilon+1}]$ 中，再以这个概率决定反馈的数据是0还是1。有了这个了解，我们来看一下论文中提到的 Duchi’s Solution for One-Dimensional Numeric Data，其算法如下所示：</p>
-<p><img src="fig-alg01.png" width="500"></p>
-<p>这个算法中，输入的原始数据范围是 $[-1, 1]​$，映射方程的设计过程如下，假如 $y = k \cdot t_i+b​$，将$(-1, \frac{1}{e^\epsilon+1}),(1, \frac{e^\epsilon}{e^\epsilon+1})​$，两点带入，可得：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-alg01.png" alt="fig-alg01"></p>
+<p>这个算法中，输入的原始数据范围是 $[-1, 1]$，映射方程的设计过程如下，假如 $y = k \cdot t_i+b$，将$(-1, \frac{1}{e^\epsilon+1}),(1, \frac{e^\epsilon}{e^\epsilon+1})$，两点带入，可得：</p>
 <script type="math/tex; mode=display">
 \begin{cases}
 \frac{1}{e^\epsilon+1} = -k + b \nonumber \\
@@ -538,32 +538,32 @@ E[u] &= 0 \times \Pr[u=0] + 1\times \Pr[u=1] \nonumber\\
 E &= -A \times \Pr[u=0] + A \times \Pr[u=1] \nonumber\\
 &= A \cdot (2\Pr[u=1]-1) \nonumber\\
 &= A \cdot \frac{e^\epsilon-1}{e^\epsilon+1}\cdot E[t] \nonumber
-\end{align}</script><p>因此，如果令$A=\frac{e^\epsilon+1}{e^\epsilon-1}​$，即可满足$E=E[t]​$，这样子也就不需要估计了均值之后再进行一步映射了。</p>
+\end{align}</script><p>因此，如果令$A=\frac{e^\epsilon+1}{e^\epsilon-1}$，即可满足$E=E[t]$，这样子也就不需要估计了均值之后再进行一步映射了。</p>
 <p>接下来我们以另一种角度理解一下为什么这样的算法（实际上是这一类算法）可以满足DP呢？下图中的$-1$和$1$代表$y=-1$和$y=1$。</p>
-<p><img src="fig-01.png" width="500"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-01.png" alt="fig-01"></p>
 <p>如果既想满足DP又想做均值估计，那么以下两点必须要达到（这是我总结的，欢迎来反驳）：</p>
 <ul>
 <li><strong>概率要求</strong>：$p_1(x)+p_2(x) = 1$</li>
-<li><strong>DP要求</strong>：$p_2(x) / p_1(x) \le e^\epsilon​$</li>
-<li><strong>均值估计要求</strong>：$\mathbb{E}[p_1(x)]$必须与$x​$是线性的</li>
+<li><strong>DP要求</strong>：$p_2(x) / p_1(x) \le e^\epsilon$</li>
+<li><strong>均值估计要求</strong>：$\mathbb{E}[p_1(x)]$必须与$x$是线性的</li>
 </ul>
-<p>在第三点均值估计的要求中，为了在匿名数据中直接得到原始数据的均值，也可以理解为$\mathbb{E}[p(x)] = x$，为了做到这点我们可以将数据范围进行放缩，比如Duchi’s Solution中，原始数据范围是$[-1, 1]$，匿名数据范围却是$\{\frac{e^\epsilon+1}{e^\epsilon-1},-\frac{e^\epsilon+1}{e^\epsilon-1}\}​$，这个是很好做的，仅仅把数据进行一个放缩就好了，因为映射关系是线性的。</p>
+<p>在第三点均值估计的要求中，为了在匿名数据中直接得到原始数据的均值，也可以理解为$\mathbb{E}[p(x)] = x$，为了做到这点我们可以将数据范围进行放缩，比如Duchi’s Solution中，原始数据范围是$[-1, 1]$，匿名数据范围却是$\{\frac{e^\epsilon+1}{e^\epsilon-1},-\frac{e^\epsilon+1}{e^\epsilon-1}\}$，这个是很好做的，仅仅把数据进行一个放缩就好了，因为映射关系是线性的。</p>
 <p>在我们以前的案例中，所接触到的映射的结果都是离散的，比如Duchi’s Solution中结果只有-1和1两种情况。所以我们就会想，能否对于一个$x$，我们映射到一个分布呢，即：这里的$p(x)$是一个分布，而不是一个离散的值。</p>
 <p>即，假设我们要把$[-1, 1]$的数据映射到范围$[-C, C]$的话，大概是这样，如下图所示（在图上标注不方便，我下文中用高的和矮的表示概率密度函数中高的部分和矮的部分）：</p>
-<p><img src="fig-02.png" width="300"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-02.png" alt="fig-02"></p>
 <p>那么现在问题又来了，我们重新看一下上面提到的三个要求：</p>
 <ul>
 <li><strong>概率要求</strong>：概率和需要为1，即在概率密度函数中，面积要为1。</li>
 <li><strong>DP要求</strong>：即高的对应的面积比低的对应的面积上界是$e^\epsilon$</li>
 <li><strong>均值估计要求</strong>：这个要求好像现在好像比较难处理</li>
 </ul>
-<p>所以，这个高的部分的中心并不是当前的值$x​$，比如当$x=1​$的时候为了使得发布数据的期望为$x​$，应该是这样的：</p>
-<p><img src="fig-03.png" width="300"></p>
+<p>所以，这个高的部分的中心并不是当前的值$x$，比如当$x=1$的时候为了使得发布数据的期望为$x$，应该是这样的：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-03.png" alt="fig-03"></p>
 <p>我们先来看概率要求，假设高的概率值为$p$（并不是说高的概率，因为概率是面积），那么矮的值就是$p / e^\epsilon$，所以概率要求在这里就是：</p>
 <script type="math/tex; mode=display">
 p \cdot (C-1) + p/e^\epsilon \cdot (C+1)= 1</script><p>接下来我们再看均值估计的要求，我们注意到，当$x=0$的时候，高的部分的中点其实就是0，当$x=1$的时候，我们来看看怎么计算均值：</p>
 <script type="math/tex; mode=display">
-E = p \cdot (C-1) \cdot \frac{1+C}{2} + \frac{p}{e^\epsilon}\cdot(C+1) \cdot \frac{1-C}{2}=1</script><p>作者给出了以下的解（根据我的过程我这两个方程我没有解出来$C$和$p$，所以我目前也不知道作者是怎么给出这个解的，以后若是解出来了，继续更新）</p>
+E = p \cdot (C-1) \cdot \frac{1+C}{2} + \frac{p}{e^\epsilon}\cdot(C+1) \cdot \frac{1-C}{2}=1</script><p>根据以上过程可以求得 $C$ 和 $p$ 的值：</p>
 <script type="math/tex; mode=display">
 \begin{align}
 &C = \frac{\exp(\epsilon/2)+1}{\exp(\epsilon/2)-1} \\

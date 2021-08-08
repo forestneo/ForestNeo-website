@@ -104,19 +104,19 @@
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
 <meta property="og:description" content="文章地址：https://dl.acm.org/citation.cfm?id=2660348作者：Úlfar Erlingsson; Vasyl Pihur; Aleksandra Korolova发表会议：Proceedings of the 2014 ACM SIGSAC conference on computer and communications security目前被引用次数：35">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://forestneo.com/2019/01/02/论文阅读-RAPPOR/fig01-example.png">
-<meta property="og:image" content="http://forestneo.com/2019/01/02/论文阅读-RAPPOR/fig02.png">
-<meta property="og:image" content="http://forestneo.com/2019/01/02/论文阅读-RAPPOR/fig03.png">
-<meta property="og:image" content="http://forestneo.com/2019/01/02/论文阅读-RAPPOR/fig04.png">
-<meta property="og:image" content="http://forestneo.com/2019/01/02/论文阅读-RAPPOR/fig05.png">
-<meta property="og:image" content="http://forestneo.com/2019/01/02/论文阅读-RAPPOR/fig06.png">
-<meta property="og:image" content="http://forestneo.com/2019/01/02/论文阅读-RAPPOR/fig07.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01-example.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig02.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig03.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig04.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig05.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig05.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig07.png">
 <meta property="og:image" content="http://forestneo.com/images/QRcode.png">
-<meta property="og:updated_time" content="2019-04-29T12:51:03.000Z">
+<meta property="og:updated_time" content="2021-08-08T10:35:30.293Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-RAPPOR：Randomized Aggregatable Privacy-Preserving Ordinal Response">
 <meta name="twitter:description" content="文章地址：https://dl.acm.org/citation.cfm?id=2660348作者：Úlfar Erlingsson; Vasyl Pihur; Aleksandra Korolova发表会议：Proceedings of the 2014 ACM SIGSAC conference on computer and communications security目前被引用次数：35">
-<meta name="twitter:image" content="http://forestneo.com/2019/01/02/论文阅读-RAPPOR/fig01-example.png">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01-example.png">
 
 
 
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-04-29 20:51:03" itemprop="dateModified" datetime="2019-04-29T20:51:03+08:00">2019-04-29</time>
+                <time title="修改时间：2021-08-08 18:35:30" itemprop="dateModified" datetime="2021-08-08T18:35:30+08:00">2021-08-08</time>
               
             
           </span>
@@ -579,7 +579,7 @@ p & \text{if } B_i'=0
 <li><strong>Report:</strong> 发送产生的结果 $S$。</li>
 </ul>
 <p>接下来我们看一个这个的应用案例，假如我们映射的比特串长度是256 ($k=256$)，然后采用了四个哈希函数($h=4$)，控制概率的参数为 $p=0.5, q=0.75, f=0.5$。那么我们看一下这个例子。</p>
-<p><img src="fig01-example.png" width="800"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01-example.png" alt="fig01-example"></p>
 <ul>
 <li>Step.1 数字 68 经过 bloom filter之后，有4位置1。即图1中的$B$</li>
 <li>Step.2 对$B$中的每一位以 $1-f=0.5$ 的概率真实回答，以 $0.5$ 的概率随机回答。相当于以$(1+0.5)/2=0.75$的概率保留原有结果，以$0.25$概率取反。</li>
@@ -675,7 +675,7 @@ y = \frac{y-N\cdot q^{*}}{q^{*}-p^{*}}=\frac{y-(p+\frac{1}{2}fq-\frac{1}{2}fp)\c
 \end{align}</script><p>所以肯定知道有2个 A，一个 B 和一个 C 啊。不过注意，这里的 T 我们只能大致估计，不一定完全准确，所以我们需要用机器学习的方法拟合出到底每个单词有多少个是最恰当的。这也就是第二步第三步做的事情了。第四步中的p值是统计中的概念了，可以自行查阅一下。</p>
 <h2 id="4-1-Parameter-Selection"><a href="#4-1-Parameter-Selection" class="headerlink" title="4.1 Parameter Selection"></a>4.1 Parameter Selection</h2><p>RAPPOR在现实场景中运用的时候需要用到很多参数，比如概率 $p, q, f$ 以及 $h$ 都和 privacy 相关（个人觉得 $h$ 和 privacy 不是太大关系，至少没有理论上的联系）。如果没有长期数据收集的话，只需要用One-time RAPPOR就可以了。$p, q, f$ 都和DP的 $\epsilon$ 相关，$\epsilon$ 的选取可以根据数据收集的具体情况看。$k, m, h$ 的选取就需要一定的先验知识了。</p>
 <p>设定 $\epsilon=\ln 3$，作者运行了一部分实验。实验中每个用户只传输一次值，所以作者使用 One-time RAPPOR。作者用了100个出现概率的字符串和100个不出现的字符串来模拟，出现了的字符串概率分布是服从指数分布的，就是下面四个图中的第一个图所示。其他图中展示了 recall 和 precision 的关系。作者做完实验后说，参数的选取很困难。对于参数选取，作者也给不了什么意见~。</p>
-<p><img src="fig02.png" width="800"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig02.png" alt="fig02"></p>
 <p>PS：这里的 recall 和 precision 文中没有完全说清楚如何计算，我猜测是只是看有没有找出来这个串存在不存在，而不是看估计的串的个数和实际串的个数是否一样。</p>
 <h2 id="4-2-What-Can-We-Learn"><a href="#4-2-What-Can-We-Learn" class="headerlink" title="4.2 What Can We Learn"></a>4.2 What Can We Learn</h2><p>上图中横坐标表示样本大小，纵坐标表示在该样本数量上可以检测到的字符串个数的理论上界，参数设置为 $p=0.5, q=0.75, f=0$，置信度 $\alpha=0.05$。而且结果发现随着数据量的增大，对于频率比较低的字符串就会难以检测到。</p>
 <p>同时作者还给出在样本量为N的情况下，可以检测到的大致为 $\sqrt{N}/10$ 个串。这个结果是基于Basic One-time RAPPOR计算出来的。理论的计算作者放在了附录，感兴趣的可以参考原文。</p>
@@ -683,15 +683,15 @@ y = \frac{y-N\cdot q^{*}}{q^{*}-p^{*}}=\frac{y-(p+\frac{1}{2}fq-\frac{1}{2}fp)\c
 <p>作者还发现与Basic One-time RAPPOR相比较，RAPPOR效果要下降的更多，毕竟RAPPOR提供了更高的隐私保护成都。当然，如果假定数据分布均匀的话，即使是RAPPOR，上面的结论也可以计算出来。</p>
 <p>总的来说就是频率低的串不太容易被检测出来。</p>
 <h1 id="5-Experiments-and-Evaluation"><a href="#5-Experiments-and-Evaluation" class="headerlink" title="5  Experiments and Evaluation"></a>5  Experiments and Evaluation</h1><h2 id="5-1-Reporting-on-the-Normal-Distribution"><a href="#5-1-Reporting-on-the-Normal-Distribution" class="headerlink" title="5.1 Reporting on the Normal Distribution"></a>5.1 Reporting on the Normal Distribution</h2><p>有了上面的分析之后这个实验就很显然了，作者学习了正态分布，使用的是Basic One-time RAPPOR，这里从论文中我也依然没懂数据是如何表示的，因为Basic One-time RAPPOR是没有bloom filter的，理论上我感觉效果会比有bloomfilter的好。是二进制表示数据吗？还是更暴力的方法，比如1就表示为0100000…，2表示为0010000…，每一位表示一个数据的话我感觉准确率会更高。</p>
-<p><img src="fig03.png" width="800"></p>
-<h2 id="5-2-Reporting-on-an-Exponentially-distributed-Set-of-Strings"><a href="#5-2-Reporting-on-an-Exponentially-distributed-Set-of-Strings" class="headerlink" title="5.2 Reporting on an Exponentially-distributed Set of Strings"></a>5.2 Reporting on an Exponentially-distributed Set of Strings</h2><p><img src="fig04.png" width="400"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig03.png" alt="fig03"></p>
+<h2 id="5-2-Reporting-on-an-Exponentially-distributed-Set-of-Strings"><a href="#5-2-Reporting-on-an-Exponentially-distributed-Set-of-Strings" class="headerlink" title="5.2 Reporting on an Exponentially-distributed Set of Strings"></a>5.2 Reporting on an Exponentially-distributed Set of Strings</h2><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig04.png" alt="fig04"></p>
 <p>作者还做了指数分布的实验，至于为什么有正态分布还继续做指数分布我猜测可能是指数有个长尾效应，做这个实验更加说明检测不到频率低的。图5红色的说明检测到了，白色的说明没有检测到，这个实验更加说明了频率低的难以检测。当然检测到了并不能说检测的就对，还要看检测的个数准不准。</p>
 <p>所以作者又把TOP-20的计算结果和真是结果来对比，下表给出了估计的个数，和实际的差，p值和z-scores(SNR)值等。</p>
 <p>看上去感觉挺准的，不过我们也知道这个方法的最主要问题在于低频串的识别，找TOP-20自然是比较准的。</p>
-<p><img src="fig05.png" width="400"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig05.png" alt="fig05"></p>
 <h2 id="5-3-Reporting-on-Windows-Process-Names"><a href="#5-3-Reporting-on-Windows-Process-Names" class="headerlink" title="5.3 Reporting on Windows Process Names"></a>5.3 Reporting on Windows Process Names</h2><p>作者还监控了Windows进程调用的实验，看哪些进程被调用，作者从10138个不同的计算中收集了186792此进程调用反馈，然后来找一个叫 “BADAPPLE.COM” 的恶意库（这一看就是在黑苹果啊，我还特意回头看了一下，作者是谷歌的，难道因为苹果说在iOS里面用了DP？）然后也列了前几个找到的结果：</p>
-<p><img src="fig06.png" width="400"></p>
-<h2 id="5-4-Reporting-on-Chrome-Homepages"><a href="#5-4-Reporting-on-Chrome-Homepages" class="headerlink" title="5.4 Reporting on Chrome Homepages"></a>5.4 Reporting on Chrome Homepages</h2><p><img src="fig07.png" width="400"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig05.png" alt=""></p>
+<h2 id="5-4-Reporting-on-Chrome-Homepages"><a href="#5-4-Reporting-on-Chrome-Homepages" class="headerlink" title="5.4 Reporting on Chrome Homepages"></a>5.4 Reporting on Chrome Homepages</h2><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig07.png" alt="fig07"></p>
 <p>当然，在黑了一下苹果之后，谷歌的东西自然要落地到谷歌的产品中。为了表示一下谷歌是多么为用户考虑，文中特别强调了作者收集的数据都是用户在使用谷歌浏览器的时候同意了向谷歌发送数据的。</p>
 <p>住居的手机过程使用128位的bloom filter, 然后概率参数设定为 q=0.75, p=0.5, f=0.75，这就意味着 ε=0.5354。实验之后，作者发现他们找到了31个意料unexpected 的主页，这个unexpected我也不知道怎么理解了。着31个中不是所有的都是恶意的。这个实验的细节还是参考一下原文吧。</p>
 <h1 id="6-Summary"><a href="#6-Summary" class="headerlink" title="6 Summary"></a>6 Summary</h1><p>RAPPOR是一个灵活、数学严谨、实用的匿名数据收集框架，用于保护客户端数据上的人口统计信息的隐私。RAPPOR通过提供差分隐私保证处理来自同一客户端的多个数据收集。高度可调的参数允许根据个人需求很好地平衡privacy和utility。RAPPOR是基于客户端的隐私解决方案。它消除了对可信第三方服务器的需求，并将客户数据的控制权交还给了自己的手中。</p>

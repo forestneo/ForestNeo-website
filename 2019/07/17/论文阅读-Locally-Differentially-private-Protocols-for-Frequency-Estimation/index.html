@@ -104,22 +104,22 @@
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
 <meta property="og:description" content="文章地址：https://www.usenix.org/system/files/conference/usenixsecurity17/sec17-wang-tianhao.pdf标题：Locally Differentially private Protocols for Frequency Estimation作者：Tianhao Wang, Jeremiah Blocki, and Nin">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://forestneo.com/2019/07/17/论文阅读-Locally-Differentially-private-Protocols-for-Frequency-Estimation/table_01.png">
-<meta property="og:image" content="http://forestneo.com/2019/07/17/论文阅读-Locally-Differentially-private-Protocols-for-Frequency-Estimation/table_02.png">
-<meta property="og:image" content="http://forestneo.com/2019/07/17/论文阅读-Locally-Differentially-private-Protocols-for-Frequency-Estimation/fig_01.png">
-<meta property="og:image" content="http://forestneo.com/2019/07/17/论文阅读-Locally-Differentially-private-Protocols-for-Frequency-Estimation/fig_02.png">
-<meta property="og:image" content="http://forestneo.com/2019/07/17/论文阅读-Locally-Differentially-private-Protocols-for-Frequency-Estimation/fig_03.png">
-<meta property="og:image" content="http://forestneo.com/2019/07/17/论文阅读-Locally-Differentially-private-Protocols-for-Frequency-Estimation/fig_04.png">
-<meta property="og:image" content="http://forestneo.com/2019/07/17/论文阅读-Locally-Differentially-private-Protocols-for-Frequency-Estimation/fig_05.png">
-<meta property="og:image" content="http://forestneo.com/2019/07/17/论文阅读-Locally-Differentially-private-Protocols-for-Frequency-Estimation/fig_07.png">
-<meta property="og:image" content="http://forestneo.com/2019/07/17/论文阅读-Locally-Differentially-private-Protocols-for-Frequency-Estimation/fig_06.png">
-<meta property="og:image" content="http://forestneo.com/2019/07/17/论文阅读-Locally-Differentially-private-Protocols-for-Frequency-Estimation/fig_08.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/table_01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/table_01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_03.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_04.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_05.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_07.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_06.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_08.png">
 <meta property="og:image" content="http://forestneo.com/images/QRcode.png">
-<meta property="og:updated_time" content="2019-07-28T02:57:33.000Z">
+<meta property="og:updated_time" content="2021-08-08T11:53:16.055Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Locally Differentially private Protocols for Frequency Estimation">
 <meta name="twitter:description" content="文章地址：https://www.usenix.org/system/files/conference/usenixsecurity17/sec17-wang-tianhao.pdf标题：Locally Differentially private Protocols for Frequency Estimation作者：Tianhao Wang, Jeremiah Blocki, and Nin">
-<meta name="twitter:image" content="http://forestneo.com/2019/07/17/论文阅读-Locally-Differentially-private-Protocols-for-Frequency-Estimation/table_01.png">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/table_01.png">
 
 
 
@@ -434,7 +434,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-07-28 10:57:33" itemprop="dateModified" datetime="2019-07-28T10:57:33+08:00">2019-07-28</time>
+                <time title="修改时间：2021-08-08 19:53:16" itemprop="dateModified" datetime="2021-08-08T19:53:16+08:00">2021-08-08</time>
               
             
           </span>
@@ -540,7 +540,7 @@ B_{0}[i]=\left\{\begin{array}{ll}{1,} & {\exists H \in \mathbb{H}, s . t . H(v)=
 <h2 id="Random-Matrix-Projection"><a href="#Random-Matrix-Projection" class="headerlink" title="Random Matrix Projection"></a>Random Matrix Projection</h2><p>这个方法目前还未接触，本文也未进行分析对比，就先不进行介绍了。</p>
 <h1 id="A-Framework-for-LDP-Protocols"><a href="#A-Framework-for-LDP-Protocols" class="headerlink" title="A Framework for LDP Protocols"></a>A Framework for LDP Protocols</h1><p>首先，现在那么多的LDP方案，有没有一个统一的框架来去描述不同的方法呢？为了统一不同的方案，作者提出了 pure LDP 的概念。在介绍什么事 pure LDP 之前，我们现需要了解 $Support$ 的概念。作者是这么描述 $Support$ 的：</p>
 <blockquote>
-<p>The function $Support$ maps each possible output $y$ to a set of input values that $y​$ supports.</p>
+<p>The function $Support$ maps each possible output $y$ to a set of input values that $y$ supports.</p>
 </blockquote>
 <p>举个例子，在 basic RAPPOR 中，一个向量 $B$ 对应的是其第 $i$ 位为1的值，比如[0,0,1,0,0,0]对应的是2。即 $Support(y)=x$ 表示的是哪些x经过编码之后变成 $y$。定义了 $Support$ 概念之后，我们就可以介绍什么是 pure LDP了。</p>
 <blockquote>
@@ -645,7 +645,7 @@ B_{0}[i]=\left\{\begin{array}{ll}{1,} & {\exists H \in \mathbb{H}, s . t . H(v)=
 </ul>
 <script type="math/tex; mode=display">
 \operatorname{Pr}\left[b^{\prime}=1\right]=\left\{\begin{array}{ll}{p=\frac{e^{\varepsilon}}{e^{\varepsilon}+1},} & {\text { if } b=1} \\ {q=\frac{1}{e^{\varepsilon}+1},} & {\text { if } b=0}\end{array}\right.</script><ul>
-<li><strong>Aggregation</strong>. 这里其实没有分析Aggregation的过程，不过我们可以分析一下support函数，为：$\text { Support }_{\mathrm{BLH}}(\langle H, b\rangle)=\{v | H(v)=b\}​$，对应的参数为 $p^*=p, q^*=\frac{1}{2}p+\frac{1}{2}q=1​$，所以方差为：<script type="math/tex; mode=display">
+<li><strong>Aggregation</strong>. 这里其实没有分析Aggregation的过程，不过我们可以分析一下support函数，为：$\text { Support }_{\mathrm{BLH}}(\langle H, b\rangle)=\{v | H(v)=b\}$，对应的参数为 $p^*=p, q^*=\frac{1}{2}p+\frac{1}{2}q=1$，所以方差为：<script type="math/tex; mode=display">
 \operatorname{Var}^{*}\left[\tilde{c}_{\mathrm{BLH}}(i)\right]=n \cdot \frac{\left(e^{\varepsilon}+1\right)^{2}}{\left(e^{\varepsilon}-1\right)^{2}}</script></li>
 </ul>
 <p>目前这里是怎么个 Aggregation ，我还没完全搞明白。</p>
@@ -670,10 +670,10 @@ p^*=p \text { and } q^*=\frac{1}{g} p+\frac{g-1}{g} q=\frac{1}{g}</script><p>对
 \operatorname{Var}^{*}\left[\tilde{c}_{\text{OLH}}(i)\right]=n \cdot \frac{4 e^{\varepsilon}}{\left(e^{\varepsilon}-1\right)^{2}}</script><p>不过，这里有问题啊，因为 $g$ 肯定只能取整数的，这个分析并不能给出 $g$ 应该怎么取值，也不能说明 $g$ 取 $e^\epsilon+1$ 取整就是最优的。</p>
 <p>后面又将 OLH 和 OUE 做了一个简短的分析，这个分析结果也体现在后面的 communication cost 中。</p>
 <h1 id="Which-Protocol-to-Use"><a href="#Which-Protocol-to-Use" class="headerlink" title="Which Protocol to Use"></a>Which Protocol to Use</h1><p>那么前面说了那么多种不同的方法，具体到应用中应该如何选择呢？表1列出了不同方法的 cost 和方差</p>
-<p><img src="table_01.png" width="800"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/table_01.png" alt="table_01"></p>
 <p>同时表2和图1给出了不同 $\epsilon$ 下方差的具体数值。</p>
-<p><img src="table_02.png" width="800"></p>
-<p><img src="fig_01.png" width="800"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/table_01.png" alt=""></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_01.png" alt="fig_01"></p>
 <p>因此作者给了这么一些 guidelines：</p>
 <ul>
 <li>当 $d$ 很小的时候，即 $d &lt; 3e^\epsilon+2$ 时，DE是所有方法中最好的方法。</li>
@@ -681,19 +681,19 @@ p^*=p \text { and } q^*=\frac{1}{g} p+\frac{g-1}{g} q=\frac{1}{g}</script><p>对
 <li>当 $d$ 太大导致 $\operatorname{cost}=\Theta(d)$ 不太可以接受的时候，我们应当使用 OLH，因为OLH 和 OUE 提供了一样的方差，并且 cost 为 $O(\log d)$ ，比 OUE 的 $O(d)$ 要小很多。</li>
 </ul>
 <h1 id="Experimental-Evaluation"><a href="#Experimental-Evaluation" class="headerlink" title="Experimental Evaluation"></a>Experimental Evaluation</h1><p>接下来我们看一下不同的方法的实际表现，每个实验结果平均运行了十次。</p>
-<h2 id="Verifying-Correctness-of-Analysis"><a href="#Verifying-Correctness-of-Analysis" class="headerlink" title="Verifying Correctness of Analysis"></a>Verifying Correctness of Analysis</h2><p><img src="fig_02.png" width="800"></p>
+<h2 id="Verifying-Correctness-of-Analysis"><a href="#Verifying-Correctness-of-Analysis" class="headerlink" title="Verifying Correctness of Analysis"></a>Verifying Correctness of Analysis</h2><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_01.png" alt=""></p>
 <p>在图2的数据中，作者首先生成了一个虚拟的数据集，是Zipf分布，限定了10000个用户，同时每个用户的数据范围为 $d$，误差是这么衡量的：$\frac{1}{d} \sum_{i \in[d]}\left[\tilde{c}(i)-n f_{i}\right]^{2}$，也就是用的平均平方误差。图2的结果很明显，就不介绍了（值得注意的是，$g=e^\epsilon+1$，取得最近的整数）。</p>
 <h2 id="Towards-Real-world-Estimation"><a href="#Towards-Real-world-Estimation" class="headerlink" title="Towards Real-world Estimation"></a>Towards Real-world Estimation</h2><p>我们再看一下真实的数据集，就是为了考虑这些方法在真实环境下的表现。其中数据集采用的是 <strong>Kosarak</strong> 数据集，这个数据集含有 80亿条对41270个不同网页的点击。</p>
 <h3 id="Accuracy-on-Frequent-Values"><a href="#Accuracy-on-Frequent-Values" class="headerlink" title="Accuracy on Frequent Values"></a>Accuracy on Frequent Values</h3><p>其实我们之前说过，现在的估计在低频率的数据估计上是恨不准确的。所以这里是先估计，然后对最高频率的30个频率进行误差估计。因为其他的频率都很低，如果统计所有条目的频率的话，可能不太准确。</p>
-<p><img src="fig_03.png" width="400"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_03.png" alt="fig_03"></p>
 <p>实验结论就是当 $\epsilon&gt;1$ 的时候，OLH 优势开始体现出来，同时OLH的方差降低的更快。由于 bloom filter 的使用，当 epsilon 比较大的时候 RAPPOR 表现的并不是很好。</p>
 <h3 id="Distinguish-True-Counts-from-Noise"><a href="#Distinguish-True-Counts-from-Noise" class="headerlink" title="Distinguish True Counts from Noise"></a>Distinguish True Counts from Noise</h3><p>在估计的结果中，对于频率低的数据，估计的结果中我们无法看出来是由于噪声的加入使得估计的频率低还是原来频率低导致频率低，即不好判断噪声对低频数据的影响。</p>
 <p><strong>Significance Threshold</strong>. 在论文13中，作者给出了一个阈值，高于这个阈值的结果被保留，低于这个阈值的认为估计就不可信了，这个阈值为：</p>
 <script type="math/tex; mode=display">
 T_{s}=\Phi^{-1}\left(1-\frac{\alpha}{d}\right) \sqrt{\mathrm{Var}^{*}}</script><p>其中 $d$ 是数据范围，$\Phi^{-1}$ 表示标准正态分布累计密度函数的逆，$\alpha$ 本文选定的是 $\alpha=0.05$。</p>
-<p><img src="fig_04.png" width="400"></p>
-<p><strong>Number of Reliable Estimation</strong>. 图4展示了不同 $T_s$ 下的 True Positive，即你认为频率高于 0.05的数据估计的频率也高于0.05，因为 $\epsilon$ 的变化会影响 $T_s$，所以横坐标直接选定的 $\epsilon​$。结论是对于 RAPPOR 来说， cohort 对 TP 影响不大，BLH 效果也不太好。</p>
-<h3 id="On-Information-Quality-Now"><a href="#On-Information-Quality-Now" class="headerlink" title="On Information Quality Now"></a>On Information Quality Now</h3><p><img src="fig_05.png" width="800"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_04.png" alt="fig_04"></p>
+<p><strong>Number of Reliable Estimation</strong>. 图4展示了不同 $T_s$ 下的 True Positive，即你认为频率高于 0.05的数据估计的频率也高于0.05，因为 $\epsilon$ 的变化会影响 $T_s$，所以横坐标直接选定的 $\epsilon$。结论是对于 RAPPOR 来说， cohort 对 TP 影响不大，BLH 效果也不太好。</p>
+<h3 id="On-Information-Quality-Now"><a href="#On-Information-Quality-Now" class="headerlink" title="On Information Quality Now"></a>On Information Quality Now</h3><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_05.png" alt="fig_05"></p>
 <p>这里又继续看了 $T_s$ 对 TP 和 FP 的影响。总的来说，OLH 还是最好的。不过我没明白为什么这里只比较了 BLH, OLH 和 RAPPOR，而不比较其他的方法。</p>
 <h1 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h1><p>Related Work 介绍了一些当前的方法，其实挺值得一看的。</p>
 <h1 id="Discussion"><a href="#Discussion" class="headerlink" title="Discussion"></a>Discussion</h1><p>这里又提了一下 <strong>answering multiple questions</strong> 的问题，传统来说 $\epsilon$ 被分到了不同的属性上面。这里作者说建议把用户分为许多组，每组用户单独回答一个属性的结果。即假设有 $Q \ge 2$ 个属性，那么相当于收集到的数据只有 $n/Q$ 了。在OLH中，方差是 $\sigma^{2}=\operatorname{Var}^{*}\left[\tilde{c}_{\mathrm{OLH}}(i) / n\right]=\frac{4 e^{\varepsilon}}{\left(e^{\varepsilon}-1\right)^{2} \cdot n}$了。</p>
@@ -708,11 +708,11 @@ T_{s}=\Phi^{-1}\left(1-\frac{\alpha}{d}\right) \sqrt{\mathrm{Var}^{*}}</script><
 <p><strong>Limitations</strong>. 本文是在 pure LDP 的范畴下，那么当一个方法不是pure的时候，就不好用这个框架去分析了。另外，我们的数据假定是有界的，那么对于无界的数据，目前怎么处理还未知。</p>
 <h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>本文研究了LDP下频率估计的问题，首先提出了一个 pure LDP 的框架，并在此框架下分析了多重编码方法及其优化方法。同时给出了应用中的方法选择知道。</p>
 <h1 id="附录-额外的实验"><a href="#附录-额外的实验" class="headerlink" title="附录-额外的实验"></a>附录-额外的实验</h1><p>本节测试了更多的实验。</p>
-<h2 id="Effect-of-Cohort-Size"><a href="#Effect-of-Cohort-Size" class="headerlink" title="Effect of Cohort Size"></a>Effect of Cohort Size</h2><p><img src="fig_07.png" width="400"></p>
+<h2 id="Effect-of-Cohort-Size"><a href="#Effect-of-Cohort-Size" class="headerlink" title="Effect of Cohort Size"></a>Effect of Cohort Size</h2><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_07.png" alt="fig_07"></p>
 <p>首先测试了RAPPOR不同配置的影响，如上图所示。</p>
 <h2 id="Performance-on-Synthetic-Datasets"><a href="#Performance-on-Synthetic-Datasets" class="headerlink" title="Performance on Synthetic Datasets"></a>Performance on Synthetic Datasets</h2><p>接着测试了不同生成数据集下不同试验参数的影响。比较的是BLH, OLH 和 RAPPOR。</p>
-<p><img src="fig_06.png" width="800"></p>
-<h2 id="Performance-on-Rockyou-Dataset"><a href="#Performance-on-Rockyou-Dataset" class="headerlink" title="Performance on Rockyou Dataset"></a>Performance on Rockyou Dataset</h2><p><img src="fig_08.png" width="800"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_06.png" alt="fig_06"></p>
+<h2 id="Performance-on-Rockyou-Dataset"><a href="#Performance-on-Rockyou-Dataset" class="headerlink" title="Performance on Rockyou Dataset"></a>Performance on Rockyou Dataset</h2><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig_08.png" alt="fig_08"></p>
 <p>最后，作者找了一个叫做 Rockyou 的数据集，并在这个数据集上运行了不同的方法进行对比。实验结果大同小异。</p>
 <hr>
 <p>本篇内容到这里就结束了，若想知道更多和信息安全有关的技术可在公众号留言。识别以下二维码可以成文本公众号的小粉丝，关注更多前沿技术。</p>
@@ -794,8 +794,8 @@ T_{s}=\Phi^{-1}\left(1-\frac{\alpha}{d}\right) \sqrt{\mathrm{Var}^{*}}</script><
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/08/19/总结-SCI论文英文写作模板/" rel="prev" title="总结-SCI论文英文写作模板">
-                总结-SCI论文英文写作模板 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/08/19/总结-SCI写作常用句式总结（一）/" rel="prev" title="总结-SCI写作常用句式总结（一）">
+                总结-SCI写作常用句式总结（一） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
