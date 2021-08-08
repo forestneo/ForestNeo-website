@@ -2,9 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://forestneo.com/2021/08/08/NEW-TEST/</loc>
+    <loc>http://forestneo.com/2019/01/05/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE-Hexo-Next%E4%B8%BB%E9%A2%98%E5%8A%A0%E5%85%A5%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F/</loc>
     
-    <lastmod>2021-08-08T08:14:48.008Z</lastmod>
+    <lastmod>2021-08-08T10:31:38.583Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://forestneo.com/2019/01/04/%E8%BD%AF%E4%BB%B6%E6%8E%A8%E8%8D%90-cdto/</loc>
+    
+    <lastmod>2021-08-08T10:31:10.637Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://forestneo.com/2017/10/05/%E9%9A%8F%E7%AC%94-%E5%86%99%E5%9C%A8%E5%8D%8E%E7%A7%91%E9%87%8C/</loc>
+    
+    <lastmod>2021-08-08T10:29:17.045Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://forestneo.com/2019/03/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-PrivKV/</loc>
+    
+    <lastmod>2021-08-08T08:41:31.214Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://forestneo.com/2021/07/22/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE-Typora+PicGo%E9%85%8D%E7%BD%AE%E5%9B%BE%E5%BA%8A/</loc>
+    
+    <lastmod>2021-08-08T08:17:47.454Z</lastmod>
     
   </url>
   
@@ -12,13 +40,6 @@
     <loc>http://forestneo.com/2020/07/04/%E8%B6%A3%E5%91%B3%E9%A2%98%E7%9B%AE-%E9%85%92%E5%BA%97%E9%82%BB%E5%B1%85%E9%97%AE%E9%A2%98/</loc>
     
     <lastmod>2021-08-08T07:25:01.112Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://forestneo.com/2018/07/22/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE-Typora+PicGo%E9%85%8D%E7%BD%AE%E5%9B%BE%E5%BA%8A/</loc>
-    
-    <lastmod>2021-08-08T07:22:06.570Z</lastmod>
     
   </url>
   
@@ -324,13 +345,6 @@
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/03/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-PrivKV/</loc>
-    
-    <lastmod>2020-01-31T10:44:12.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://forestneo.com/2019/12/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Resolving-Conflicts-in-Heterogeneous-Data-by-Truth-Discovery-and-Source-Reliability-Estimation/</loc>
     
     <lastmod>2020-01-03T09:35:42.000Z</lastmod>
@@ -457,13 +471,6 @@
   </url>
   
   <url>
-    <loc>http://forestneo.com/2017/10/05/%E9%9A%8F%E7%AC%94-%E5%86%99%E5%9C%A8%E5%8D%8E%E7%A7%91%E9%87%8C/</loc>
-    
-    <lastmod>2019-07-03T02:34:33.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://forestneo.com/2018/09/19/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Secure-Two-Party-Differentially-Private-Data-Release-for-Vertically-Partitioned-Data/</loc>
     
     <lastmod>2019-06-18T02:57:30.000Z</lastmod>
@@ -530,20 +537,6 @@
     <loc>http://forestneo.com/2018/12/01/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE-Hexo-NexT%E4%B8%BB%E9%A2%98%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB%E7%88%B1%E5%BF%83%E7%89%B9%E6%95%88/</loc>
     
     <lastmod>2019-04-02T02:03:45.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://forestneo.com/2019/01/05/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE-Hexo-Next%E4%B8%BB%E9%A2%98%E5%8A%A0%E5%85%A5%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F/</loc>
-    
-    <lastmod>2019-04-02T02:03:26.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://forestneo.com/2019/01/04/%E8%BD%AF%E4%BB%B6%E6%8E%A8%E8%8D%90-cdto/</loc>
-    
-    <lastmod>2019-04-02T02:03:07.000Z</lastmod>
     
   </url>
   
