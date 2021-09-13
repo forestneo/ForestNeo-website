@@ -2,9 +2,51 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://forestneo.com/2021/09/13/%E6%8A%80%E6%9C%AF%E6%89%AB%E7%9B%B2-Private%20Set%20Integration/</loc>
+    
+    <lastmod>2021-09-13T14:17:26.555Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://forestneo.com/2021/08/31/%E9%9A%8F%E7%AC%94-%E8%BF%99%E5%B0%B1%E6%98%AF%E8%80%81%E4%B8%80%E8%BE%88%E7%9A%84%E7%88%B1%E6%83%85%E5%90%A7/</loc>
+    
+    <lastmod>2021-09-04T03:58:38.774Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://forestneo.com/2019/10/20/Python-Pandas%E5%AD%A6%E4%B9%A0/</loc>
+    
+    <lastmod>2021-09-04T03:06:32.876Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://forestneo.com/about/index.html</loc>
     
-    <lastmod>2021-08-15T01:02:49.364Z</lastmod>
+    <lastmod>2021-09-01T15:21:40.757Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://forestneo.com/2021/08/30/ML-%E5%91%A8%E5%BF%97%E5%8D%8E%E3%80%8A%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%8B-02-%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/</loc>
+    
+    <lastmod>2021-08-30T15:51:48.958Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://forestneo.com/2020/02/26/ML-%E5%90%B4%E6%81%A9%E8%BE%BE%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%AF%BE%E7%A8%8B-04-Linear%20Regression%20with%20Multiple%20Variables/</loc>
+    
+    <lastmod>2021-08-30T15:14:58.449Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://forestneo.com/2019/08/20/%E6%80%BB%E7%BB%93-%E5%B8%B8%E7%94%A8%E6%9C%AF%E8%AF%AD%E4%BB%8B%E7%BB%8D/</loc>
+    
+    <lastmod>2021-08-15T01:04:42.001Z</lastmod>
     
   </url>
   
@@ -233,13 +275,6 @@
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/10/20/Python-Pandas%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/</loc>
-    
-    <lastmod>2020-07-17T08:52:15.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://forestneo.com/2020/06/15/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-TGM/</loc>
     
     <lastmod>2020-06-15T15:06:42.000Z</lastmod>
@@ -352,13 +387,6 @@
   </url>
   
   <url>
-    <loc>http://forestneo.com/2020/02/26/ML-%E5%90%B4%E6%81%A9%E8%BE%BE%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%AF%BE%E7%A8%8B-04-Linear%20Regression%20with%20Multiple%20Variables/</loc>
-    
-    <lastmod>2020-04-30T02:03:25.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://forestneo.com/2020/04/20/ML-%E5%90%B4%E6%81%A9%E8%BE%BE%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%AF%BE%E7%A8%8B-10-Advice%20for%20Applying%20Machine%20Learning/</loc>
     
     <lastmod>2020-04-24T09:29:46.000Z</lastmod>
@@ -439,13 +467,6 @@
     <loc>http://forestneo.com/2019/12/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Resolving-Conflicts-in-Heterogeneous-Data-by-Truth-Discovery-and-Source-Reliability-Estimation/</loc>
     
     <lastmod>2020-01-03T09:35:42.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://forestneo.com/2019/08/20/%E6%80%BB%E7%BB%93-%E5%B8%B8%E7%94%A8%E6%9C%AF%E8%AF%AD%E4%BB%8B%E7%BB%8D/</loc>
-    
-    <lastmod>2020-01-03T07:22:52.000Z</lastmod>
     
   </url>
   
