@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="我们之前介绍了著名的Laplace机制。在本章节中我们将介绍一下同样著名的指数机制。  指数机制与Laplace机制 如何实现指数机制 应用案例 指数机制的理论证明  指数机制与Laplace机制在Laplace机制中，我们首先对数据库进行查询，然后再查询结果之上添加一定的噪声使其满足DP的要求。因此，返回的数据通常只是“接近准确”的。那么差分隐私能否允许我们得到真实的结果呢？在这种情况下，指数机">
+<meta name="keywords" content="Differential Privacy,指数机制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DP-Exponential Mechanism">
+<meta property="og:url" content="http://forestneo.com/2018/08/02/技术扫盲-DP指数机制/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="我们之前介绍了著名的Laplace机制。在本章节中我们将介绍一下同样著名的指数机制。  指数机制与Laplace机制 如何实现指数机制 应用案例 指数机制的理论证明  指数机制与Laplace机制在Laplace机制中，我们首先对数据库进行查询，然后再查询结果之上添加一定的噪声使其满足DP的要求。因此，返回的数据通常只是“接近准确”的。那么差分隐私能否允许我们得到真实的结果呢？在这种情况下，指数机">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/fig-table.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
+<meta property="og:updated_time" content="2021-10-08T15:13:53.009Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DP-Exponential Mechanism">
+<meta name="twitter:description" content="我们之前介绍了著名的Laplace机制。在本章节中我们将介绍一下同样著名的指数机制。  指数机制与Laplace机制 如何实现指数机制 应用案例 指数机制的理论证明  指数机制与Laplace机制在Laplace机制中，我们首先对数据库进行查询，然后再查询结果之上添加一定的噪声使其满足DP的要求。因此，返回的数据通常只是“接近准确”的。那么差分隐私能否允许我们得到真实的结果呢？在这种情况下，指数机">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/fig-table.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2018/08/02/技术扫盲-DP指数机制/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>DP-Exponential Mechanism | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2018/08/02/技术扫盲-DP指数机制/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DP-Exponential Mechanism
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-02 00:00:00" itemprop="dateCreated datePublished" datetime="2018-08-02T00:00:00+08:00">2018-08-02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-10-08 23:13:53" itemprop="dateModified" datetime="2021-10-08T23:13:53+08:00">2021-10-08</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/技术扫盲/" itemprop="url" rel="index"><span itemprop="name">技术扫盲</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/技术扫盲/Differential-Privacy/" itemprop="url" rel="index"><span itemprop="name">Differential Privacy</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我们之前介绍了著名的Laplace机制。在本章节中我们将介绍一下同样著名的指数机制。</p>
+<ul>
+<li>指数机制与Laplace机制</li>
+<li>如何实现指数机制</li>
+<li>应用案例</li>
+<li>指数机制的理论证明</li>
+</ul>
+<h1 id="指数机制与Laplace机制"><a href="#指数机制与Laplace机制" class="headerlink" title="指数机制与Laplace机制"></a>指数机制与Laplace机制</h1><p>在Laplace机制中，我们首先对数据库进行查询，然后再查询结果之上添加一定的噪声使其满足DP的要求。因此，返回的数据通常只是“接近准确”的。那么差分隐私能否允许我们得到真实的结果呢？在这种情况下，指数机制应运而生。</p>
+<p>指数机制（The exponential mechanism）是为我们希望选择“最佳”响应的情况而设计的，但直接在计算数量上添加噪声可以完全破坏其价值。例如在拍卖中设定价格，其目标是最大化收益，以及在最优价格上添加少量正噪声（为了保护投标的隐私）可以大大减少由此产生的收入。</p>
+<p>为了理解接下来我们举个例子：</p>
+<blockquote>
+<p>假设我们有大量的南瓜和四个投标人：A，B，C，D，其中A，B，C各自出价1.00美元，D出价3.01美元。如何制定最优出售价格？假如以 3.01美元出售，则收入为3.01美元（只有D买）；以1.00美元出售，收入为3.00美元（ABC购买）；以3.02美元出售，收入为零！</p>
+</blockquote>
+<p>在这个案例中，每个用户的投标价格是涉及个人隐私的，而对于价格来说，我们自然不希望是加噪声了的。毕竟谁也不希望本来可以3美元出手的南瓜最后只卖了2美元。</p>
+<h1 id="如何实现指数机制"><a href="#如何实现指数机制" class="headerlink" title="如何实现指数机制"></a>如何实现指数机制</h1><p>指数机制适用于回答具有任意实用程序（和任意非数字范围），同时保留差异隐私。给定一些任意范围 $\mathcal{R}$，首先我们需要定义一个实用性函数 $u$ ：</p>
+<script type="math/tex; mode=display">
+u: \mathbb{N}^{|\mathcal{X}|} \times \mathcal{R} \rightarrow \mathbb{R}</script><p>简单来说，这里 $\mu$ 的作用就是给用户拥有的数据打个分，分越高，表示这个数据越重要（比如上述案例中的价格，可以直接作为 $u$ 看待）。因此对于数据集 $X$，我们希望选取的元素有最大效益。</p>
+<p>和 Laplace 机制一样，我们需要知道 $u$ 最多改变多少，所以我们定义：</p>
+<script type="math/tex; mode=display">
+\triangle u = \max \limits_{r \in \mathcal{R}, ||x-y||_1 \le 1} |u(x,r)-u(y,r)|</script><p>设计指数机制的出发点即为对于任意的 $r$ ，按照 $\exp(\epsilon u(x,r)/\triangle \mu)$ 的概率选取最优解即可满足差分隐私要求，因为：</p>
+<script type="math/tex; mode=display">
+\ln \frac{\exp(\epsilon \cdot u(x,r)/\triangle u)}{\exp (\epsilon \cdot u(y,r) / \triangle \mu)} = \epsilon [u(x,r)-u(y,r)]/\triangle u \le \epsilon</script><p>所以就有了我们的指数机制了：</p>
+<blockquote>
+<p><strong>The Exponential Mechanism: </strong> The exponential mechanism $\mathcal{M}_E(x,u,\mathcal{R}) $ selects and outputs an element $r\in \mathcal{R}$ with probability proportional to $\exp(\frac{\epsilon\cdot u(x,r)}{2\triangle u})$</p>
+</blockquote>
+<p>翻译过来就是：设随机化算法 $M$ 输入为数据集 $X$ ，输出为一个实体对象 $r\in\mathcal{R}$, $u(X,\mathcal{R})$ 为可用性函数，$\triangle u$  为函数 $u(x,\mathcal{R})$  的敏感度，若以正比于 $\exp(\frac{\epsilon\cdot u(x,r)}{2\triangle u})$ 的概率从输入中选择并输出 $r$，则算法 $M$ 是 $\epsilon$-DP的。</p>
+<h1 id="应用案例"><a href="#应用案例" class="headerlink" title="应用案例"></a>应用案例</h1><p>假设某基地正在举办一场体育比赛，可以选择的项目有{足球，排球，篮球，网球}四个项目，参与者们对这些项目进行投票，现在要确定一个项目是的整个决策过程满足$\epsilon$-DP，以每个选项的得票数量作为可用性函数，在给定隐私预算情况下，可以计算选择各个项目的输出概率：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/fig-table.png" alt="fig-table"></p>
+<p>上述案例中，当 $\epsilon = 0$ 时，提供完全的隐私保护但数据可用性为0，随着 $\epsilon$ 越大，选择出期望结果的可能性也越大。</p>
+<h1 id="指数机制的理论证明"><a href="#指数机制的理论证明" class="headerlink" title="指数机制的理论证明"></a>指数机制的理论证明</h1><p>此部分涉及指数机制的理论证明，不感兴趣的可以直接跳过。</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\frac{\Pr[\mathcal{M}_E(x,u,\mathcal{R})=r]}{\Pr[\mathcal{M}_E(y,u,\mathcal{R})=r]} &= \frac{(\frac{\exp(\frac{\epsilon u(x,r)}{2\triangle u})}{\sum_{r'\in\mathcal{R}}\exp(\frac{\epsilon u(x,r')}{2\triangle u})})}{(\frac{\exp(\frac{\epsilon u(y,r)}{2\triangle u})}{\sum_{r'\in\mathcal{R}}\exp(\frac{\epsilon u(y,r')}{2\triangle u})})}\\
+&=(\frac{\exp(\frac{\epsilon u(x,r)}{2\triangle u})}{\exp(\frac{\epsilon u(y,r)}{2\triangle u})}) \cdot (\frac{\sum_{r'\in\mathcal{R}}\exp(\frac{\epsilon u(y,r')}{2\triangle u})}{\sum_{r'\in\mathcal{R}}\exp(\frac{\epsilon u(x,r')}{2\triangle u})})\\
+&=\exp(\frac{\epsilon(u(x,r')-u(y,r'))}{2\triangle u}) \cdot (\frac{\sum_{r'\in\mathcal{R}}\exp(\frac{\epsilon u(y,r')}{2\triangle u})}{\sum_{r'\in\mathcal{R}}\exp(\frac{\epsilon u(x,r')}{2\triangle u})})\\
+&\le \exp(\frac{\epsilon}{2})\cdot\exp(\frac{\epsilon}{2})\cdot(\frac{\sum_{r'\in\mathcal{R}}\exp(\frac{\epsilon u(x,r')}{2\triangle u})}{\sum_{r'\in\mathcal{R}}\exp(\frac{\epsilon u(x,r')}{2\triangle u})})\\
+&=\exp(\epsilon)
+\end{align}</script><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本章介绍了 Laplace 机制及其证明和应用，下面是我的公众号二维码，所有的内容也同步在公众号上面，希望大家关注。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png" alt=""></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+          
+            <a href="/tags/指数机制/" rel="tag"><i class="fa fa-tag"></i> 指数机制</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/27/技术扫盲-DP-Laplace-Mechanism/" rel="next" title="DP-Laplace Mechanism">
+                <i class="fa fa-chevron-left"></i> DP-Laplace Mechanism
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/04/技术扫盲-DP组合性质/" rel="prev" title="DP-Composition Theorem">
+                DP-Composition Theorem <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">82</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">54</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#指数机制与Laplace机制"><span class="nav-number">1.</span> <span class="nav-text">指数机制与Laplace机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何实现指数机制"><span class="nav-number">2.</span> <span class="nav-text">如何实现指数机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用案例"><span class="nav-number">3.</span> <span class="nav-text">应用案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#指数机制的理论证明"><span class="nav-number">4.</span> <span class="nav-text">指数机制的理论证明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

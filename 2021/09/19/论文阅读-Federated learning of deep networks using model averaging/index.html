@@ -109,7 +109,7 @@
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202109191533886.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202109191533899.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
-<meta property="og:updated_time" content="2021-09-19T07:37:11.488Z">
+<meta property="og:updated_time" content="2021-09-19T07:58:29.967Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Federated Learning of Deep Networks using Model Averaging">
 <meta name="twitter:description" content="标题：Federated Learning of Deep Networks using Model Averaging作者：H.Brendan McMahan (Google), Eider Moore (Google), Daniel Ramage (Google), Blaise Aguera y Arcas (Google)  本文由谷歌提出，开阔了“联邦学习”这一新领域，提出了著名的 m">
@@ -411,7 +411,7 @@
                 
               
 
-              <time title="创建时间：2021-09-19 19:53:45 / 修改时间：15:37:11" itemprop="dateCreated datePublished" datetime="2021-09-19T19:53:45+08:00">2021-09-19</time>
+              <time title="创建时间：2021-09-19 19:53:45 / 修改时间：15:58:29" itemprop="dateCreated datePublished" datetime="2021-09-19T19:53:45+08:00">2021-09-19</time>
             
 
             
@@ -513,7 +513,7 @@
 <li>图像分类：比如预测哪一个图片将来可能被多次查看或分享；</li>
 <li>语言模型：可以改进语音识别和文本输入等。</li>
 </ul>
-<p>这一类场景的数据可能是隐私的，这些数据的分布也可能和容易获取的数据集有很大的不同，比如平常使用的夜愿和维基百科的语法就不太一样了，又或者平常用户的拍照和 Flickr 上面的图片是差很多的。也因此，这些数据对应的label不是可以直接获取的（这也就对应上面特点的第三个，需要能够根据某种模式推测出数据对应的label）。</p>
+<p>这一类场景的数据可能是隐私的，这些数据的分布也可能和容易获取的数据集有很大的不同，比如平常使用的语言和维基百科的语法就不太一样了，又或者平常用户的拍照和 Flickr 上面的图片是差很多的。也因此，这些数据对应的label不是可以直接获取的（这也就对应上面特点的第三个，需要能够根据某种模式推测出数据对应的label）。</p>
 <p>这些任务都适合用深度学习解决，后面将会考虑联邦学习做这么个事情。同时咱们也希望在大的数据线，不要有太高的通信损耗（Communication cost）。</p>
 <p><strong>Privacy for federated learning</strong>: FL下隐私有两方面含义，首先，我们需要考虑攻击者可以从模型参数获取什么东西，模型参数也就是不同客户端共同优化的目标。我们目前无法认为这个是安全的，但是在现实场景中，模型参数是由很多个用户共同得到的，此类攻击将会很难部署。</p>
 <p>对于真的很隐私的训练任务，可以考虑采用DP去搞这么个事情，但是DP会降低数据效用。还讲了一些其他的东西好像不是很核心。</p>
@@ -562,7 +562,7 @@ w_{t+1} \leftarrow w_t - \eta \sum_{k=1}^{K} \frac{n_k}{n} g_k,</script><p>等�
 <p>SGD对学习率 $\eta$ 很敏感，因此实验结果都是基于一系列的学习率的，大概用了11-13个不同的学习率，间隔在$10^{-3}$和$10^{-6}$。然后也发现了最优的学习率不会像其他参数一样变化那么明显。</p>
 <p><strong>Increasing parallelism</strong>：首先研究了参数 $C$ 的影响，这个参数控制了客户端数量。表1表明了不同参数 $C$ 下 MNIST 模型的实验结果。</p>
 <p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202109191533886.png" alt="image-20210907174510046"></p>
-<p>处于展示目的，作者也构建了学习曲线，如图2所示。淡灰色的线是啥我好像也没理解透。</p>
+<p>出于展示目的，作者也构建了学习曲线，如图2所示。淡灰色的线是啥我好像也没理解透。</p>
 <p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202109191533899.png" alt="image-20210907174529856"></p>
 <p>当$B=\infty$ 的时候，也就是MNIST数据集把600个客户端的数据视作单一batch，添加 $C$ 仅仅有很小的提升。采用较小的 batch size $B=10$的时候，$C&gt;0.1$ 时效果有很大的提升，尤其是对于 Non-IID 的情况。所以后面的实验就设置$C=0.1$了。后面还设置了一系列其他实验，由于我呢也不懂，就目前没有仔细看了。</p>
 <h1 id="Conclusions-and-Future-Work"><a href="#Conclusions-and-Future-Work" class="headerlink" title="Conclusions and Future Work"></a>Conclusions and Future Work</h1><p>本文表明FL是个很牛逼的东西，可以在相对较少的迭代次数下训练不错的模型。当然本文只在SGD上面进行了探讨，在其他优化模型上也需要进行进一步研究，比如AdaGrad、ADAM；在助于优化的模型结构上也期待进一步研究，如dropout、batch-normalization等。</p>
@@ -636,8 +636,8 @@ w_{t+1} \leftarrow w_t - \eta \sum_{k=1}^{K} \frac{n_k}{n} g_k,</script><p>等�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/09/13/技术扫盲-Private Set Integration/" rel="next" title="<span style=" background:green;"=""><font color="#000000">技术扫盲</font>-Collecting Telemetry Data Privately">
-                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">技术扫盲</font></span>-Collecting Telemetry Data Privately
+              <a href="/2021/09/13/技术扫盲-Private Set Integration/" rel="next" title="<span style=" background:green;"=""><font color="#000000">技术扫盲</font>-Private Set Integration">
+                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">技术扫盲</font></span>-Private Set Integration
               </a>
             
           </div>
@@ -645,6 +645,10 @@ w_{t+1} \leftarrow w_t - \eta \sum_{k=1}^{K} \frac{n_k}{n} g_k,</script><p>等�
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/10/08/技术扫盲-RSA与联邦学习样本对齐/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">技术扫盲</font>-RSA 与联邦学习样本对齐">
+                <span style="background:green;"><font color="#000000">技术扫盲</font></span>-RSA 与联邦学习样本对齐 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -720,7 +724,7 @@ w_{t+1} \leftarrow w_t - \eta \sum_{k=1}^{K} \frac{n_k}{n} g_k,</script><p>等�
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">80</span>
+                    <span class="site-state-item-count">82</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -785,7 +789,9 @@ w_{t+1} \leftarrow w_t - \eta \sum_{k=1}^{K} \frac{n_k}{n} g_k,</script><p>等�
                     
                       
                     
-                    <span class="site-state-item-count">26</span>
+                      
+                    
+                    <span class="site-state-item-count">27</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -900,7 +906,13 @@ w_{t+1} \leftarrow w_t - \eta \sum_{k=1}^{K} \frac{n_k}{n} g_k,</script><p>等�
                     
                       
                     
-                    <span class="site-state-item-count">51</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">54</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

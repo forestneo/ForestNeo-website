@@ -96,20 +96,20 @@
 
 
 
-  <meta name="description" content="PSI基本概念PSI 全称 Private Set Intersection，翻译为隐私集合求交。说白点就是在多个实体（数据集）间求交集但是又要保证隐私。  介绍PSI简化一点，就是有集合A和集合B，求集合$A \cap B$​​​​。在概念上，A和B的地位是平等的，但是通常在协议执行的过程中，PSI 的结果通常先由一方获得，然后再同步给另一方。 讨论安全方案的时候，一般有个安全模型。通常分为半可">
+  <meta name="description" content="PSI 基本概念PSI 全称 Private Set Intersection，翻译为隐私集合求交。说白点就是在多个实体（数据集）间求交集但是又要保证隐私。  介绍PSI简化一点，就是有集合A和集合B，求集合$A \cap B$​​​​。在概念上，A和B的地位是平等的，但是通常在协议执行的过程中，PSI 的结果通常先由一方获得，然后再同步给另一方。 讨论安全方案的时候，一般有个安全模型。通常分为半">
 <meta name="keywords" content="Private Set Integration">
 <meta property="og:type" content="article">
-<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;技术扫盲&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Collecting Telemetry Data Privately">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;技术扫盲&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Private Set Integration">
 <meta property="og:url" content="http://forestneo.com/2021/09/13/技术扫盲-Private Set Integration/index.html">
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
-<meta property="og:description" content="PSI基本概念PSI 全称 Private Set Intersection，翻译为隐私集合求交。说白点就是在多个实体（数据集）间求交集但是又要保证隐私。  介绍PSI简化一点，就是有集合A和集合B，求集合$A \cap B$​​​​。在概念上，A和B的地位是平等的，但是通常在协议执行的过程中，PSI 的结果通常先由一方获得，然后再同步给另一方。 讨论安全方案的时候，一般有个安全模型。通常分为半可">
+<meta property="og:description" content="PSI 基本概念PSI 全称 Private Set Intersection，翻译为隐私集合求交。说白点就是在多个实体（数据集）间求交集但是又要保证隐私。  介绍PSI简化一点，就是有集合A和集合B，求集合$A \cap B$​​​​。在概念上，A和B的地位是平等的，但是通常在协议执行的过程中，PSI 的结果通常先由一方获得，然后再同步给另一方。 讨论安全方案的时候，一般有个安全模型。通常分为半">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202109082034281.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
-<meta property="og:updated_time" content="2021-09-19T07:39:12.935Z">
+<meta property="og:updated_time" content="2021-10-08T15:16:19.050Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;技术扫盲&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Collecting Telemetry Data Privately">
-<meta name="twitter:description" content="PSI基本概念PSI 全称 Private Set Intersection，翻译为隐私集合求交。说白点就是在多个实体（数据集）间求交集但是又要保证隐私。  介绍PSI简化一点，就是有集合A和集合B，求集合$A \cap B$​​​​。在概念上，A和B的地位是平等的，但是通常在协议执行的过程中，PSI 的结果通常先由一方获得，然后再同步给另一方。 讨论安全方案的时候，一般有个安全模型。通常分为半可">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;技术扫盲&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Private Set Integration">
+<meta name="twitter:description" content="PSI 基本概念PSI 全称 Private Set Intersection，翻译为隐私集合求交。说白点就是在多个实体（数据集）间求交集但是又要保证隐私。  介绍PSI简化一点，就是有集合A和集合B，求集合$A \cap B$​​​​。在概念上，A和B的地位是平等的，但是通常在协议执行的过程中，PSI 的结果通常先由一方获得，然后再同步给另一方。 讨论安全方案的时候，一般有个安全模型。通常分为半">
 <meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202109082034281.png">
 
 
@@ -127,7 +127,7 @@
   };
 </script>
 
-  <title><span style="background:green;"><font color="#000000">技术扫盲</font></span>-Collecting Telemetry Data Privately | ForestNeo's Space</title>
+  <title><span style="background:green;"><font color="#000000">技术扫盲</font></span>-Private Set Integration | ForestNeo's Space</title>
   
 
 
@@ -381,7 +381,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">技术扫盲</font></span>-Collecting Telemetry Data Privately
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">技术扫盲</font></span>-Private Set Integration
 
               
             
@@ -425,7 +425,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-09-19 15:39:12" itemprop="dateModified" datetime="2021-09-19T15:39:12+08:00">2021-09-19</time>
+                <time title="修改时间：2021-10-08 23:16:19" itemprop="dateModified" datetime="2021-10-08T23:16:19+08:00">2021-10-08</time>
               
             
           </span>
@@ -490,7 +490,7 @@
       
 
       
-        <h1 id="PSI基本概念"><a href="#PSI基本概念" class="headerlink" title="PSI基本概念"></a>PSI基本概念</h1><p>PSI 全称 Private Set Intersection，翻译为隐私集合求交。说白点就是在多个实体（数据集）间求交集但是又要保证隐私。</p>
+        <h1 id="PSI-基本概念"><a href="#PSI-基本概念" class="headerlink" title="PSI 基本概念"></a>PSI 基本概念</h1><p>PSI 全称 Private Set Intersection，翻译为隐私集合求交。说白点就是在多个实体（数据集）间求交集但是又要保证隐私。</p>
 <p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202109082034281.png" alt="image-20210908203405238" style="zoom:50%;"></p>
 <p>介绍PSI简化一点，就是有集合A和集合B，求集合$A \cap B$​​​​。在概念上，A和B的地位是平等的，但是通常在协议执行的过程中，PSI 的结果通常先由一方获得，然后再同步给另一方。</p>
 <p>讨论安全方案的时候，一般有个安全模型。通常分为半可信模型和恶意模型去讨论：</p>
@@ -500,7 +500,7 @@
 </ul>
 <h1 id="PSI方法介绍"><a href="#PSI方法介绍" class="headerlink" title="PSI方法介绍"></a>PSI方法介绍</h1><p>在应用落地阶段，通常不会考虑含有第三方的方案。下面介绍以下几种PSI方法：</p>
 <ul>
-<li>不安全的PSI方案：基于哈希的方案</li>
+<li>不安全的 PSI 方案：基于哈希的方案</li>
 <li>安全的PSI方案：<ul>
 <li>基于 Diffie-Hellmann的PSI方案</li>
 <li>基于RSA的PSI方案</li>
@@ -684,7 +684,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">80</span>
+                    <span class="site-state-item-count">82</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -749,7 +749,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">26</span>
+                      
+                    
+                    <span class="site-state-item-count">27</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -864,7 +866,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">51</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">54</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -937,7 +945,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PSI基本概念"><span class="nav-number">1.</span> <span class="nav-text">PSI基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PSI方法介绍"><span class="nav-number">2.</span> <span class="nav-text">PSI方法介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于哈希的PSI"><span class="nav-number">2.1.</span> <span class="nav-text">基于哈希的PSI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于-Diffie-Hellmann的PSI方案"><span class="nav-number">2.2.</span> <span class="nav-text">基于 Diffie-Hellmann的PSI方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于RSA的PSI方案"><span class="nav-number">2.3.</span> <span class="nav-text">基于RSA的PSI方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于不经意传输的PSI方案"><span class="nav-number">2.4.</span> <span class="nav-text">基于不经意传输的PSI方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PSI用途"><span class="nav-number">3.</span> <span class="nav-text">PSI用途</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PSI-基本概念"><span class="nav-number">1.</span> <span class="nav-text">PSI 基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PSI方法介绍"><span class="nav-number">2.</span> <span class="nav-text">PSI方法介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于哈希的PSI"><span class="nav-number">2.1.</span> <span class="nav-text">基于哈希的PSI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于-Diffie-Hellmann的PSI方案"><span class="nav-number">2.2.</span> <span class="nav-text">基于 Diffie-Hellmann的PSI方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于RSA的PSI方案"><span class="nav-number">2.3.</span> <span class="nav-text">基于RSA的PSI方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于不经意传输的PSI方案"><span class="nav-number">2.4.</span> <span class="nav-text">基于不经意传输的PSI方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PSI用途"><span class="nav-number">3.</span> <span class="nav-text">PSI用途</span></a></li></ol></div>
             
 
           </div>
