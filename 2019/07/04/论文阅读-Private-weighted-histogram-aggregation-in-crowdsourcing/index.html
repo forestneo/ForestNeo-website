@@ -97,25 +97,25 @@
 
 
   <meta name="description" content="文章地址：https://link.springer.com/chapter/10.1007/978-3-319-42836-9_23标题：Private weighted histogram aggregation in crowdsourcing作者：Shaowei Wang, Liusheng Huang, Pengzhan Wang, Hou Deng, Hongli Xu, Wei Ya">
-<meta name="keywords" content="Differential Privacy,Local Differential Privacy,Histogram Estimation,Crowdsourcing,[object Object],论文阅读">
+<meta name="keywords" content="LDP,直方图估计,Crowdsourcing">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Private weighted histogram aggregation in crowdsourcing">
 <meta property="og:url" content="http://forestneo.com/2019/07/04/论文阅读-Private-weighted-histogram-aggregation-in-crowdsourcing/index.html">
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
 <meta property="og:description" content="文章地址：https://link.springer.com/chapter/10.1007/978-3-319-42836-9_23标题：Private weighted histogram aggregation in crowdsourcing作者：Shaowei Wang, Liusheng Huang, Pengzhan Wang, Hou Deng, Hongli Xu, Wei Ya">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png">
-<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig02.png">
-<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg01.png">
-<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg02.png">
-<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig03.png">
-<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig04.png">
-<meta property="og:image" content="http://forestneo.com/images/QRcode.png">
-<meta property="og:updated_time" content="2021-08-08T11:48:39.430Z">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102307644.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102306152.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102307180.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102307482.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102308769.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102308125.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
+<meta property="og:updated_time" content="2021-10-10T15:08:30.257Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Private weighted histogram aggregation in crowdsourcing">
 <meta name="twitter:description" content="文章地址：https://link.springer.com/chapter/10.1007/978-3-319-42836-9_23标题：Private weighted histogram aggregation in crowdsourcing作者：Shaowei Wang, Liusheng Huang, Pengzhan Wang, Hou Deng, Hongli Xu, Wei Ya">
-<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102307644.png">
 
 
 
@@ -430,11 +430,29 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-08-08 19:48:39" itemprop="dateModified" datetime="2021-08-08T19:48:39+08:00">2021-08-08</time>
+                <time title="修改时间：2021-10-10 23:08:30" itemprop="dateModified" datetime="2021-10-10T23:08:30+08:00">2021-10-10</time>
               
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -483,18 +501,18 @@
 <h2 id="Local-Differential-Privacy"><a href="#Local-Differential-Privacy" class="headerlink" title="Local Differential Privacy"></a>Local Differential Privacy</h2><p>LDP的概念已经说过很多次了，总的来说，LDP是想要达到输入到输出上的概率不可区分性。即根据输出，无法判断输入是哪个。通常来说定义如下，对于可能的输入 $x,y$ 以及输出 $o$，如果机制 $M$ 满足：</p>
 <script type="math/tex; mode=display">
 \Pr[M(x) = o] \le e^\epsilon \Pr[M(y) = o]</script><p>那么我们就说机制 $M$ 满足 $\epsilon$-LDP。其中 $\epsilon$ 是 privacy budget。通常来说，我们常常用 Random Response 来实现LDP。</p>
-<h2 id="Weighted-Histogram-Aggregation-Model"><a href="#Weighted-Histogram-Aggregation-Model" class="headerlink" title="Weighted Histogram Aggregation Model"></a>Weighted Histogram Aggregation Model</h2><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png" alt="fig01"></p>
+<h2 id="Weighted-Histogram-Aggregation-Model"><a href="#Weighted-Histogram-Aggregation-Model" class="headerlink" title="Weighted Histogram Aggregation Model"></a>Weighted Histogram Aggregation Model</h2><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102307644.png" alt="image-20211010230729600"></p>
 <p>带权重的直方图估计，简单来说就是每个桶是有权重的。首先举个例子，如图1所示。我们假定有4个桶，其权重分别为 $[4,3,2,1]$，然后用户的数据经过LDP机制之后发送给 Aggregator，这个数据集成者收到数据之后对每个桶的数据求和，然后乘以权重，就得到了最终的结果。这个例子应该已经能很清楚的说明什么是带权重的直方图估计了。</p>
 <p>那么带权重和不带权重有啥区别呢？为什么不能直接将不带权重的机制运用过来呢？可以这么理解，在不带权重的情况下，每个桶的统计误差都是一样的（本质是 $\epsilon$ 并未对桶特殊处理）。因此权重大的就会显得误差大。所以我们希望权重大的可以误差小一点，然后权重小的误差大一点也没关系。这就启发我们对不同权重的桶设定不同的 $\epsilon$ 了。</p>
 <h1 id="Mechanism"><a href="#Mechanism" class="headerlink" title="Mechanism"></a>Mechanism</h1><p>延续上一节的思想，这一章就告诉我们如何对不同的权重去设计机制。</p>
 <h2 id="Bi-parties-Mechanism"><a href="#Bi-parties-Mechanism" class="headerlink" title="Bi-parties Mechanism"></a>Bi-parties Mechanism</h2><p>这个 Bi-parties 机制实际上非常简单，就是将权重分为两部分，高权重部分用一个机制，低权重部分用另外一个机制。下图举个例子：</p>
-<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig02.png" alt="fig02"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102306152.png" alt="image-20211010230632111"></p>
 <p>我们假设前三个桶是高权重部分，后面7个是低权重部分。那么我们现在就关心对高权重和低权重怎么去处理了。</p>
 <p>先说高权重部分。这个实际上就是 k-RR了。只不过作者多考虑了一种都是 0 的情况，也就是算法里面的 $null$，个人觉得考虑这个完全没有必要。</p>
 <p>然后剩下的就是低权重部分了，权重部分的处理相当简单，就是对每一位采用 Random Response。这两个一组合，就形成了作者所说的 Bi-parties 机制了。其算法如算法1所示。</p>
-<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg01.png" alt="alg01"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102307180.png" alt="image-20211010230747135"></p>
 <p>当然，设计了编码机制之后，还需要一个对应的估计方法，因为这个 k-RR 和 Random Resposne 都是很传统的方法了，所以其估计也就很简单了。对直方图的估计如算法2所示。</p>
-<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg02.png" alt="alg02"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102307482.png" alt="image-20211010230757444"></p>
 <h2 id="Optimal-Parameters-Selection"><a href="#Optimal-Parameters-Selection" class="headerlink" title="Optimal Parameters Selection"></a>Optimal Parameters Selection</h2><p>我们前面说到，要将直方图分为两部分。那么该怎么分呢？也就是前面中的参数 $k$ 取多少合适呢？</p>
 <p>作者这里以方差为指标，我们看一下方差怎么算：</p>
 <script type="math/tex; mode=display">
@@ -508,14 +526,14 @@ WSE\left(k, \epsilon_{h}, \epsilon_{l}\right)=\frac{n \cdot|D| \cdot k \cdot \ex
 W S E \leq n \cdot \min \left\{\frac{\exp (0.5 \cdot \epsilon)}{(\exp (0.5 \cdot \epsilon)-1)^{2}}, \frac{|D|^{2} \cdot \exp (\epsilon)+(|D|-1)^{2}}{|D| \cdot(\exp (\epsilon)-1)^{2}}\right\} \cdot \sum_{j=1 .|D|} w_{j}^{2}</script><p>为什么上式成立呢。因为这个机制的误差肯定不会比传统的方法差，所以这个方法的误差肯定小于传统的方法。感觉有点牵强啊。</p>
 <h2 id="Computational-Complexities"><a href="#Computational-Complexities" class="headerlink" title="Computational Complexities"></a>Computational Complexities</h2><p>然后这里又分析了计算复杂度，总的来说算法1的复杂度是 $O(|D|)$ ，然后算法2的复杂度是 $O(n \cdot|D|+|D|)$。其中是 $n$ 用户的数量。因为还有一个求和的过程。</p>
 <h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><p>接下来就到了实验部分了。作者尝试了$\epsilon \in [1, 3]$ ，然后设定了 $|D|=40$，并且假定有1000个用户。权重怎么办呢，作者采用了两个标准：heavy-core-set families 和 exponential decay families. 作者把自己的方法 bi-party mechanism (BPM) 和 binary randomized response (BRR) 以及 exponential mechanism (EM) 对比。然后误差采用了平均带权平方误差，就是$NWSE=WSE/n$。</p>
-<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig03.png" alt="fig03"></p>
-<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig04.png" alt="fig04"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102308769.png" alt="image-20211010230815723"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110102308125.png" alt="image-20211010230826082"></p>
 <p>图3和图4展示了两种权重下面不同方法的估计误差。可以看出来的是作者提出的这个BPM方法还是有着比较好的实验效果的。</p>
 <h1 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h1><p>这部分介绍了一些有关的工作，就不说了吧。</p>
 <h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>总的来说，本文介绍了一种可以解决带权重的直方图估计的机制，同时分析了这个机制的误差，以及实验结果表明，所提出的机制有着比较好的实验效果。</p>
 <hr>
 <p>本篇内容到这里就结束了，若想知道更多和信息安全有关的技术可在公众号留言。识别以下二维码可以成文本公众号的小粉丝，关注更多前沿技术。</p>
-<p><img src="/images/QRcode.png" alt=""></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png" alt=""></p>
 
       
     </div>
@@ -568,17 +586,11 @@ W S E \leq n \cdot \min \left\{\frac{\exp (0.5 \cdot \epsilon)}{(\exp (0.5 \cdot
       
         <div class="post-tags">
           
-            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+            <a href="/tags/LDP/" rel="tag"><i class="fa fa-tag"></i> LDP</a>
           
-            <a href="/tags/Local-Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Local Differential Privacy</a>
-          
-            <a href="/tags/Histogram-Estimation/" rel="tag"><i class="fa fa-tag"></i> Histogram Estimation</a>
+            <a href="/tags/直方图估计/" rel="tag"><i class="fa fa-tag"></i> 直方图估计</a>
           
             <a href="/tags/Crowdsourcing/" rel="tag"><i class="fa fa-tag"></i> Crowdsourcing</a>
-          
-            <a href="/tags/object-Object/" rel="tag"><i class="fa fa-tag"></i> [object Object]</a>
-          
-            <a href="/tags/论文阅读/" rel="tag"><i class="fa fa-tag"></i> 论文阅读</a>
           
         </div>
       
@@ -679,7 +691,7 @@ W S E \leq n \cdot \min \left\{\frac{\exp (0.5 \cdot \epsilon)}{(\exp (0.5 \cdot
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">82</span>
+                    <span class="site-state-item-count">81</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -728,25 +740,7 @@ W S E \leq n \cdot \min \left\{\frac{\exp (0.5 \cdot \epsilon)}{(\exp (0.5 \cdot
                     
                       
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">27</span>
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -867,7 +861,9 @@ W S E \leq n \cdot \min \left\{\frac{\exp (0.5 \cdot \epsilon)}{(\exp (0.5 \cdot
                     
                       
                     
-                    <span class="site-state-item-count">54</span>
+                      
+                    
+                    <span class="site-state-item-count">55</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
