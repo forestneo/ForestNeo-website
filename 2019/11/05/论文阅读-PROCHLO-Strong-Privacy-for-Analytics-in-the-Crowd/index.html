@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="IntroductionMotivation and AlternativesThe Encode-Shuffle-Analyze Architecture ESA 架构主要分为三层，分别是：Encoders，Shufflers 以及 Analyzers，就像上面的这个图一样。 Encoders 运行在用户的客户端设备。其对监测的数据进行一定的保护。例如采用嵌套的加密方法来保护哪个实体拥有哪些数据">
+<meta name="keywords" content="Differential Privacy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-PROCHLO Strong Privacy for Analytics in the Crowd">
+<meta property="og:url" content="http://forestneo.com/2019/11/05/论文阅读-PROCHLO-Strong-Privacy-for-Analytics-in-the-Crowd/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="IntroductionMotivation and AlternativesThe Encode-Shuffle-Analyze Architecture ESA 架构主要分为三层，分别是：Encoders，Shufflers 以及 Analyzers，就像上面的这个图一样。 Encoders 运行在用户的客户端设备。其对监测的数据进行一定的保护。例如采用嵌套的加密方法来保护哪个实体拥有哪些数据">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://forestneo.com/2019/11/05/论文阅读-PROCHLO-Strong-Privacy-for-Analytics-in-the-Crowd/fig01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig02.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig03.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig04.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig05.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg02.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg03.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg04.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/tbl01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/tbl02.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/tbl03.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/tbl04.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/tbl05.png">
+<meta property="og:updated_time" content="2021-10-10T12:31:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-PROCHLO Strong Privacy for Analytics in the Crowd">
+<meta name="twitter:description" content="IntroductionMotivation and AlternativesThe Encode-Shuffle-Analyze Architecture ESA 架构主要分为三层，分别是：Encoders，Shufflers 以及 Analyzers，就像上面的这个图一样。 Encoders 运行在用户的客户端设备。其对监测的数据进行一定的保护。例如采用嵌套的加密方法来保护哪个实体拥有哪些数据">
+<meta name="twitter:image" content="http://forestneo.com/2019/11/05/论文阅读-PROCHLO-Strong-Privacy-for-Analytics-in-the-Crowd/fig01.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2019/11/05/论文阅读-PROCHLO-Strong-Privacy-for-Analytics-in-the-Crowd/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title><span style="background:green;"><font color="#000000">论文阅读</font></span>-PROCHLO Strong Privacy for Analytics in the Crowd | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2019/11/05/论文阅读-PROCHLO-Strong-Privacy-for-Analytics-in-the-Crowd/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">论文阅读</font></span>-PROCHLO Strong Privacy for Analytics in the Crowd
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-05 11:06:08" itemprop="dateCreated datePublished" datetime="2019-11-05T11:06:08+08:00">2019-11-05</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-10-10 20:31:47" itemprop="dateModified" datetime="2021-10-10T20:31:47+08:00">2021-10-10</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h1 id="Motivation-and-Alternatives"><a href="#Motivation-and-Alternatives" class="headerlink" title="Motivation and Alternatives"></a>Motivation and Alternatives</h1><h1 id="The-Encode-Shuffle-Analyze-Architecture"><a href="#The-Encode-Shuffle-Analyze-Architecture" class="headerlink" title="The Encode-Shuffle-Analyze Architecture"></a>The Encode-Shuffle-Analyze Architecture</h1><p><img src="fig01.png" width="450"></p>
+<p>ESA 架构主要分为三层，分别是：Encoders，Shufflers 以及 Analyzers，就像上面的这个图一样。</p>
+<p>Encoders 运行在用户的客户端设备。其对监测的数据进行一定的保护。例如采用嵌套的加密方法来保护哪个实体拥有哪些数据以及数据的顺序。出于隐私需求，encoders 还可以对客户端数据进行一定的处理，比如加上随机噪声。</p>
+<p>Shuffler 是个独立的网络服务提供方，他从 Encoders 端接受加密的编码数据。它的功能是对数据进行隐藏，防止数据可以溯源（去掉报文到达时间，IP地址信息等），同时对数据进行重新排序以防止 thwart traffic analysis。</p>
+<h2 id="Keys-Trust-and-Attack-Models"><a href="#Keys-Trust-and-Attack-Models" class="headerlink" title="Keys, Trust, and Attack Models"></a>Keys, Trust, and Attack Models</h2><h2 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h2><h2 id="Shuffler"><a href="#Shuffler" class="headerlink" title="Shuffler"></a>Shuffler</h2><p>从逻辑上说，Shuffler 将用户端和分析端隔离，提供了一个隐私保护层。</p>
+<p>Shuffler 主要完成四个任务：anonymization, shuffling, thresholding 以及 batching。</p>
+<ul>
+<li><strong>anonymization</strong>：Shuffler 接收到从 Encoder 发来的数据，因此 Shuffler 是可以从报文中访问到和用户有关的 metadata 的，如 timestamps, source IP addresses, routing paths 等。因此 shuffler 的一个重要功能就是提供匿名化支持，shuffler 需要将这一类隐含用户信息的 metadata 剥离出来。匿名化的核心目标就是使得 user 和 report 相互独立。</li>
+<li><strong>shuffling</strong>：那么匿名化能否做到使得 user 和 report 相互独立呢？其实不是的，在特定攻击模型中，analyzer 可能会监控网络流量，通过对比 shuffler 接收到报文的时间和 shuffler 将报文发送给自己的时间就知道哪个 report 是 哪个 user 的。因此 shuffler 并不是接收到一个 report 就进行 anonymization 并转发。而是<strong>将接收到的 reports 打包，并且随意置换顺序，然后以低频率方式统一发送。</strong></li>
+<li><strong>thresholding</strong>：</li>
+<li><strong>batching</strong>：</li>
+</ul>
+<h2 id="Analyzer"><a href="#Analyzer" class="headerlink" title="Analyzer"></a>Analyzer</h2><h2 id="Privacy-Guarantees"><a href="#Privacy-Guarantees" class="headerlink" title="Privacy Guarantees"></a>Privacy Guarantees</h2><h1 id="PROCHLO-Implementation-and-Hardening"><a href="#PROCHLO-Implementation-and-Hardening" class="headerlink" title="PROCHLO Implementation and Hardening"></a>PROCHLO Implementation and Hardening</h1><h2 id="Higher-Assurance-by-using-Trustworthy-Hardware"><a href="#Higher-Assurance-by-using-Trustworthy-Hardware" class="headerlink" title="Higher Assurance by using Trustworthy Hardware"></a>Higher Assurance by using Trustworthy Hardware</h2><h3 id="SGX-Attestation-for-Networked-Shuffler-Services"><a href="#SGX-Attestation-for-Networked-Shuffler-Services" class="headerlink" title="SGX Attestation for Networked Shuffler Services"></a>SGX Attestation for Networked Shuffler Services</h3><h3 id="Oblivious-Shuffling-within-SGX-Enclaves"><a href="#Oblivious-Shuffling-within-SGX-Enclaves" class="headerlink" title="Oblivious Shuffling within SGX Enclaves"></a>Oblivious Shuffling within SGX Enclaves</h3><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig02.png" alt="fig02"></p>
+<h3 id="State-of-the-Art-in-Oblivious-Shuffling"><a href="#State-of-the-Art-in-Oblivious-Shuffling" class="headerlink" title="State of the Art in Oblivious Shuffling"></a>State of the Art in Oblivious Shuffling</h3><p>作者想要找这样一个 oblivious-shuffling 算法，其要满足密码学意义上的安全同时要有好的扩展性和效率。结果是没找到，所以他们自己设计了一个叫做 Stash Shuffle 的算法。</p>
+<h3 id="The-Stash-Shuffle-Algorithm"><a href="#The-Stash-Shuffle-Algorithm" class="headerlink" title="The Stash Shuffle Algorithm"></a>The Stash Shuffle Algorithm</h3><p>由于已有的 oblivious shuffling 算法并不满足scalability, efficiency or randomness of the permutations，作者们设计了一个叫做 Stash Shuffle 的算法，这个算法可以在这里单独看到：<a href="https://arxiv.org/pdf/1709.07553" target="_blank" rel="noopener">Oblivious Stash Shuffle</a>。</p>
+<p>的</p>
+<h3 id="Crowd-Cardinality-Thresholding-inside-SGX"><a href="#Crowd-Cardinality-Thresholding-inside-SGX" class="headerlink" title="Crowd Cardinality Thresholding inside SGX"></a>Crowd Cardinality Thresholding inside SGX</h3><h2 id="Encoding-Using-Secret-Sharing-Cryptography"><a href="#Encoding-Using-Secret-Sharing-Cryptography" class="headerlink" title="Encoding Using Secret-Sharing Cryptography"></a>Encoding Using Secret-Sharing Cryptography</h2><h2 id="Blinded-Crowd-IDs-for-Shuffler-Thresholding"><a href="#Blinded-Crowd-IDs-for-Shuffler-Thresholding" class="headerlink" title="Blinded Crowd IDs for Shuffler Thresholding"></a>Blinded Crowd IDs for Shuffler Thresholding</h2><h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h2><h1 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h1><h2 id="Stash-Shuffle"><a href="#Stash-Shuffle" class="headerlink" title="Stash Shuffle"></a>Stash Shuffle</h2><h2 id="Vocab-Empirical-Long-tail-Distributions"><a href="#Vocab-Empirical-Long-tail-Distributions" class="headerlink" title="Vocab: Empirical Long-tail Distributions"></a>Vocab: Empirical Long-tail Distributions</h2><h2 id="Perms-User-Actions-Regarding-Permissions"><a href="#Perms-User-Actions-Regarding-Permissions" class="headerlink" title="Perms: User Actions Regarding Permissions"></a>Perms: User Actions Regarding Permissions</h2><h2 id="Suggest-Predicting-the-Next-Contend-Viewed"><a href="#Suggest-Predicting-the-Next-Contend-Viewed" class="headerlink" title="Suggest: Predicting the Next Contend Viewed"></a>Suggest: Predicting the Next Contend Viewed</h2><h2 id="Flix-Collaborative-Filtering"><a href="#Flix-Collaborative-Filtering" class="headerlink" title="Flix: Collaborative Filtering"></a>Flix: Collaborative Filtering</h2><h1 id="Conclusions"><a href="#Conclusions" class="headerlink" title="Conclusions"></a>Conclusions</h1><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png" alt="fig01"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig03.png" alt="fig03"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig04.png" alt="fig04"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig05.png" alt="fig05"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg01.png" alt="alg01"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg02.png" alt="alg02"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg03.png" alt="alg03"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/alg04.png" alt="alg04"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/tbl01.png" alt="tbl01"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/tbl02.png" alt="tbl02"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/tbl03.png" alt="tbl03"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/tbl04.png" alt="tbl04"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/tbl05.png" alt="tbl05"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/20/编程语言-Python-eval函数/" rel="next" title="Python-eval函数">
+                <i class="fa fa-chevron-left"></i> Python-eval函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/06/技术扫盲-Secret-Sharing/" rel="prev" title="密码学-Secret Sharing">
+                密码学-Secret Sharing <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">99</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Motivation-and-Alternatives"><span class="nav-number">2.</span> <span class="nav-text">Motivation and Alternatives</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#The-Encode-Shuffle-Analyze-Architecture"><span class="nav-number">3.</span> <span class="nav-text">The Encode-Shuffle-Analyze Architecture</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Keys-Trust-and-Attack-Models"><span class="nav-number">3.1.</span> <span class="nav-text">Keys, Trust, and Attack Models</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Encoder"><span class="nav-number">3.2.</span> <span class="nav-text">Encoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shuffler"><span class="nav-number">3.3.</span> <span class="nav-text">Shuffler</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Analyzer"><span class="nav-number">3.4.</span> <span class="nav-text">Analyzer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Privacy-Guarantees"><span class="nav-number">3.5.</span> <span class="nav-text">Privacy Guarantees</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PROCHLO-Implementation-and-Hardening"><span class="nav-number">4.</span> <span class="nav-text">PROCHLO Implementation and Hardening</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Higher-Assurance-by-using-Trustworthy-Hardware"><span class="nav-number">4.1.</span> <span class="nav-text">Higher Assurance by using Trustworthy Hardware</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SGX-Attestation-for-Networked-Shuffler-Services"><span class="nav-number">4.1.1.</span> <span class="nav-text">SGX Attestation for Networked Shuffler Services</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Oblivious-Shuffling-within-SGX-Enclaves"><span class="nav-number">4.1.2.</span> <span class="nav-text">Oblivious Shuffling within SGX Enclaves</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#State-of-the-Art-in-Oblivious-Shuffling"><span class="nav-number">4.1.3.</span> <span class="nav-text">State of the Art in Oblivious Shuffling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Stash-Shuffle-Algorithm"><span class="nav-number">4.1.4.</span> <span class="nav-text">The Stash Shuffle Algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crowd-Cardinality-Thresholding-inside-SGX"><span class="nav-number">4.1.5.</span> <span class="nav-text">Crowd Cardinality Thresholding inside SGX</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Encoding-Using-Secret-Sharing-Cryptography"><span class="nav-number">4.2.</span> <span class="nav-text">Encoding Using Secret-Sharing Cryptography</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Blinded-Crowd-IDs-for-Shuffler-Thresholding"><span class="nav-number">4.3.</span> <span class="nav-text">Blinded Crowd IDs for Shuffler Thresholding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementation"><span class="nav-number">4.4.</span> <span class="nav-text">Implementation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Evaluation"><span class="nav-number">5.</span> <span class="nav-text">Evaluation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Stash-Shuffle"><span class="nav-number">5.1.</span> <span class="nav-text">Stash Shuffle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vocab-Empirical-Long-tail-Distributions"><span class="nav-number">5.2.</span> <span class="nav-text">Vocab: Empirical Long-tail Distributions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Perms-User-Actions-Regarding-Permissions"><span class="nav-number">5.3.</span> <span class="nav-text">Perms: User Actions Regarding Permissions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Suggest-Predicting-the-Next-Contend-Viewed"><span class="nav-number">5.4.</span> <span class="nav-text">Suggest: Predicting the Next Contend Viewed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flix-Collaborative-Filtering"><span class="nav-number">5.5.</span> <span class="nav-text">Flix: Collaborative Filtering</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusions"><span class="nav-number">6.</span> <span class="nav-text">Conclusions</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

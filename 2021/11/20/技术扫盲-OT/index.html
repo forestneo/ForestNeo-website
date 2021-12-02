@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文内容转载自公众号《陆叁》，作者井渭展，本科毕业于南京航空航天大学信息安全专业，目前在中国科学院信息工程研究所攻读硕士学位。研究兴趣包括隐私保护、安全多方计算、同态加密和机器学习。知乎：基因井  不经意传输（OT，oblivious transfer）是一个密码学协议，目前被广泛的应用于安全多方计算（SMPC，Secure Multi-Party Computation）。它由 Rabin[1">
+<meta name="keywords" content="OT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;密码学&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-不经意传输 Oblivious Transfer">
+<meta property="og:url" content="http://forestneo.com/2021/11/20/技术扫盲-OT/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="本文内容转载自公众号《陆叁》，作者井渭展，本科毕业于南京航空航天大学信息安全专业，目前在中国科学院信息工程研究所攻读硕士学位。研究兴趣包括隐私保护、安全多方计算、同态加密和机器学习。知乎：基因井  不经意传输（OT，oblivious transfer）是一个密码学协议，目前被广泛的应用于安全多方计算（SMPC，Secure Multi-Party Computation）。它由 Rabin[1">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/5Ig98FmhHw0mZWwR4nvNUJU1fcppKu2yG79Jl84dBqkNTrB7tMZWQnb7jC94S7Ys1ruhKbic2931dQ8tDgl6krQ/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/5Ig98FmhHw24NH8EGNIyfSiblAYEPv3KKAEUWJiaAJicj0NiazSgjA4SahmyBJdAmQ4sGUiccYfLO2myouLfMicNJmjw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/5Ig98FmhHw0mZWwR4nvNUJU1fcppKu2yLNrHh2CZrSeOhF4J061PPEibHQTHianTVAPrVPDuz8X5ibVPXfuoncfXQ/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/5Ig98FmhHw0mZWwR4nvNUJU1fcppKu2yPzgQWH74bpYbnrcfpxENRSnQYdd1uShibb0ibBBzv7EIIjuYX0jNlMFA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/5Ig98FmhHw24NH8EGNIyfSiblAYEPv3KKGAf5GiasXU1hl0wWB6mzpL6mOWXgGBAWjsFdhHN9tz86vHSE0990GXg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/5Ig98FmhHw24NH8EGNIyfSiblAYEPv3KKJKVPic9M80S2c1BeibwoiarRef8Baz86zdlgKG31uez3HkWIaiaVEdshtQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/5Ig98FmhHw0mZWwR4nvNUJU1fcppKu2y3nN6mosd9C2nBuYxgxib6TFAmqnreCDPZWQaxB0Mu3Cjdib2ezsQoqxw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
+<meta property="og:updated_time" content="2021-11-20T01:04:14.212Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;密码学&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-不经意传输 Oblivious Transfer">
+<meta name="twitter:description" content="本文内容转载自公众号《陆叁》，作者井渭展，本科毕业于南京航空航天大学信息安全专业，目前在中国科学院信息工程研究所攻读硕士学位。研究兴趣包括隐私保护、安全多方计算、同态加密和机器学习。知乎：基因井  不经意传输（OT，oblivious transfer）是一个密码学协议，目前被广泛的应用于安全多方计算（SMPC，Secure Multi-Party Computation）。它由 Rabin[1">
+<meta name="twitter:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2021/11/20/技术扫盲-OT/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title><span style="background:green;"><font color="#000000">密码学</font></span>-不经意传输 Oblivious Transfer | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2021/11/20/技术扫盲-OT/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">密码学</font></span>-不经意传输 Oblivious Transfer
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-11-20 00:00:00 / 修改时间：09:04:14" itemprop="dateCreated datePublished" datetime="2021-11-20T00:00:00+08:00">2021-11-20</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/技术扫盲/" itemprop="url" rel="index"><span itemprop="name">技术扫盲</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/技术扫盲/密码学/" itemprop="url" rel="index"><span itemprop="name">密码学</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>本文内容转载自公众号《陆叁》，作者井渭展，本科毕业于南京航空航天大学信息安全专业，目前在中国科学院信息工程研究所攻读硕士学位。研究兴趣包括隐私保护、安全多方计算、同态加密和机器学习。知乎：基因井</p>
+</blockquote>
+<p>不经意传输（OT，oblivious transfer）是一个密码学协议，目前被广泛的应用于安全多方计算（SMPC，Secure Multi-Party Computation）。它由 Rabin[1]在 1981 年提出。本文梳理总结了1981年到2013年之间，不经意传输协议的发展脉络，并总结了关键技术。</p>
+<p>一、Rabin 1981 提出</p>
+<p>它是为了解决如下的问题而产生：Alice 拥有秘密 ，Bob 拥有秘密 。Alice 和 Bob 想要交换秘密，要求两方都有可能得到秘密并且秘密拥有方不知道对方是否得到秘密。具体方案如下：</p>
+<blockquote>
+<p>方案假设两方的秘密都是单比特!!<br>(1) 随机选取两个大素数 、 。并计算得到 ，然后将 发送给 。<br>(2) 随机选取一个数 ，要求 ，计算 ，然后将 和私钥加密的 发送给 。<br>(3) 找到一个 使得 ，发送 给 。<br>(4) 计算 ，此时有 。<br>(5) 根据下面公式计算 </p>
+<p>接着计算  然后将 发送给 </p>
+</blockquote>
+<p>这是 Alice 获得 Bob 的秘密 的过程，可以得出 Alice 得到 的概率为 。Bob获得 的过程依然是上述步骤，只不过是将 Alice 和 Bob 角色互换。</p>
+<p>Rabin 提出的方案两方都无法获得对方的秘密的概率是 ，可以成功交换的概率是 。可见该方案还不是很完善，不能保证两方每次都能在满足要求的情况下获得秘密，还不具有应用意义。所以有了 1985 年 Even[2]等人在此[1]基础上提出的新的 1-out-2 OT 协议[2]。</p>
+<p>1985 1-out-of-2 OT</p>
+<p>Even 等人的提出新的使用公钥密码体制的 1-out-of-2 OT 协议，给出了 OT 公理化的定义和实现。相比于 Rabin 等人提出的一方只有 的概率获得秘密，Even等人将其进行了改进，即：Alice 拥有两个秘密 ，而 Bob 想要知道其中一个。在 OT 协议执行完成之后，Bob 获得了其中一个秘密，但是不知道另外一条秘密 ，并且 Alice 也不知道 Bob 选择的是 ，还是 。如下图：</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片"></p>
+<p>具体过程为：</p>
+<blockquote>
+<p>(1) 在公钥密码中随机选择一组密钥 ;<br>同时随机选择加密算32法明文空间R的两个明文 ;<br>最后将 和 发送给 .<br>(2) 随机选择 ;<br>然后在与(1)同样的明文空间选择 ;<br>计算 ,并且向 发送 ;<br>(3) 计算 ,其中 ;<br>  随机选择变量 ;<br>进而将三元组 发送给 .<br>(4) 根据自己选择 以及三元组最后一项 来选择第一项或者第二项；<br>  相同选第一项，不同选第二项，与自己 进行 运算得到秘密 .  是模运算加法， 是模运算减法。模运算的 就是明文空间大小</p>
+</blockquote>
+<p>可以清楚的看到，1-out-of-2 OT 执行结束之后，Bob获得了一个秘密且不知到另外一条秘密，而 Alice 则不知到 Bob 拿到了哪一条秘密。1-out-of-2 OT 是一个具有实际应用意义的不经意传输协议，也是目前较为常用的一种。</p>
+<p>1986 1-out-of-n OT</p>
+<p>之后在1986年，Brassard[3] 等人继续将OT协议改进到了 1-out-of-n OT 版本。与上述1-out-of-2 OT中的问题基本相同，唯一变化的就是从 2 条秘密传递 1 条给 Bob 变成了 从 n 条秘密传递给 Bob .</p>
+<p>初始协议为：n条秘密为： ,且每个消息长为 bits，设 表示第 i 个秘密的第 j 位，可见 。</p>
+<blockquote>
+<p>(1)首先 Alice 随机选择大素数 ，计算 ，并计算模 m 的二次非剩余 y，然后对于每一个比特位 选择一个整数 并计算 （显然，当且仅当 时 是二次剩余）然后将 发送给 Bob。<br>(2)Bob选择随机数 r 以及随机的比特位 ，计算 ，其中当且仅当 时 ，q 是 m 的二次剩余。<br>如此一来，只需要验证 (2) 中得到的 q 是否为 m 的二次剩余即可，若是则 反之则不等。<br>每一轮上述过程 Bob 可以得某个消息的一个比特位，重复 次，即可得到秘密 。</p>
+</blockquote>
+<p>虽然上述方法可以完成目标，但是仍存在三个缺点：</p>
+<ol>
+<li>Bob 可能询问的是不同秘密的比特位。</li>
+<li>Bob 可能得到两个消息之间的异或。</li>
+<li>Alice 可能欺骗 Bob，发送的 y 可能是一个 二次剩余，也就有可能指出 Bob 的选择。</li>
+</ol>
+<p>为克服以上缺点，改进上述算法如下：</p>
+<blockquote>
+<p>(1) Bob 随机选择扰动函数 ，随机整数 和随机比特位 ，使得 ，其中 i 表示 Bob 想要获得第 i 条秘密。并计算 将 t 个 传送给 Alice，同时需要向 Alice 证明所有的 可用性（我的理解是以此来保证请求的是同一条消息的不同比特位，也就是解决缺点 1和2）。<br>(2) Bob 传送 k 给 Alice ( ).<br>(3) Alice 对于每一个 都给出模 m 下的二次特征值，发送给Bob。<br>(4) Bob根据二次特征值来推测出相应比特的数据（特征值为零则与 α 不同，不为零则相同）。</p>
+</blockquote>
+<p>这便是最开始的 1-out-of-n OT 协议。至此最基本的OT协议包括 2 取 1，n 取 1 都已经有了。接下来就是关于OT扩展的内容了。</p>
+<p>Beaver 96</p>
+<p>但是在1988年，Impagliazzo和Rudich[4]就已经证明了不能使用黑盒的构造方法从一个单项函数来实现 OT，也就是说，虽然OT协议的设计已经很成熟，但是应用中的运算消耗仍然很高。而公钥密钥的出现有助于解决现有的OT协议执行次数过高的问题，不过因为公钥密钥需要低效率的幂指数运算，不利于直接加密大数据，因此将公钥的私钥两种方法结合，对现有OT进行扩展，提高OT协议的效率。1996年Beaver[5]等人就使用这种方法，提出了一种OT扩展技巧，通过伪随机装置来对等大量OT执行的效果。伪随机依靠一个单向函数（一个黑箱）来了实现。</p>
+<p>下图是一个基本的1-out-of-2 OT, 设预计算阶段的 R-OT 协议使发送方 Alice 获得两个随机信息 , 接收方Bob获得 , 设在线阶段Alice的需要发送的信息为 , Bob 的选择比特为 . Beaver 去随机化的主要思想是 Alice 使用R-OT的两个随机信 作为一次一密(OTP)来加密需要他发送的信息 并将盲化结果 发给 Bob. 如果  , Alice发送的两个信息是 , Bob本地计算 即可得到选择比特 c 对应的比特秘密  ,但是无法获得 。但是如果 ，按照上述步骤我们会发现 Bob 将无法获得正确的信息，除非 Alice 交换 来加密 。如下图所示：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/5Ig98FmhHw0mZWwR4nvNUJU1fcppKu2yG79Jl84dBqkNTrB7tMZWQnb7jC94S7Ys1ruhKbic2931dQ8tDgl6krQ/640?wx_fmt=jpeg&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片">为解决上述 的情况，容易想到的解决方法是让 Bob 告知 Alice 是否有 ，具体如下图所示，其中 是否等于0，表示为 </p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片">上述过程就是一个在基本的 1-out-of-2 OT上使用随机数来实现的过程，即 R-OT 。但是其每执行以此 OT 都需要进行里现阶段的随机数生成，这个开销非常昂贵。反之其在线阶段只需要异或运算，反而比较高效。并且以此离线阶段的R-OT以此只能产生一个OT实例，这也给其应用带来困难。而Beaver等人在1996年，使用了混合加密的方式对R-OT进行了改进，使得其离线阶段效率得到了提高，并且例证了OT扩展方案的可行性。</p>
+<p>要讲清Beaver等人的 OT 扩展，首先了解一下混合加密。公钥密钥的出现有助于解决现有的OT协议执行次数过高的问题，不过因为公钥密钥需要低效率的幂指数运算，不利于直接加密大数据，因此将公钥的私钥两种方法结合，使用昂贵的公钥加密短密钥，然后使用相对便宜的私钥来加密长信息。以此实现对现有OT进行扩展，提高OT协议的效率。应用如下：</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片"></p>
+<p>如上图所示，使用姚氏混淆电路来完成整个过程，其中左侧为 Alice 输入 并得到所有的消息对，即就是 n 个R-OT离线阶段的 ，右侧为 Bob 输入 并得到比特串 r 以及对应的消息 ，即就是R-OT离线阶段的 。其中输入的 长度为 ，输出的结果个数为 n ，且 。也就是说在此扩展中只需要 个R-OT，可以得到 n 个 OT 实例，即就是使用 实现 ,同样有 。</p>
+<p>然而由于姚氏混淆电路的原因导致其不够实用，但是他的例证说明了 OT-extension 是可行的。也为后面 OT 的发展做出重要贡献。</p>
+<p>IKNP[03]</p>
+<p>在Beaver等人之后，IKNP[03][6]协议则逐步让 OT 协议走上实用的道路。IKNP[03]协议和Beaver等人解决的问题实际上是相同的，都是为了让 Alice 获得消息对 和让 Bob 后的对应的 以便在线阶段 OT 的使用。与不太实用的Beaver96使用 Yao’s GC 不同的是，IKNP[03] 使用 OT 来实现，具体如下：</p>
+<p>首先，Bob 随机构造长度为 比特串 ,然后将其看为一个 的列向量，并对每个比特位进行按行扩展为 位 (重复编码扩展)，完成后进行秘密分享，如图：</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片">接着 Alice 也随机选取长度为 的比特串 ，然后双方共同执行base-OT 其中 Bob 为发送方，将两个秘密份额矩阵 的第 列作为输入的两个消息，Alice 作为接收方，以 为输入来选择两个秘密份额矩阵第 列的某一个来构成自己的矩阵 的第 列，结果如下:</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片"></p>
+<p>当 时, 两个秘密份额矩阵 对应位置的行向量相等，所以Alice所得矩阵 的行向量 与 Bob 的任意一个份额矩阵该位置对应的行向量 相同；当 时, Alice所得矩阵 的行向量 等于 Bob 的份额矩阵 该位置对应的行向量 与 的异或，即：</p>
+<p>其中 是份额矩阵 的行向量，上述过程可以进一步抽象为： </p>
+<p>上述过程后 Alice 获得了矩阵 ，加上自己拥有的选择串 ，则 Alice 就有了消息对 。Bob 则拥有了相应的 (选择比特),  (某个消息)，如下图所示：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/5Ig98FmhHw24NH8EGNIyfSiblAYEPv3KKAEUWJiaAJicj0NiazSgjA4SahmyBJdAmQ4sGUiccYfLO2myouLfMicNJmjw/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片"></p>
+<p>运用上述公式进一步改写为：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/5Ig98FmhHw0mZWwR4nvNUJU1fcppKu2yLNrHh2CZrSeOhF4J061PPEibHQTHianTVAPrVPDuz8X5ibVPXfuoncfXQ/640?wx_fmt=jpeg&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片">由此就已经可以明显的看出 Alice 拥有了随机的消息对，并且 Bob 拥有选择比特位和 Alice 消息对中的其中一个消息。这已是解决一开始问题（两方获得用于在线阶段的消息队等）。效率方面，扩展矩阵是 的矩阵，其中 ，而base-OT阶段是按照列来进行，所以会进行 次 base-OT，然而传输了 n-bits 的内容，并且不需要 Yao’s GC。</p>
+<p>但是仔细观察可以看到，上述的消息对之间重复的使用了同一个比特串 ，这使得生成的消息之间存在相关性，所以必须解决这种下相关性。本协议采用的方法是：使用一个随机预言机(Random Oracle)来解决相关性，用哈希函数 来实现随机预言机(Random Oracle) 。对于消息 和比特串 使得 是独立伪随机的。从而解决上述问题！整个INKP[03]协议如下图所示：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/5Ig98FmhHw0mZWwR4nvNUJU1fcppKu2yPzgQWH74bpYbnrcfpxENRSnQYdd1uShibb0ibBBzv7EIIjuYX0jNlMFA/640?wx_fmt=jpeg&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片">最后整合为可用的结果为：</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片"></p>
+<p>此协议是面对半诚实模型的。对于 Bob 恶意的情况下，该模型是危险的！</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片"></p>
+<p>若 Bob 在生成的某一个份额矩阵中修改 对应行向量的某一个比特位 (如 中黑色方块由原来的 0 变为 1) ，并且同时 Alice 对应的选择向量 对应的比特位  ( Alice 得到的矩阵中橘色方块位置)，那么就会造成 Alice 得到的向量与 Bob 具有的行向量不同 (灰色块所示的向量)。在后续协议执行过程中，例如哈希等，只要Bob检测到 Alice 的结果与自己的不同，就可以推断出该位 ，相同则推断出 。如此一来，Bob得到 Alice 选择串 的一个比特值。因此 IKNP[03] 仅仅是半诚实安全。</p>
+<p>KK[13]</p>
+<p>在 Kolesnikov，Kumaresan[7]等人 2013 年发表的文章中，对 IKNP[03] 协议在 GMW 中长度扩展步骤的通信开销远高于核心归约步骤的通信开销问题进行了优化。Kolesnikov 等人发现，IKNP[03] 在base-OT 阶段，对 Bob 的选择比特串 进行扩展的时，使用的是重复编码扩展方法，这是最简单的编码方法，其编码效率仅为 ， 是扩展后的向量长度。因此 Kolesnikov 等人从此着手，使用更加复杂的编码方式在优化 IKNP[03] 协议。</p>
+<p>用 表示对 使用某种编码方法，用编码的视角看待 IKNP[03] 协议，首先是 Bob 对选择向量 扩展，扩展后的矩阵如下：</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片"></p>
+<p>然后再运用秘密分享得到：（其中 示 其中一个份额矩阵的行向量）</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片"></p>
+<p>通过秘密分享矩阵得到 Alice 的向量组 ，然后每一个向量分别异或 ，得到 ：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/5Ig98FmhHw24NH8EGNIyfSiblAYEPv3KKGAf5GiasXU1hl0wWB6mzpL6mOWXgGBAWjsFdhHN9tz86vHSE0990GXg/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片"></p>
+<p>使用 ,改写 矩阵为：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/5Ig98FmhHw24NH8EGNIyfSiblAYEPv3KKJKVPic9M80S2c1BeibwoiarRef8Baz86zdlgKG31uez3HkWIaiaVEdshtQ/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片">可以看到最后 Alice 获得结果进一步变为： ，然后再用随机预言机来破坏其关联性： Bob的值也就变为 。</p>
+<p>从编码的方式了解了 IKNP[03] 之后就可以使用其他的编码方式对其推广，按照这种方式推广的结果相比于 IKNP[03] 也就是 Alice 获得的两个消息结果中的编码部分改变而已，例如用 表示一个编码结果 ( 表示编码结果的第 位)，则 Alice 获得的两个消息变为 。而 Bob 的结果并不变。所以改进后协议的提升也都来自编码效率的改变。</p>
+<p>ALSZ[13]</p>
+<p>ALSZ[13][8]在 IKNP[03] 基础上多通信复杂度和计算复杂度都进行了优化，首先是算法方面的计算复杂度，Asharov 经过实验发现 IKNP[03] 协议中大约 42% 的计算耗费在矩阵转置上，于是对于矩阵给的转置进行优化，如下图所示：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/5Ig98FmhHw0mZWwR4nvNUJU1fcppKu2y3nN6mosd9C2nBuYxgxib6TFAmqnreCDPZWQaxB0Mu3Cjdib2ezsQoqxw/640?wx_fmt=jpeg&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片"></p>
+<p>先对最小的 2×2 子矩阵进行转置，只需要消耗很少的时间，进而再将该 2×2 矩阵看为整体再寻找下一个 “2×2” 子矩阵。并且因为转置之间不冲突，再同一个层级上可以并行。如此一来将 m×n 的矩阵转置的计算消耗从 降低为 。其中 是CPU 寄存器大小。此外因为 拥有的 组成的矩阵列之间没有相关性，所以可以在 OT 中使用并行算法加速。</p>
+<p>在通信复杂度方面，Asharov 等人使用盲化因子 来初始化 Bob 持有的矩阵而不是随机生成，这样每次只需要向 Alice 传输一个消息就可，具体如下。</p>
+<p>原本的协议是：(其中 PRG() 是伪随机序列生成器)</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片"></p>
+<p>优化后：</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片"></p>
+<p>在 IKNP[03] 中有： ，以此来验证一下上述优化的正确性，当 时，易得 ；当 时，易得 ，这符合 IKNP[03] 中的结论。在通信中，原本的方案需要发送消息对 ，但是优化后的方案对于一个消息对，只需要发送一个消息 就可以了，可见该优化方法理论上可以降低此过程一半通信消耗。</p>
+<p>Asharov 等人还对应用在 Yao’S GC 和 GMW 上的 OT-Extension 做出了相应的优化。</p>
+<p>在 Yao’S GC 上，对于最后一部分的 OT ，使用了Correlated-OT 来降低带宽，在 C-OT 中，Alice 得到的消息对 是相关的，例如 。具体如图所示：</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片"></p>
+<p> 是一个随机比特,  ,其中 是一个全局随机量， 是Bob 的选择比特，在之前叙述的通用 OT-Extension 中，Alice 接下来需要计算并发送两个消息 。但是在应用了上述C-OT 的 Yao’S GC 上只需要Alice 设定 ，计算并发送一个消息 即可。而 Bob 根据自己的 r 值来得到自己的输出，当 ,得到 ；当 ，得到 。很容易证明，不同的 r 值会让 Bob 得到 ，所以此方法可行，并且因为只需要传输一个消息，则降低了一半的带宽需求。</p>
+<p>在 GMW 上则使用了Random-OT 来优化，如图：</p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="图片"></p>
+<p>其中 Alice 获得的 都是随机的，之后 Alice 设定 ,  ,而后 Bob 只需要计算 ，因为 ，显然当 ,得到 ；当 ，得到 。如此一来不需要进行最后一步的通信就可以得到消息。</p>
+<p>最后，感谢陈小军老师的帮助、建议、指导和修改！感谢董业师兄 @酸菜鱼的帮助、建议和修改，李开运师兄 @李开运的帮助和建议！</p>
+<p>此外上述图示中 Beaver96 和 IKNP03 部分图例是根据 Mike Rosulek 报告[12]中的图示重新绘制得来，特此声明！</p>
+<p>参考文献</p>
+<p>[1] Rabin M O . How to Exchange Secrets by Oblivious Transfer[J]. Technical Memo TR-81, 1981.</p>
+<p>[2] Even S . A randomized protocol for signing contracts[J]. ACM SIGACT News, 1983.</p>
+<p>[3] Brassard G , C Crépeau, Robert J M . All-or Nothing Disclosure of Secrets. Advances in Cryptology — CRYPTO’ 86, 1986.</p>
+<p>[4] Impagliazzo R , Rudich S . Limits on the provable consequences of one-way permutations (invited talk). Springer New York, 1990.</p>
+<p>[5] Beaver D . Correlated Pseudorandomness and the Complexity of Private Computations[C]// Twenty-eighth Acm Symposium on the Theory of Computing. ACM, 1996.</p>
+<p>[6] Ishai Y , Kilian J , Nissim K , et al. Extending Oblivious Transfers Efficiently[C]// 23rd Annual International Cryptology Conference. CiteSeer, 2003.</p>
+<p>[7] Kolesnikov V , Kumaresan R . Improved OT Extension for Transferring Short Secrets[M]. Springer Berlin Heidelberg, 2013.</p>
+<p>[8] Asharov G , Lindell Y , Schneider T , et al. More efficient oblivious transfer and extensions for faster secure computation[C]// Proceedings of the 2013 ACM SIGSAC conference on Computer &amp; communications security. ACM, 2013.</p>
+<p>[9] Yao, Andrew. (1986). How to generate and exchange secrets. Annual Symposium on Foundations of Computer Science (Proceedings). 10. 162 - 167. 10.1109/SFCS.1986.25.</p>
+<p>[10] Goldreich, Oded &amp; Micali, S. &amp; Wigderson, Avi. (1987). How to play ANY mental game. 218-229. 10.1145/28395.28420.</p>
+<p>[11] V. Kolesnikov and T. Schneider. Improved garbled circuit: Free XOR gates and applications. In International Colloquium on Automata, Languages and Programming (ICALP’08), volume 5126 of LNCS, pages 486–498. Springer, 2008.</p>
+<p>[12] Mike Rosulek. web.engr.oregonstate.edu</p>
+<hr>
+<p>本篇内容到这里就结束了，若想知道更多和信息安全有关的技术可在公众号留言。识别以下二维码可以成为本公众号的小粉丝，关注更多前沿技术。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png" alt="微信公众号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OT/" rel="tag"><i class="fa fa-tag"></i> OT</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/11/随笔-我的小米产品/" rel="next" title="<span style=" background:yellow;"=""><font color="#000000">人生随笔</font>-我的小米产品">
+                <i class="fa fa-chevron-left"></i> <span style="background:yellow;"><font color="#000000">人生随笔</font></span>-我的小米产品
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/11/29/技术扫盲-树模型/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">技术扫盲</font>-树模型">
+                <span style="background:green;"><font color="#000000">技术扫盲</font></span>-树模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">99</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

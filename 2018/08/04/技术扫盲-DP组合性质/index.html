@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在之前的文章《DP-拉普拉斯机制》和《DP-指数机制》中，我们介绍了两个应用场景下的差分隐私算法设计。就像一般的运算一样，我们定义了某种运算就想知道这种运算的一些性质以便于后续更加方便的使用这种运算。本章节我们关心差分隐私的运算性质。  为什么有组合性质 组合性质 简单应用  为什么有组合性质在《DP-Differential Privacy概念介绍》中的背景知识小节中，我们举了一个对数据库查询以">
+<meta name="keywords" content="Differential Privacy,Composition Theorem">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DP-Composition Theorem">
+<meta property="og:url" content="http://forestneo.com/2018/08/04/技术扫盲-DP组合性质/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="在之前的文章《DP-拉普拉斯机制》和《DP-指数机制》中，我们介绍了两个应用场景下的差分隐私算法设计。就像一般的运算一样，我们定义了某种运算就想知道这种运算的一些性质以便于后续更加方便的使用这种运算。本章节我们关心差分隐私的运算性质。  为什么有组合性质 组合性质 简单应用  为什么有组合性质在《DP-Differential Privacy概念介绍》中的背景知识小节中，我们举了一个对数据库查询以">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/fig-application.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
+<meta property="og:updated_time" content="2021-10-08T15:13:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DP-Composition Theorem">
+<meta name="twitter:description" content="在之前的文章《DP-拉普拉斯机制》和《DP-指数机制》中，我们介绍了两个应用场景下的差分隐私算法设计。就像一般的运算一样，我们定义了某种运算就想知道这种运算的一些性质以便于后续更加方便的使用这种运算。本章节我们关心差分隐私的运算性质。  为什么有组合性质 组合性质 简单应用  为什么有组合性质在《DP-Differential Privacy概念介绍》中的背景知识小节中，我们举了一个对数据库查询以">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/fig-application.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2018/08/04/技术扫盲-DP组合性质/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>DP-Composition Theorem | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2018/08/04/技术扫盲-DP组合性质/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DP-Composition Theorem
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-04 00:00:00" itemprop="dateCreated datePublished" datetime="2018-08-04T00:00:00+08:00">2018-08-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-10-08 23:13:47" itemprop="dateModified" datetime="2021-10-08T23:13:47+08:00">2021-10-08</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/技术扫盲/" itemprop="url" rel="index"><span itemprop="name">技术扫盲</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/技术扫盲/Differential-Privacy/" itemprop="url" rel="index"><span itemprop="name">Differential Privacy</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在之前的文章《DP-拉普拉斯机制》和《DP-指数机制》中，我们介绍了两个应用场景下的差分隐私算法设计。就像一般的运算一样，我们定义了某种运算就想知道这种运算的一些性质以便于后续更加方便的使用这种运算。本章节我们关心差分隐私的运算性质。</p>
+<ul>
+<li>为什么有组合性质</li>
+<li>组合性质</li>
+<li>简单应用</li>
+</ul>
+<h1 id="为什么有组合性质"><a href="#为什么有组合性质" class="headerlink" title="为什么有组合性质"></a>为什么有组合性质</h1><p>在《DP-Differential Privacy概念介绍》中的背景知识小节中，我们举了一个对数据库查询以得到某个具体记录的案例：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">patient</th>
+<th>has cancer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Amy</td>
+<td>0</td>
+</tr>
+<tr>
+<td style="text-align:center">Tom</td>
+<td>1</td>
+</tr>
+<tr>
+<td style="text-align:center">Jack</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>假设 $sum(n)$ 表示前n行的统计结果，则通过</p>
+<script type="math/tex; mode=display">sum(3)-sum(2)=2-1=1</script><p>可以得到 Jack 的患病信息（假设我们拥有背景知识是Jack在第三行）。</p>
+<p>在使用了DP机制之后，由于 DP 对相邻数据集的不可区分性，$sum(3)-sum(2)$ 是很可能相等的，所以$sum(3)-sum(2)$ 得到的结果可能是 0，可能是 1，甚至可能是-1. 通过这种手段，敌手无法得知Jack的患病情况。</p>
+<p>但是：<strong>为了保证数据可用性，添加的噪声均值必须为0。</strong>这就意味着</p>
+<script type="math/tex; mode=display">
+E[sum(3)-sum(2)]=E[sum(3)]-E[sum(2)]=1</script><p>即，<strong>如果敌手可以无限制地对数据集进行查询，最终一定会得到真实结果。</strong></p>
+<p>实际上，<strong>对于同一个查询来说，查询次数越多，得到的结果平均值越收敛于真实值，隐私保护等级就越低。</strong></p>
+<p>所以从这个角度来说，我们想知道随着连续的查询，隐私保护等级会如何变化呢？</p>
+<h1 id="组合性质"><a href="#组合性质" class="headerlink" title="组合性质"></a>组合性质</h1><p>我们来看看什么是组合机制：</p>
+<blockquote>
+<p><strong>Composition Theorem: </strong> Let $\mathcal{M}_1: \mathbb{N}^{|\mathcal{X}|} \rightarrow \mathcal{R}_1$ be an $\epsilon_1$-differentially private algorithm, and let $\mathcal{M}_2: \mathbb{N}^{|\mathcal{X}|} \rightarrow \mathcal{R}_2$ be an $\epsilon_2$-differentially private algorithm. Then their combination, defined to be $\mathcal{M}_{1,2}: \mathbb{N}^{|\mathcal{X}|} \rightarrow \mathcal{R}_1 \times \mathcal{R}_2$ by the mapping: $\mathcal{M}_{1,2}(x) = (\mathcal{M}_1(x), \mathcal{M}_2(x))$ is $(\epsilon_1+\epsilon_2)$-differentially private.</p>
+</blockquote>
+<p>组合机制的理解其实很简单，即如果算法$\mathcal{M}_1$是$\epsilon_1$-DP的，$\mathcal{M}_2$是$\epsilon_2$-DP的，那么把$\mathcal{M}_1$和$\mathcal{M}_2$放到一起就是$(\epsilon_1+\epsilon_2)$-DP的。证明过程如下：</p>
+<blockquote>
+<p>Let $x,y\in\mathbb{N}^{|\mathcal{X}|}$ be such that $||x-y||_1 \le 1$. Fix any $(r_1, r_2)\in \mathcal{R}_1\times\mathcal{R}_2$. Then:</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\frac{\Pr[\mathcal{M}_{1,2}(x)=(r_1,r_2)]}{\Pr[\mathcal{M}_{1,2}(y)=(r_1,r_2)]} &= \frac{\Pr[\mathcal{M}_1(x)=r_1][\mathcal{M}_2(x)=r_2]}{\Pr[\mathcal{M}_1(y)=r_1][\mathcal{M}_2(y)=r_2]}\\
+&= \frac{\Pr[\mathcal{M}_1(x)=r_1]}{\Pr[\mathcal{M}_1(y)=r_1]} \times \frac{\Pr[\mathcal{M}_2(x)=r_2]}{\Pr[\mathcal{M}_2(y)=r_2]}\\
+&\le \exp(\epsilon_1) \exp(\epsilon_2)\\
+&=\exp(\epsilon_1+\epsilon_2)
+\end{align}</script></blockquote>
+<p>有了两个机制的组合机制之后，我们自然会将这个机制推广到 $n$ 个机制的组合情况，在这里总的结论就不放了。</p>
+<h1 id="简单应用"><a href="#简单应用" class="headerlink" title="简单应用"></a>简单应用</h1><p>根据组合机制，如果敌手可以对数据集进行查询，那么只需要重复执行同一个查询再对结果求平均，就可以很大程度上得到真实结果。所以在一般的实际应用中，限定一个隐私保护预算上界，如果查询的总预算那么禁止用户对数据集进行查询。这就有点类似于访问控制的意思了。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/web_img/fig-application.png" alt="fig-application"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本章介绍了组合机制，下面是我的公众号二维码，所有的内容也同步在公众号上面，希望大家关注。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png" alt=""></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+          
+            <a href="/tags/Composition-Theorem/" rel="tag"><i class="fa fa-tag"></i> Composition Theorem</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/02/技术扫盲-DP指数机制/" rel="next" title="DP-Exponential Mechanism">
+                <i class="fa fa-chevron-left"></i> DP-Exponential Mechanism
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/19/论文阅读-Secure-Two-Party-Differentially-Private-Data-Release-for-Vertically-Partitioned-Data/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Secure Two-Party Differentially Private Data Release for Vertically Partitioned Data">
+                <span style="background:green;"><font color="#000000">论文阅读</font></span>-Secure Two-Party Differentially Private Data Release for Vertically Partitioned Data <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">99</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么有组合性质"><span class="nav-number">1.</span> <span class="nav-text">为什么有组合性质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#组合性质"><span class="nav-number">2.</span> <span class="nav-text">组合性质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#简单应用"><span class="nav-number">3.</span> <span class="nav-text">简单应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

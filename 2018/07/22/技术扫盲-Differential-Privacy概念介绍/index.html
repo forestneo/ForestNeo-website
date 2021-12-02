@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本节我们介绍一下差分隐私的概念，也是本公众号的核心工作所在，这一节，暂且用我认为读者可以理解的方式介绍一下什么是差分隐私。本文从以下几个方面展开介绍:  背景 去除标识化信息导致的隐私问题 背景知识攻击案例 我们需要什么样的隐私保护策略 差分隐私 一个简单的应用案例 待续  背景 在大数据背景下，如何保护个人信息安全以及防止隐私泄露一直是学术界和工业界的研究重点，从隐私保护角度来看，一般我们可能采">
+<meta name="keywords" content="Differential Privacy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DP-Differential Privacy概念介绍">
+<meta property="og:url" content="http://forestneo.com/2018/07/22/技术扫盲-Differential-Privacy概念介绍/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="本节我们介绍一下差分隐私的概念，也是本公众号的核心工作所在，这一节，暂且用我认为读者可以理解的方式介绍一下什么是差分隐私。本文从以下几个方面展开介绍:  背景 去除标识化信息导致的隐私问题 背景知识攻击案例 我们需要什么样的隐私保护策略 差分隐私 一个简单的应用案例 待续  背景 在大数据背景下，如何保护个人信息安全以及防止隐私泄露一直是学术界和工业界的研究重点，从隐私保护角度来看，一般我们可能采">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122152.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122218.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122249.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122303.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
+<meta property="og:updated_time" content="2021-11-03T14:43:55.515Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DP-Differential Privacy概念介绍">
+<meta name="twitter:description" content="本节我们介绍一下差分隐私的概念，也是本公众号的核心工作所在，这一节，暂且用我认为读者可以理解的方式介绍一下什么是差分隐私。本文从以下几个方面展开介绍:  背景 去除标识化信息导致的隐私问题 背景知识攻击案例 我们需要什么样的隐私保护策略 差分隐私 一个简单的应用案例 待续  背景 在大数据背景下，如何保护个人信息安全以及防止隐私泄露一直是学术界和工业界的研究重点，从隐私保护角度来看，一般我们可能采">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122152.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2018/07/22/技术扫盲-Differential-Privacy概念介绍/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>DP-Differential Privacy概念介绍 | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2018/07/22/技术扫盲-Differential-Privacy概念介绍/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DP-Differential Privacy概念介绍
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-22 00:00:00" itemprop="dateCreated datePublished" datetime="2018-07-22T00:00:00+08:00">2018-07-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-11-03 22:43:55" itemprop="dateModified" datetime="2021-11-03T22:43:55+08:00">2021-11-03</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/技术扫盲/" itemprop="url" rel="index"><span itemprop="name">技术扫盲</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/技术扫盲/Differential-Privacy/" itemprop="url" rel="index"><span itemprop="name">Differential Privacy</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本节我们介绍一下差分隐私的概念，也是本公众号的核心工作所在，这一节，暂且用我认为读者可以理解的方式介绍一下什么是差分隐私。本文从以下几个方面展开介绍:</p>
+<ul>
+<li>背景</li>
+<li>去除标识化信息导致的隐私问题</li>
+<li>背景知识攻击案例</li>
+<li>我们需要什么样的隐私保护策略</li>
+<li>差分隐私</li>
+<li>一个简单的应用案例</li>
+<li>待续</li>
+</ul>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122152.png" alt=""></p>
+<p>在大数据背景下，如何保护个人信息安全以及防止隐私泄露一直是学术界和工业界的研究重点，从隐私保护角度来看，一般我们可能采取以下几种手段：</p>
+<ul>
+<li>密码学手段(Cryptography)：信息完全保真，但是计算复杂度太高。</li>
+<li>匿名化手段(Anonymization)：隐私保护水平比较低，可能会碰到NP难问题。</li>
+<li>替代方法(Perturbation)：暂不了解。</li>
+</ul>
+<p>在这几种手段中，K匿名便是一种广为人知的隐私保护手段。现实生活中，我们通常以为去除了标识化信息，就可以保证个人的隐私保护，而新的研究逐渐表明，这种隐私保护的方法太过脆弱了。</p>
+<h1 id="去除标识化信息导致的隐私问题"><a href="#去除标识化信息导致的隐私问题" class="headerlink" title="去除标识化信息导致的隐私问题"></a>去除标识化信息导致的隐私问题</h1><p>当前的研究广为接受的一点是：当我们讨论安全技术，比如加密的时候，加密机制是假定公开的。一方面这有助于我们分析加密机制的复杂度；另一方面，很多情况下隐藏的敌手（Adversary）是知道加密实施的细节的。否则：你大可公开说，我发明了一种非常安全的加密机制，因为加密机制只有我知道。这可是一件会被嘲笑的事情。</p>
+<p>与此同时，讨论隐私保护的时候也是一样。<strong>你永远不知道攻击你的人含有你哪些信息。</strong>对此，有些人可能嗤之以鼻：</p>
+<blockquote>
+<p>Netflix曾经办了一个机器学习的比赛，旨在提高其推荐系统的准确性。为了保护公布的数据集中可能透露出的隐私问题，Netflix官方去除了数据集中的关键ID信息，然而，数据及发布没多久，研究人员便结合网上现有的知识和官方公布的数据还原出了数据集中的标识化信息。感兴趣的小伙伴可以参考这篇文章：Robust De-anonymization of Large Sparse Datasets。</p>
+<p>对此，作者表示：“ Releasing the data and just removing the names does nothing for privacy. If you know their name and a few records, then you can identify that person in the other (private) database. ”</p>
+</blockquote>
+<p>通过Netflix的案例，想必我们已经知道：直观上感觉安全的机制其实在精心设计的攻击面前毫无抵抗力。 </p>
+<h1 id="背景知识攻击案例"><a href="#背景知识攻击案例" class="headerlink" title="背景知识攻击案例"></a>背景知识攻击案例</h1><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">patient</th>
+<th>has cancer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Amy</td>
+<td>0</td>
+</tr>
+<tr>
+<td style="text-align:center">Tom</td>
+<td>1</td>
+</tr>
+<tr>
+<td style="text-align:center">Jack</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>我们不妨假定拥有一个和是否患有癌症有关的表，是否患有癌症对个人来说自然是相当敏感的问题，也需要我们保护。那么，假定敌手知道表中Jack在最后一行的话会发生什么呢？</p>
+<p>如果此表支持查询患有癌症的人数，那么敌手自然可以进行以下两个查询：</p>
+<ol>
+<li>前两行有多少人患有癌症</li>
+<li>前三行有多少人患有癌症</li>
+</ol>
+<p>利用两个回复的差，敌手就完全可以知道Jack是患有癌症的。所以从这个角度来说，是否能保护好个人隐私和敌手拥有的背景知识有关。敌手拥有的背景知识越多，被攻击的可能性就越高。</p>
+<h1 id="设想"><a href="#设想" class="headerlink" title="设想"></a>设想</h1><p>背景知识就像薛定谔的猫，你永远不知道敌手有没有，也不知道他有多少。不妨？假定敌手拥有所有的背景知识？</p>
+<p>当然不行，已有的数据敌手都知道了，那就没东西可以保护了。所以，我们就<strong>假定敌手拥有除了当前我拥有的数据之外的所有其他知识</strong>。</p>
+<p>如果这种情况敌手还不能从我的数据中获取有关个人的知识，那不是爽歪歪？</p>
+<h1 id="差分隐私"><a href="#差分隐私" class="headerlink" title="差分隐私"></a>差分隐私</h1><p>在这个假定之下，如何从直观上设计出保护隐私的算法呢？</p>
+<p>这时候我们需要重新回到“什么是隐私”这个话题上，学术界目前还没有对隐私有一个共识的定义，直观来说，如果从数据中获取到关于你的信息越多，我们倾向于认为你所受到的隐私侵犯越大。</p>
+<p>那么，<strong>如果我对数据的查询完全得不到你的信息，是不是意味着完全没有泄露你的隐私（这个“你”就是我们要保护的对象）？</strong>当然是的，不过代价是，都得不到你的信息，那么你的信息也就没用，这当然也不是我们所希望的。<strong>我们希望的是在保证数据可用的前提下，尽可能少地泄露隐私。</strong></p>
+<p>因此，我们希望我们对数据的查询<strong>“几乎”</strong>得不到你的信息。也就是说，你在这个数据库中和你不在这个数据库中两种情况下我对数据库的查询得到的结果“几乎”一样，我们就更倾向于你的隐私得到了保护。也就是说我们希望：</p>
+<p><center><strong>你在不在数据库中，我得到的结果都是差不多的</strong></center><br><br>既然在数据库中和不在数据库中结果都一样了，那肯定就意味着数据可用性为0了。所以“几乎”二字很重要，“几乎”的程度也就表示着隐私保护的力度。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122218.png" alt=""></p>
+<p>为此，科学家们提出了“相邻数据集”的概念：如果两个数据集只相差一条记录，那么这两个数据集是“相邻数据集”。在这基础上，如果对于相邻数据集的查询结果相近，那么那相差的一条记录的隐私就得到了保护。</p>
+<p>接下来很自然而言的一个问题，就是得到了多大程度的保护？还记得前面提到的“几乎”的概念吗？直观上，我们有：</p>
+<p><center><strong>如果对相邻数据集的查询结果越像，那么隐私保护力度越大！</strong></center><br>在这个背景之下，Cynthia Dwork在2006年提出了差分隐私（Differential Privacy, DP）的概念。</p>
+<blockquote>
+<p><strong>Differential Privacy:</strong> A randomized algoritnm $\mathcal{M}$ with domain $\mathbb{N}^{|\mathcal{X}|}$ is $(\epsilon, \delta)-$differentially private if for all $\mathcal{S}\subseteq$ Range $(\mathcal{M})$ and for all $x,y\in\mathbb{N}^{|\mathcal{X}|}$ such that $||x-y||_1 \le 1$:</p>
+<script type="math/tex; mode=display">\Pr[\mathcal{M}(x)\in\mathcal{S}] \le e^\epsilon \Pr[\mathcal{M}(y)\in\mathcal{S}]+\delta</script></blockquote>
+<p>对这个定义可以这么理解：如果对于任何一个可能查询结果，机制M对于任何相邻数据集的查询结果都不可区分，那么就说机制M是满足差分隐私机制的。epsilon称为隐私预算（budget）。通常而言，budget越小，隐私保护程度越高，数据可用性越差。（这里的delta可以忽略不看）</p>
+<p>这个定义中有两点需要体会：</p>
+<ol>
+<li>(x,y)是无序的，我们用概率比值来衡量相似程度</li>
+<li>相邻数据集意味着对每一条记录都提供保护</li>
+</ol>
+<p>根据这个定义，研究者就可以对数据集进行分析而保证任何一个数据集中的个体的隐私都不会被泄露。那么如何理解这个定义呢？首先需要知道什么是M以及为何M的输出是概率性的。</p>
+<blockquote>
+<ul>
+<li><strong>查询不应该是确定性的吗？为何会有概率？</strong></li>
+</ul>
+</blockquote>
+<p>在当前的很多隐私保护模型中，查询结果确实是确定性的。差分隐私机制引入的“随机化”就是通过将确定的输出以概率的方式呈现（可以理解为，以一定概率说假话）。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122249.png" alt=""></p>
+<blockquote>
+<ul>
+<li><strong>将确定性的结果概率化难道不会导致不精确吗？</strong></li>
+</ul>
+</blockquote>
+<p>这需要回到数据分析的目的来，即数据可用性。在大数据环境下，我们关心的是数据集中数据呈现出来的性质，规律等，而非单一个体的性状。要保障个人的隐私，必然会导致数据分析中引入误差。我们希望控制误差，<strong>差分隐私实际上也正式隐私保护程度和数据可用性之间的权衡。</strong>即如果下图中的两条曲线越近，隐私保护程度就越高。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122303.png" alt=""></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><p>DP只是一个定义，最初的DP甚至只是一种对隐私保护的一种至高目标，如何设计出满足DP机制的随机化算法M才是研究人员最关心的问题。本篇内容先不给出如何设计机制M，仅给出一个案例：</p>
+<p><strong>案例研究：如何通过抽样统计人群中抽烟人数的比例？</strong></p>
+<p>对于被调查者，是不希望直接回答自己抽烟与否的，因为在一定程度上，抽烟是一种和个人隐私紧密相关的问题。</p>
+<p>只需要通过一枚硬币，就可以以差分隐私的方式解决这个问题。这个方法叫做Coin Flipping：</p>
+<p>（1）扔一枚硬币，如果正面朝上，老实回答自己是否抽烟<br>（2）如果反面朝上，则重复扔一枚硬币，如果正面朝上就回答“抽烟”，反面朝上就回答“不抽烟”。</p>
+<h2 id="数据有效性（Utility）"><a href="#数据有效性（Utility）" class="headerlink" title="数据有效性（Utility）"></a>数据有效性（Utility）</h2><p>首先，我们来看这个机制是否可以解决问题，我们用$P_a$表示被调查者抽烟的概率（即我们想获得的结果），用$P_b$表示我们收集到的抽烟人数的比例，则根据上面的过程有：</p>
+<script type="math/tex; mode=display">P_b = 0.5 P_a + 0.25</script><p>因此：$P_a = 2P_b-0.5$</p>
+<p>所以根据统计的$P_b$可以估计出$P_a$，这个估计人群吸烟比例的方法是正确的（假设有足够多的样本）。</p>
+<h2 id="隐私性（Privacy）"><a href="#隐私性（Privacy）" class="headerlink" title="隐私性（Privacy）"></a>隐私性（Privacy）</h2><p>数据有效性是对数据整体而言的特性，而隐私就更涉及到和个人有关。理想情况下，最好的隐私保护策略就是随机回答，但是随机回答会导致数据完全没有真实性。我们看一下CoinFlipping的过程，首先有：</p>
+<p>S=[‘抽烟’, ‘不抽烟’]</p>
+<p>因此我们可以计算出</p>
+<p>P[‘抽烟’ | ‘抽烟’] = 0.75<br>P[‘抽烟’ | ‘不抽烟’] = 0.25<br>P[‘不抽烟’ | ‘不抽烟’] = 0.75<br>P[‘不抽烟’ | ‘抽烟’] = 0.25</p>
+<p>那么我们自然而然就计算出了$\epsilon=\ln 3$，所以我们说 Coin Flipping 机制是提供了$\ln 3$-DP的。</p>
+<p>直观感觉上来说，Coin Flipping是比较能保护隐私的，因为即使某人回答抽烟，我们只能得到他很可能抽烟（保证数据有效性），而无法确定此人是否抽烟（隐私性）。</p>
+<h1 id="待续"><a href="#待续" class="headerlink" title="待续"></a>待续</h1><p>上面提到的一个应用仅仅针对二值回答才有效，如何对一般性的查询设计出一个满足差分隐私的随机化查询机制M呢？在DP的定义一出来之后，不就便广受研究人员的关心。</p>
+<p>文中的部分配图来源于朱天清老师的课件，朱老师在学术上做了大量和差分隐私有关的工作，辛苦朱老师的付出。</p>
+<hr>
+<p>本篇内容到这里就结束了，若想知道更多和信息安全有关的技术可在公众号留言。识别以下二维码可以成为本公众号的小粉丝，关注更多前沿技术。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png" alt="微信公众号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/26/随笔-20180626-苦涩与生活/" rel="next" title="<span style=" background:yellow;"=""><font color="#000000">人生随笔</font>-苦涩与生活">
+                <i class="fa fa-chevron-left"></i> <span style="background:yellow;"><font color="#000000">人生随笔</font></span>-苦涩与生活
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/27/技术扫盲-DP-Laplace-Mechanism/" rel="prev" title="DP-Laplace Mechanism">
+                DP-Laplace Mechanism <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">99</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#去除标识化信息导致的隐私问题"><span class="nav-number">2.</span> <span class="nav-text">去除标识化信息导致的隐私问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#背景知识攻击案例"><span class="nav-number">3.</span> <span class="nav-text">背景知识攻击案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设想"><span class="nav-number">4.</span> <span class="nav-text">设想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#差分隐私"><span class="nav-number">5.</span> <span class="nav-text">差分隐私</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">6.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据有效性（Utility）"><span class="nav-number">6.1.</span> <span class="nav-text">数据有效性（Utility）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隐私性（Privacy）"><span class="nav-number">6.2.</span> <span class="nav-text">隐私性（Privacy）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#待续"><span class="nav-number">7.</span> <span class="nav-text">待续</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

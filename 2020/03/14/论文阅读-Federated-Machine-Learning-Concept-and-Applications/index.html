@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="文章地址：Federated Machine Learning Concept and Applications标题：Federated Machine Learning: Concept and Applications作者：Qiang Yang, Yang Liu, Tianjian Chen, Yongxin Tong发表期刊：ACM Transactions on Intelligent">
+<meta name="keywords" content="Federated Learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Federated Machine Learning Concept and Applications">
+<meta property="og:url" content="http://forestneo.com/2020/03/14/论文阅读-Federated-Machine-Learning-Concept-and-Applications/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="文章地址：Federated Machine Learning Concept and Applications标题：Federated Machine Learning: Concept and Applications作者：Qiang Yang, Yang Liu, Tianjian Chen, Yongxin Tong发表期刊：ACM Transactions on Intelligent">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200407151446.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200407151533.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200407151545.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200407151629.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200407152416.png">
+<meta property="og:image" content="http://forestneo.com/Users/sunlin/Desktop/20200407152319.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200408191953.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200408192008.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200408192533.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
+<meta property="og:updated_time" content="2021-10-10T12:31:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Federated Machine Learning Concept and Applications">
+<meta name="twitter:description" content="文章地址：Federated Machine Learning Concept and Applications标题：Federated Machine Learning: Concept and Applications作者：Qiang Yang, Yang Liu, Tianjian Chen, Yongxin Tong发表期刊：ACM Transactions on Intelligent">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200407151446.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2020/03/14/论文阅读-Federated-Machine-Learning-Concept-and-Applications/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title><span style="background:green;"><font color="#000000">论文阅读</font></span>-Federated Machine Learning Concept and Applications | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2020/03/14/论文阅读-Federated-Machine-Learning-Concept-and-Applications/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">论文阅读</font></span>-Federated Machine Learning Concept and Applications
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-03-14 23:29:32" itemprop="dateCreated datePublished" datetime="2020-03-14T23:29:32+08:00">2020-03-14</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-10-10 20:31:04" itemprop="dateModified" datetime="2021-10-10T20:31:04+08:00">2021-10-10</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/综述/" itemprop="url" rel="index"><span itemprop="name">综述</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>文章地址：<a href="https://arxiv.org/abs/1902.04885" target="_blank" rel="noopener">Federated Machine Learning Concept and Applications</a><br>标题：Federated Machine Learning: Concept and Applications<br>作者：Qiang Yang, Yang Liu, Tianjian Chen, Yongxin Tong<br>发表期刊：ACM Transactions on Intelligent Systems and Technology (TIST) Volume 10 Issue 2, Article No. 12, January 2019</p>
+<hr>
+<p>之前已经大概读了一遍，为了做这个笔记，总体而言使用谷歌翻译完成的。</p>
+<ul>
+<li>Introduction</li>
+<li>An overview of federated learning<ul>
+<li>difinition of federated learning</li>
+<li>privacy of federated learning</li>
+<li>a categorization of federated learning</li>
+<li>architecture for a federated learning system</li>
+</ul>
+</li>
+<li>Related works<ul>
+<li>privacy-preserving machine learning</li>
+<li>federated learning vs. distributed machine learning</li>
+<li>federated learning vs. edge computing</li>
+<li>federated learning vs. federated database systems</li>
+</ul>
+</li>
+<li>Applications</li>
+<li>Federated learning and data alliance of enterprises</li>
+<li>Conclusions and prospects</li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>当今的AI仍然面临两个主要挑战。 一是在大多数行业中，数据以孤立的孤岛形式存在。 另一个是加强数据隐私和安全性。 我们为这些挑战提出了一种可能的解决方案：安全的联邦学习。 除了Google在2016年首次提出的联邦学习框架之外，我们还引入了一个全面的安全联邦学习框架，其中包括水平联邦学习，垂直联邦学习和联合转移学习。 我们提供联邦学习框架的定义，体系结构和应用程序，并提供有关该主题的现有著作的全面概述。 另外，我们建议在基于联盟机制的组织之间建立数据网络，作为一种有效的解决方案，使知识可以在不损害用户隐私的情况下进行共享。</p>
+<p>2016年是人工智能（AI）走向成熟的一年。 随着AlphaGo [59]击败人类顶尖的Go选手，我们真正见证了人工智能（AI）的巨大潜力，并开始期望在许多应用中使用更复杂，最先进的AI技术，包括无人驾驶汽车，医疗保健， 如今，人工智能技术正在几乎每个行业和各行各业中展示其优势。 但是，当我们回顾AI的发展时，不可避免的是AI的发展经历了几次起伏。 人工智能会不会再下滑呢？ 什么时候出现？由于什么因素？ 当前对人工智能的公共兴趣部分是由大数据的可用性所驱动的：2016年，AlphaGo总共使用了300,000个游戏作为培训数据，以取得出色的成绩。</p>
+<p>有了AlphaGo的成功，人们自然希望，像AlphaGo这样的大数据驱动型AI能够在我们生活的方方面面早日实现。但是，现实情况令人有些失望：除少数行业外，大多数领域的数据有限或数据质量较差，这使得AI技术的实现比我们想象的要困难得多。通过跨组织传输数据，是否可以将数据融合到一个公共站点中？实际上，要打破数据源之间的障碍，即使在许多情况下，也是非常困难的。通常，任何AI项目中所需的数据都涉及多种类型。例如，在AI驱动的产品推荐服务中，产品卖方拥有有关产品的信息，用户购买的数据，但没有描述用户的购买能力和付款习惯的数据。在大多数行业中，数据以孤立的孤岛形式存在。由于行业竞争，隐私安全和复杂的管理程序，即使同一公司的不同部门之间的数据集成也面临着巨大的阻力。几乎不可能整合遍布全国和机构的数据，否则成本很高。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200407151446.png" style="zoom:50%;"></p>
+<p>同时，随着大型公司对数据安全性和用户隐私的妥协意识日益增强，对数据隐私和安全性的重视已成为全球性的主要问题。有关公共数据泄漏的新闻引起了公共媒体和政府的极大关注。例如，Facebook最近的数据泄露已经引起了广泛的抗议[70]。作为回应，世界各国都在加强保护数据安全和隐私的法律。一个示例就是欧盟于2018年5月25日实施的《通用数据保护条例》 [GDPR] [19]。GDPR（图1）旨在保护用户的个人隐私和数据安全。它要求企业使用清晰明了的语言来达成用户协议，并授予用户“被遗忘的权利”，即用户可以删除或撤回其个人数据。违反该法案的公司将面临严厉的罚款。美国和中国正在制定类似的隐私和安全法案。例如，2017年颁布的《中国网络安全法》和《民法通则》要求互联网业务不得泄露或篡改其收集的个人信息，并且在与第三方进行数据交易时，他们需要确保拟议合同遵守法律数据保护义务。这些法规的建立显然将有助于建立一个更加文明的社会，但也会给当今AI中普遍使用的数据交易程序带来新的挑战。</p>
+<p>更具体地说，人工智能中的传统数据处理模型通常涉及简单的数据事务处理模型，其中一方收集数据并将其传输到另一方，而另一方将负责清理和融合数据。最后，第三方将获取集成数据并构建模型，以供其他各方使用。模型通常是作为服务出售的最终产品。这种传统过程面临着上述新数据法规和法律的挑战。同样，由于用户可能不清楚模型的未来用途，因此交易违反了GDPR之类的法律。结果，我们面临着一个难题，即我们的数据是孤立的孤岛形式，但是在许多情况下，我们被禁止在不同地方收集，融合和使用数据进行AI处理。对于当今的AI研究人员和从业人员来说，如何合法地解决数据碎片和隔离问题是一个重大挑战。</p>
+<p>在本文中，我们概述了一种称为联邦学习的新方法，这是应对这些挑战的一种可能的解决方案。我们调查有关联邦学习的现有工作，并为全面安全的联邦学习框架提出定义，分类和应用。我们讨论了联邦学习框架如何成功地应用于各种企业。在促进联邦学习方面，我们希望将AI开发的重点从改善模型性能（这是大多数AI领域目前正在做的事情）转移到研究符合数据隐私和安全法的数据集成方法。</p>
+<h1 id="An-overview-of-federated-learning"><a href="#An-overview-of-federated-learning" class="headerlink" title="An overview of federated learning"></a>An overview of federated learning</h1><p>谷歌最近提出了联邦学习的概念[36，37，41]。他们的主要思想是基于分布在多个设备上的数据集构建机器学习模型，同时防止数据泄漏。最近的改进集中在克服联邦学习中的统计挑战[60，77]和提高安全性[9，23]。也有研究工作使联邦学习更加个性化[13，60]。以上工作全部集中在设备上的联邦学习上，其中涉及分布式移动用户交互，并且大规模分布中的通信成本，不平衡的数据分布和设备可靠性是优化的一些主要因素。另外，数据由用户ID或设备ID划分，因此在数据空间中水平划分。这方面的工作与[58]这样的隐私保护机器学习非常相关，因为它也考虑了分散式协作学习环境中的数据隐私。为了将联邦学习的概念扩展到涵盖组织之间的协作学习方案，我们将原始的“联邦学习”扩展到所有保留隐私的分散式协作机器学习技术的一般概念。在[71]中，我们对联邦学习和联合转移学习技术进行了初步概述。在本文中，我们将进一步调查相关的安全基础，并探讨与其他几个相关领域的关系，例如多主体理论和隐私保护数据挖掘。在本节中，我们提供了关于联邦学习的更全面的定义，其中考虑了数据分区，安全性和应用程序。我们还描述了联邦学习系统的工作流程和系统架构。</p>
+<h2 id="Definition-of-Federated-Learning"><a href="#Definition-of-Federated-Learning" class="headerlink" title="Definition of Federated Learning"></a>Definition of Federated Learning</h2><p>假定 $N$ 个数据所有者 $\left\{\mathcal{F}_{1}, \ldots \mathcal{F}_{N}\right\}$，这些人想用自己的数据 $\left\{\mathcal{D}_{1}, \ldots \mathcal{D}_{N}\right\}$ 共同训练出一个机器学习模型。传统的方法是将这些数据集合成 $\mathcal{D}=\mathcal{D}_{1} \cup \ldots \cup \mathcal{D}_{N}$ 来训练一个模型 $\mathcal{M}_{S U M}$。联邦学习的目标依然是他们合作训练一个模型 $\mathcal{M}_{FED}$，但是 $\mathcal{F}_i$ 并不泄露出其数据 $\mathcal{D}_i$。除此之外，我们假设模型 $\mathcal{M}$ 的精确度为 $\mathcal{V}$，那么对于任意 $\delta&gt;0$，我们应该有：</p>
+<script type="math/tex; mode=display">
+\left|\mathcal{V}_{F E D}-\mathcal{V}_{S U M}\right|<\delta</script><p>我们就说这个联邦学习算法有 $\delta$-精确度损失。</p>
+<h2 id="Privacy-of-Federated-Learning"><a href="#Privacy-of-Federated-Learning" class="headerlink" title="Privacy of Federated Learning"></a>Privacy of Federated Learning</h2><p>隐私是联邦学习的基本属性之一。 这就需要安全模型和分析来提供有意义的隐私保证。 在本节中，我们简要回顾并比较了用于联邦学习的不同隐私技术，并确定了防止间接泄漏的方法和潜在挑战。</p>
+<p><strong>安全多方计算（SMC）</strong>。 SMC安全模型自然包含多个参与方，并在定义明确的仿真框架中提供安全证明，以确保完全零知识，也就是说，除了输入和输出之外，每个参与方都不知道。零知识是非常需要的，但是这种期望的属性通常需要复杂的计算协议，并且可能无法有效实现。在某些情况下，如果提供安全保证，则可以认为部分知识公开是可以接受的。有可能在较低的安全性要求下用SMC建立安全性模型以换取效率[16]。最近，研究[46]使用SMC框架训练带有两个服务器和半诚实假设的机器学习模型。参考文献[33]使用MPC协议进行模型训练和验证，而用户无需透露敏感数据。最先进的SMC框架之一是Sharemind [8]。 Ref [44]提出了一个诚实多数的3PC模型[5，21，45]，并在半诚实和恶意假设中考虑了安全性。这些作品要求参与者的数据在非冲突服务器之间秘密共享。</p>
+<p><strong>差分隐私</strong>。 另一行工作使用差分隐私[18]或k-匿名[63]技术保护数据隐私[1、12、42、61]。 差分隐私，k匿名和多样化的方法[3]涉及给数据添加噪声，或使用归纳方法掩盖某些敏感属性，直到第三方无法区分个人为止，从而使数据无法还原到 保护用户隐私。 但是，这些方法的根源仍然要求将数据传输到其他地方，并且这些工作通常需要在准确性和隐私之间进行权衡。 在[23]中，作者介绍了一种针对联邦学习的差分隐私方法，目的是通过在培训期间隐藏客户的贡献来为客户端数据增加保护。</p>
+<p><strong>同态加密</strong>。 在机器学习过程中，还采用了同态加密[53]来通过加密机制下的参数交换来保护用户数据的隐私性[24、26、48]。 与差分隐私保护不同，数据和模型本身不会被传输，也不会被对方的数据猜中。 因此，在原始数据级别泄漏的可能性很小。 最近的工作采用同态加密来集中和训练云上的数据[75，76]。 在实践中，加性同态加密[2]被广泛使用，并且需要进行多项式逼近来评估机器学习算法中的非线性函数，从而在准确性和隐私性之间进行权衡[4，35]。</p>
+<h3 id="间接信息泄漏"><a href="#间接信息泄漏" class="headerlink" title="间接信息泄漏"></a>间接信息泄漏</h3><p>联邦学习的先驱作品暴露了中间结果，例如来自诸如随机梯度下降（SGD）等优化算法的参数更新[41，58]，但是没有提供安全保证，这些梯度的泄漏实际上可能泄漏重要的数据信息[51]。当与数据结构（例如图像像素）一起暴露时。研究人员已经考虑了一种情况，即联邦学习系统的成员之一通过允许插入后门来学习他人的数据来恶意攻击他人。在[6]中，作者证明了有可能将隐藏的后门插入到联合全局模型中，并提出一种新的“约束和规模”模型中毒方法以减少数据中毒。在[43]中，研究人员发现了协作机器学习系统中的潜在漏洞，协作学习中不同方使用的训练数据容易受到推理攻击。他们表明，对抗参与者可以推断出成员资格以及与训练数据子集相关的属性。他们还讨论了针对这些攻击的可能防御措施。在[62]中，作者揭露了与不同方之间进行梯度交换相关的潜在安全问题，并提出了梯度下降方法的安全变体，并表明它可以承受恒定比例的拜占庭工人。</p>
+<p>研究人员还开始考虑将区块链作为促进联邦学习的平台。 在[34]中，研究人员考虑了区块链联邦学习（BlockFL）架构，该架构通过利用区块链来交换和验证移动设备的本地学习模型更新。 他们考虑了最佳的块生成，网络可扩展性和健壮性问题。</p>
+<h2 id="A-Categorization-of-Federated-Learning"><a href="#A-Categorization-of-Federated-Learning" class="headerlink" title="A Categorization of Federated Learning"></a>A Categorization of Federated Learning</h2><p>在本节中，我们讨论如何根据数据的分布特征对联邦学习进行分类。</p>
+<p>令矩阵 $\mathcal{D}_i$ 表示每个数据所有者i持有的数据。矩阵的每一行代表一个样本，每一列代表一个特征。同时，某些数据集可能还包含标签数据。我们将要素空间表示为X，将标签空间表示为Y，并使用I表示样本ID空间。例如，在财务字段中，标签可能是用户的信用；在营销字段中，标签可能是用户的购买意愿；在教育领域，Y可能是学生的学位。特征X，标签Y和样本ID I构成了完整的训练数据集（I，X，Y）。数据参与方的特征和样本空间可能并不相同，我们根据特征和样本ID空间中各方之间的数据分配方式，将联邦学习分为水平联邦学习，垂直联邦学习和联合转移学习。图2显示了针对两方场景的各种联邦学习框架。</p>
+<h3 id="Horizontal-Federated-Learning"><a href="#Horizontal-Federated-Learning" class="headerlink" title="Horizontal Federated Learning"></a>Horizontal Federated Learning</h3><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200407151533.png" style="zoom: 50%;"></p>
+<p>在数据集共享相同特征空间但样本不同的情况下引入了水平联邦学习或基于样本的联邦学习（图2a）。例如，两个区域银行可能具有与其各自区域不同的用户组，并且它们的用户的交集非常小。但是，它们的业务非常相似，因此要素空间相同。参考文献[58]提出了一种协作式深度学习方案，其中参与者独立训练并且仅共享参数更新的子集。 2017年，Google提出了用于Android手机模型更新的水平联邦学习解决方案[41]。在该框架中，使用Android手机的单个用户可以在本地更新模型参数，并将参数上传到Android云，从而与其他数据所有者一起共同训练集中式模型。还引入了一种安全的聚合方案，以在其联邦学习框架下保护聚合的用户更新的隐私性[9]。参考文献[51]使用加性同态加密进行模型参数聚合，以提供针对中央服务器的安全性。</p>
+<p>在[60]中，提出了一种多任务样式的联邦学习系统，以允许多个站点完成单独的任务，同时共享知识并维护安全性。他们提出的多任务学习模型还可以解决高通信成本，麻烦和容错问题。在[41]中，作者提议建立一个安全的客户端-服务器结构，在该结构中，联邦学习系统按用户划分数据，并允许在客户端设备上构建的模型在服务器站点上进行协作以构建全局联合模型。建立模型的过程可确保没有数据泄漏。同样，在[36]中，作者提出了一些方法来提高通信成本，以促进基于分布在移动客户端上的数据的集中模型的训练。最近，提出了一种称为“深度梯度压缩”的压缩方法[39]，以在大规模分布式训练中大大减少通信带宽。</p>
+<p>我们将横向联邦学习总结为：</p>
+<script type="math/tex; mode=display">
+\mathcal{X}_{i}=\mathcal{X}_{j}, \quad \mathcal{Y}_{i}=\mathcal{Y}_{j}, \quad I_{i} \neq I_{j}, \quad \forall \mathcal{D}_{i}, \mathcal{D}_{j}, i \neq j</script><p>安全定义。 水平联邦学习系统通常假设诚实的参与者和针对诚实但好奇的服务器的安全性[9，51]。 也就是说，只有服务器才能损害数据参与者的隐私。 这些作品中已提供安全证明。 最近，还提出了考虑恶意用户的另一种安全模型[29]，这带来了额外的隐私挑战。 在培训结束时，通用模型和整个模型参数将向所有参与者公开。</p>
+<h3 id="Verical-Federated-Learning"><a href="#Verical-Federated-Learning" class="headerlink" title="Verical Federated Learning"></a>Verical Federated Learning</h3><p>已经提出了针对垂直划分的数据的隐私保护机器学习算法，包括合作统计分析[15]，关联规则挖掘[65]，安全线性回归[22、32、55]，分类[16]和梯度下降[68]。最近，参考文献[27，49]提出了一种垂直联邦学习方案，以训练隐私保护逻辑回归模型。作者研究了实体分辨率对学习性能的影响，并将泰勒逼近应用于损失函数和梯度函数，以便可以将同态加密用于隐私保护计算。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200407151545.png" style="zoom:50%;"></p>
+<p>垂直联邦学习或基于特征的联邦学习（图2b）适用于两个数据集共享相同的样本ID空间但特征空间不同的情况。例如，考虑在同一城市中的两家不同的公司，一家是银行，另一家是电子商务公司。他们的用户集可能包含该地区的大多数居民，因此他们的用户空间相交很大。但是，由于银行记录了用户的收支行为和信用等级，并且电子商务保留了用户的浏览和购买历史，因此它们的功能空间大不相同。假设我们希望双方都有一个基于用户和产品信息的产品购买预测模型。</p>
+<p>垂直联邦学习是聚合这些不同特征并以保护隐私的方式计算训练损失和梯度的过程，以使用双方的数据共同构建模型。在这种联邦机制下，每个参与方的身份和地位都是相同的，联邦系统帮助每个人建立“共同财富”策略，这就是为什么该系统被称为“联邦学习”。因此，在这样的系统中，我们具有：</p>
+<script type="math/tex; mode=display">
+\mathcal{X}_{i} \neq \mathcal{X}_{j}, \quad \mathcal{Y}_{i} \neq \mathcal{Y}_{j}, \quad I_{i}=I_{j} \quad \forall \mathcal{D}_{i}, \mathcal{D}_{j}, i \neq j</script><p>安全定义。 垂直联邦学习系统通常假设诚实但好奇的参与者。 例如，在两党的情况下，两党是无冲突的，并且最多只有其中之一受到对手的妥协。 安全性定义是，攻击者只能从其损坏的客户端中学习数据，而不能从其他客户端中学习超出输入和输出所显示内容的数据。 为了促进两方之间的安全计算，有时会引入半诚实的第三方（STP），在这种情况下，假定STP不与任何一方串通。 SMC为这些协议提供了正式的隐私证明[25]。 在学习结束时，每一方只保留与其自身功能相关的模型参数，因此在推理时，两方还需要协作以生成输出。</p>
+<h3 id="Federated-Transfer-Learning-FTL"><a href="#Federated-Transfer-Learning-FTL" class="headerlink" title="Federated Transfer Learning (FTL)"></a>Federated Transfer Learning (FTL)</h3><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200407151629.png" style="zoom:50%;"></p>
+<p>联合转移学习适用于两个数据集不仅在样本上而且在特征空间上都不同的情况。 考虑两个机构，一个是位于中国的银行，另一个是位于美国的电子商务公司。 由于地理位置的限制，两个机构的用户群之间的交叉点很小。 另一方面，由于业务不同，双方的特征空间只有一小部分重叠。 在这种情况下，可以应用转移学习[50]技术为联合之下的整个样本和特征空间提供解决方案（图2c）。 特别地，使用有限的公共样本集学习两个特征空间之间的共同表示，然后将其应用于获得仅具有一侧特征的样本的预测。 FTL是现有联邦学习系统的重要扩展，因为它处理的问题超出了现有联邦学习算法的范围：</p>
+<script type="math/tex; mode=display">
+X_{i} \neq X_{j}, \quad \mathcal{Y}_{i} \neq \mathcal{Y}_{j}, \quad I_{i} \neq I_{j} \quad \forall \mathcal{D}_{i}, \mathcal{D}_{j}, i \neq j</script><p><strong>安全定义</strong>。 联邦转移学习系统通常涉及两个方面。 如下一节将显示的，其协议类似于垂直联邦学习中的协议，在这种情况下，可以在此处扩展垂直联邦学习的安全性定义。</p>
+<h2 id="Acchitecture-for-a-federated-learning-sysmte"><a href="#Acchitecture-for-a-federated-learning-sysmte" class="headerlink" title="Acchitecture for a federated learning sysmte"></a>Acchitecture for a federated learning sysmte</h2><p>在本节中，我们说明了联邦学习系统的一般体系结构的示例。 请注意，水平和垂直联邦学习系统的体系结构在设计上有很大的不同，我们将分别介绍它们。</p>
+<h3 id="Horizontal-Federated-Learning-1"><a href="#Horizontal-Federated-Learning-1" class="headerlink" title="Horizontal Federated Learning"></a>Horizontal Federated Learning</h3><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200407152416.png" style="zoom:67%;"></p>
+<p>图3显示了水平联邦学习系统的典型体系结构。在该系统中，具有相同数据结构的k个参与者借助参数或云服务器协作学习机器学习模型。 一个典型的假设是，参与者是诚实的，而服务器是诚实但好奇的，因此，不允许任何参与者向服务器泄漏信息[51]。 这种系统的培训过程通常包含以下四个步骤：</p>
+<ul>
+<li>Step 1: 参与者在本地计算训练梯度，使用加密[51]，差分隐私[58]或秘密共享[9]技术掩盖梯度的选择，并将掩蔽的结果发送到服务器；</li>
+<li>Step 2: 服务器执行安全聚合，而无需了解有关任何参与的信息；</li>
+<li>Step 3: 服务器将汇总结果发回给参与者；</li>
+<li>Step 4: 参与者使用解密的渐变更新各自的模型。</li>
+</ul>
+<p>继续执行上述步骤，直到损失函数收敛为止，从而完成了整个训练过程。 这种架构独立于特定的机器学习算法（逻辑回归，DNN等），并且所有参与者都将共享最终的模型参数。</p>
+<p><strong>安全分析</strong>。 如果使用SMC [9]或同态加密[51]完成梯度聚合，则上述架构被证明可以保护数据免受半诚实服务器的泄漏。 但是它可能会受到恶意参与者在协作学习过程中训练生成对抗网络（GAN）的另一种安全模型的攻击[29]。</p>
+<h3 id="Vertical-Federated-Learning"><a href="#Vertical-Federated-Learning" class="headerlink" title="Vertical Federated Learning"></a>Vertical Federated Learning</h3><p>假设公司A和公司B希望共同训练机器学习模型，并且他们的业务系统各自具有自己的数据。 此外，公司B还具有模型需要预测的标签数据。 出于数据隐私和安全原因，A和B无法直接交换数据。 为了确保在培训过程中数据的机密性，需要第三方协作者C的参与。 在这里，我们假设协作者C是诚实的，并且不与A或B串通，但甲方和B都是诚实但好奇的。 受信任的第三方C是一个合理的假设，因为第三方C可以由政府等机构扮演，也可以由诸如Intel Software Guard Extensions（SGX）[7]之类的安全计算节点代替。 联邦学习系统由两部分组成，如图4所示。</p>
+<p><img src="/Users/sunlin/Desktop/20200407152319.png" style="zoom:67%;"></p>
+<p>第1部分。加密实体对齐。 由于两家公司的用户组不同，因此系统使用基于加密的用户ID对齐技术（例如[38、56]）来确认双方的普通用户，而A和B不会暴露各自的数据。 在实体对齐期间，系统不会公开彼此不重叠的用户。</p>
+<p>第2部分。加密模型训练。 确定公共实体后，我们可以使用这些公共实体的数据来训练机器学习模型。 培训过程可以分为以下四个步骤（如图4所示）：</p>
+<ul>
+<li>步骤1：合作者C创建加密对，将公钥发送给A和B;</li>
+<li>步骤2：A和B加密并交换中间结果以进行梯度和损耗计算；</li>
+<li>步骤3：A和B分别计算加密的梯度并添加额外的掩码，B也计算加密的损失； A和B向C发送加密后的值；</li>
+<li>步骤4：C解密并将解密的梯度和损失发送回A和B； A和B取消遮盖渐变，相应地更新模型参数。</li>
+</ul>
+<p>在这里，我们说明了使用线性回归和同态加密作为一个例子。 要使用梯度下降方法训练线性回归模型，我们需要安全损耗和梯度的计算。 假设学习率 $\eta$，正则化参数 $\lambda$，数据集合 $\{x_i^A\}_{i\in\mathcal{D}_A}$, $\{x_i^B, y_i\}_{i\in\mathcal{D}_B}$,模型参数 $\Theta_{A}, \boldsymbol{\Theta}_{B}$，训练目标为：</p>
+<script type="math/tex; mode=display">
+\min _{\Theta_{A}, \Theta_{B}} \sum_{i}\left\|\Theta_{A} x_{i}^{A}+\Theta_{B} x_{i}^{B}-y_{i}\right\|^{2}+\frac{\lambda}{2}\left(\left\|\Theta_{A}\right\|^{2}+\left\|\Theta_{B}\right\|^{2}\right)</script><p>令 $u_{i}^{A}=\Theta_{A} x_{i}^{A}, u_{i}^{B}=\Theta_{B} x_{i}^{B}$，那么加密之后的 loss 为：</p>
+<script type="math/tex; mode=display">
+[[\mathcal{L}]]=\left[\left[\sum_{i}\left(\left(u_{i}^{A}+u_{i}^{B}-y_{i}\right)\right)^{2}+\frac{\lambda}{2}\left(\left\|\Theta_{A}\right\|^{2}+\left\|\Theta_{B}\right\|^{2}\right)\right]\right]</script><p>其中，同态加密用 $[[\cdot]]$ 表示。令 $\left[\left[\mathcal{L}_{A}\right]\right]=\left[\left[\sum_{i}\left(\left(u_{i}^{A}\right)^{2}\right)+\frac{\lambda}{2} \Theta_{A}^{2}\right]\right]$，$\left[\left[\mathcal{L}_{B}\right]\right]=\left[\left[\sum_{i}\left(\left(u_{i}^{B}-y_{i}\right)^{2}\right)+\frac{\lambda}{2} \Theta_{B}^{2}\right]\right]$，以及 $\left[\left[\mathcal{L}_{A B}\right]\right]=2 \sum_{i}\left(\left[\left[u_{i}^{A}\right]\right]\left(u_{i}^{B}-y_{i}\right)\right)$，那么有：</p>
+<script type="math/tex; mode=display">
+[[\mathcal{L}]]=\left[\left[\mathcal{L}_{A}\right]\right]+\left[\left[\mathcal{L}_{B}\right]\right]+\left[\left[\mathcal{L}_{A B}\right]\right]</script><p>类似道理，令 $\left[\left[d_{i}\right]\right]=\left[\left[u_{i}^{A}\right]\right]+\left[\left[u_{i}^{B}-y_{i}\right]\right]$，我们可以计算梯度为：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\left[\left[\frac{\partial \mathcal{L}}{\partial \Theta_{A}}\right]\right]=\sum_{i}\left[\left[d_{i}\right]\right] x_{i}^{A}+\left[\left[\lambda \Theta_{A}\right]\right]\\
+&\left[\left[\frac{\partial \mathcal{L}}{\partial \Theta_{B}}\right]\right]=\sum_{i}\left[\left[d_{i}\right]\right] x_{i}^{B}+\left[\left[\lambda \Theta_{B}\right]\right]
+\end{aligned}</script><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200408191953.png" style="zoom:50%;"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200408192008.png" style="zoom:50%;"></p>
+<p>有关详细步骤，请参见表1和2。在实体对齐和模型训练过程中，A和B的数据保留在本地，并且训练中的数据交互不会导致数据隐私泄露。注意向C泄漏的潜在信息可能会或可能不会被视为侵犯隐私。为了进一步防止C在这种情况下从A或B学习信息，A和B可以通过添加加密的随机掩码来进一步向C隐藏其梯度。因此，双方在联邦学习的帮助下实现了对共同模型的共同训练。因为在训练过程中，当事方收到的损失和梯度与在没有隐私约束的情况下共同建立一个在一个地方收集的数据的模型共同建立时，他们将收到的损失和梯度完全相同，也就是说，该模型是无损的。模型的效率取决于加密数据的通信成本和计算成本。在每次迭代中，A和B之间发送的信息随重叠样本的数量而定。因此，通过采用分布式并行计算技术可以进一步提高该算法的效率。</p>
+<p><strong>安全分析</strong>。表1所示的训练协议没有向C透露任何信息，因为所有C获悉的信息都是被掩盖的梯度，并且被掩盖矩阵的随机性和保密性得到了保证[16]。在上述协议中，甲方在每个步骤都学习其梯度，但这不足以使甲根据等式8从乙学习任何信息，因为标量乘积协议的安全性基于无法解决 $n$ 个未知数中的方程[16，65]。在这里，我们假设样本数量 $N_A$ 远大于 $n_A$，其中 $N_A$ 是特征数量。同样，乙方也无法向甲方学习任何信息。因此，证明了该协议的安全性。请注意，我们假设双方都是半诚实的。如果一方是恶意的并且通过伪造其输入来欺骗系统，例如，方A仅提交具有一个非零功能的一个非零输入，则它可以告诉该示例该功能的 $u_i^B$ 值。虽然它仍然不能告诉 $x_i^B$ 或 $\Theta_B$，并且偏差将使下一次迭代的结果失真，从而警告另一方终止学习过程。在训练过程结束时，每一方（A或B）都不会理会另一方的数据结构，并且它仅获得与自身功能相关的模型参数。在推论时，双方需要使用表2中所示的步骤来协同计算预测结果，但这仍然不会导致信息泄漏。</p>
+<h3 id="Federated-Transfer-Learning"><a href="#Federated-Transfer-Learning" class="headerlink" title="Federated Transfer Learning"></a>Federated Transfer Learning</h3><p>假设在上面的垂直联邦学习示例中，甲方和乙方只有很少的一组重叠样本，并且我们有兴趣学习甲方中所有数据集的标签。对于重叠的数据集。为了将其覆盖范围扩展到整个样本空间，我们引入了转移学习。这不会改变图4所示的总体架构，而是会更改甲方和乙方之间交换的中间结果的细节。具体而言，转移学习通常涉及学习甲方和乙方特征之间的通用表示，并将其最小化通过利用源域参与方（在这种情况下为B）中的标签来预测目标域参与方的标签中的错误。因此，甲方和乙方的梯度计算与垂直联邦学习方案中的梯度计算不同。在推论时，它仍然需要双方计算预测结果。</p>
+<h3 id="Incentives-Mechanism"><a href="#Incentives-Mechanism" class="headerlink" title="Incentives Mechanism"></a>Incentives Mechanism</h3><p>为了使不同组织之间的联邦学习完全商业化，需要开发一个公平的平台和激励机制[20]。构建模型后，模型的性能将在实际应用程序中体现出来，并且可以在永久数据记录机制（例如，区块链）中记录该性能。提供更多数据的组织将会更好，而模型的有效性取决于数据提供商对系统的贡献。这些模型的有效性基于联合机制分发给各方，并继续激励更多组织加入数据联合会。</p>
+<p>上述架构的实现不仅考虑了多个组织之间的隐私保护和协作建模的有效性，还考虑了如何奖励贡献更多数据的组织，以及如何以共识机制实施激励措施。因此，联邦学习是一种“闭环”学习机制。</p>
+<h1 id="Related-Works"><a href="#Related-Works" class="headerlink" title="Related Works"></a>Related Works</h1><p>联邦学习使多方可以协作构建机器学习模型，同时将其私人培训数据保密。 联邦学习作为一种新技术，具有多个独创性线程，其中一些根植于现有领域。 下面我们从多个角度解释联邦学习与其他相关概念之间的关系。</p>
+<h2 id="Privacy-preserving-machine-learning"><a href="#Privacy-preserving-machine-learning" class="headerlink" title="Privacy-preserving machine learning"></a>Privacy-preserving machine learning</h2><p>联邦学习可以被认为是保护隐私的分散协作机器学习，因此它与多方隐私保护机器学习紧密相关。过去，许多研究工作已致力于该领域。例如，参考文献[17，67]提出了用于垂直分割数据的安全多方决策树的算法。 Vaidya和Clifton提出了用于垂直分区数据的安全关联挖掘规则[65]，安全k均值[66]和朴素贝叶斯分类器[64]。参考文献[31]提出了一种用于水平分割数据的关联规则的算法。安全支持向量机算法是针对垂直分割的数据[73]和水平分割的数据[74]开发的。参考文献[16]提出了用于多方线性回归和分类的安全协议。参考文献[68]提出了安全的多方梯度下降方法。上面的工作全部用于安全性多方计算（SMC）[25，72]，以确保隐私。</p>
+<p>Nikolaenko等人[48]为了实现水平分割数据的线性回归，使用同态加密和Yao的乱码电路，实现了一种隐私保护协议，参考文献[22，24]提出了一种用于垂直分割数据的线性回归方法。这些系统直接解决了线性回归问题。文献[47]利用随机梯度下降法（SGD）解决了这一问题，他们还提出了用于逻辑回归和神经网络的隐私保护协议。最近，有人提出了采用三服务器模型的后续工作[44]。 Aono等人[4]提出了一种使用同态加密的安全逻辑回归协议。 Shokri和Shmatikov [58]提出了通过交换更新参数对水平分割数据进行神经网络训练的方法。文献[51]使用加性同态加密来保护梯度的私密性并增强系统的安全性。随着深度学习的最新进展，保护隐私的神经网络推理也收到了很多研究兴趣[10，11，14，28，40，52，54]。</p>
+<h2 id="Federated-Learning-vs-Distributed-Machine-Learning"><a href="#Federated-Learning-vs-Distributed-Machine-Learning" class="headerlink" title="Federated Learning vs Distributed Machine Learning"></a>Federated Learning vs Distributed Machine Learning</h2><p>乍一看，水平联邦学习与分布式机器学习有些相似。分布式机器学习涵盖了许多方面，包括训练数据的分布式存储，计算任务的分布式操作，模型结果的分布式分布等。参数服务器[30]是分布式机器学习中的典型元素。作为加速训练过程的工具，参数服务器将数据存储在分布式工作节点上，通过中央调度节点分配数据和计算资源，从而更有效地训练模型。对于水平联邦学习，工作节点代表数据所有者。它具有本地数据的完全自治权，并且可以决定何时以及如何加入联邦学习。在参数服务器中，中央节点始终负责控制，因此联邦学习面临着更为复杂的学习环境。其次，联邦学习强调在模型训练过程中对数据所有者的数据隐私保护。保护数据隐私的有效措施可以更好地应对将来日益严格的数据隐私和数据安全监管环境。</p>
+<p>像在分布式机器学习设置中一样，联邦学习也将需要处理非IID数据。在[77]中表明，使用非iid本地数据，联邦学习的性能会大大降低。作为回应，作者提供了一种类似于转移学习的新方法来解决该问题。</p>
+<h2 id="Federated-Learning-vs-Edge-Computing"><a href="#Federated-Learning-vs-Edge-Computing" class="headerlink" title="Federated Learning vs Edge Computing"></a>Federated Learning vs Edge Computing</h2><p>联邦学习可以看作是边缘计算的操作系统，因为它为协调和安全性提供了学习协议。 在[69]中，作者考虑了使用基于梯度下降的方法训练的通用机器学习模型。 他们从理论的角度分析了分布梯度下降的收敛范围，并在此基础上提出了一种控制算法，该算法确定了局部更新和全局参数聚合之间的最佳折衷，以在给定资源预算下将损失函数降至最低。</p>
+<h2 id="Federated-Learning-vs-Federated-Database-Systems"><a href="#Federated-Learning-vs-Federated-Database-Systems" class="headerlink" title="Federated Learning vs Federated Database Systems"></a>Federated Learning vs Federated Database Systems</h2><p>联合数据库系统[57]是集成多个数据库单元并整体管理集成系统的系统。提出了联邦数据库概念以实现与多个独立数据库的互操作性。联邦数据库系统通常使用分布式存储来存储数据库单元，实际上，每个数据库单元中的数据都是异构的。因此，就数据的类型和存储而言，它与联邦学习有很多相似之处。但是，联邦数据库系统在彼此交互的过程中不包含任何隐私保护机制，并且所有数据库单元对于管理系统都是完全可见的。此外，联合数据库系统的重点是数据的基本操作，包括插入，删除，搜索和合并等，而联邦学习的目的是在以下前提下为每个数据所有者建立联合模型。保护数据隐私，使数据所包含的各种价值和法律更好地为我们服务。</p>
+<h1 id="Applications"><a href="#Applications" class="headerlink" title="Applications"></a>Applications</h1><p>作为一种创新的建模机制，它可以在不损害数据保密性和安全性的情况下，针对多方数据训练统一模型，因此联邦学习在销售，金融和许多其他行业中很有希望，因为这些行业中的数据无法直接汇总用于训练 由于诸如知识产权，隐私保护和数据安全之类的因素而导致的机器学习模型。</p>
+<p>以智能零售为例。其目的是使用机器学习技术为客户提供个性化服务，主要包括产品推荐和销售服务。智能零售业务涉及的数据特征主要包括用户购买力，用户个人喜好和产品特征。在实际应用中，这三个数据特征可能分散在三个不同的部门或企业中。例如，用户的购买力可以从她的银行存款中推断出来，而她的个人喜好可以从她的社交网络中分析出来，而产品的特征则由电子商店记录下来。在这种情况下，我们面临两个问题。首先，为了保护数据隐私和数据安全，很难打破银行，社交网站和电子购物网站之间的数据障碍。结果，数据不能直接聚合以训练模型。其次，存储在三方中的数据通常是异构的，并且传统的机器学习模型无法直接在异构数据上工作。目前，这些问题尚未通过传统的机器学习方法得到有效解决，这阻碍了人工智能在更多领域的普及和应用。</p>
+<p>联邦学习和迁移学习是解决这些问题的关键。首先，通过利用联邦学习的特征，我们可以为三方构建机器学习模型而无需导出企业数据，不仅可以充分保护数据隐私和数据安全，还可以为客户提供个性化和针对性的服务，从而实现互惠互利。同时，我们可以利用转移学习来解决数据异质性问题，并突破传统人工智能技术的局限性。因此，联邦学习为我们构建大数据，人工智能的跨企业，跨数据和跨域生态圈提供了良好的技术支持。</p>
+<p>可以使用联邦学习框架进行多方数据库查询而无需公开数据。例如，假设在金融应用程序中，我们有兴趣检测多方借款，这是银行业的主要风险因素。当某些用户恶意从一家银行借款以支付另一家银行的贷款时，就会发生这种情况。多方借款对金融稳定构成威胁，因为大量此类违法行为可能导致整个金融体系崩溃。为了找到这样的用户而不会在银行A和银行B之间彼此暴露用户列表，我们可以利用联邦学习框架。特别是，我们可以使用联邦学习的加密机制，对各方的用户列表进行加密，然后在联合身份验证中获取加密列表的交集。最终结果的解密给出了多方借款人的列表，而没有将其他“好”用户暴露给另一方。正如我们将在下面看到的，此操作对应于垂直联邦学习框架。</p>
+<p>智能医疗保健是我们预计将受益于联邦学习技术的兴起的另一个领域。诸如疾病症状，基因序列，医学报告之类的医学数据非常敏感和私密，但是医学数据很难收集，并且存在于孤立的医学中心和医院中。数据源不足和标签不足导致机器学习模型的性能不尽人意，这成为当前智能医疗保健的瓶颈。我们设想，如果所有医疗机构联合起来并共享其数据以形成一个大型医疗数据集，那么在该大型医疗数据集上训练的机器学习模型的性能将得到显着提高。联邦学习与迁移学习相结合是实现此愿景的主要方法。可以应用转移学习来填补缺失的标签，从而扩大可用数据的规模，并进一步提高训练模型的性能。因此，联邦迁移学习将在智能医疗保健的发展中发挥关键作用，并且可能将人类保健提升到一个全新的水平。</p>
+<h1 id="Federated-Learning-and-Data-Alliance-of-Enterprises"><a href="#Federated-Learning-and-Data-Alliance-of-Enterprises" class="headerlink" title="Federated Learning and Data Alliance of Enterprises"></a>Federated Learning and Data Alliance of Enterprises</h1><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200408192533.png" style="zoom:50%;"></p>
+<p>联邦学习不仅是一种技术标准，而且还是一种商业模式。当人们意识到大数据的影响时，首先想到的是将数据聚合在一起，通过远程处理器计算模型，然后下载结果以供进一步使用。云计算应运而生。但是，随着数据隐私和数据安全性的重要性日益提高，以及公司利润与数据之间的紧密关系，云计算模型受到了挑战。但是，联邦学习的业务模型为大数据的应用提供了新的范例。当每个机构占用的孤立数据无法产生理想的模型时，联邦学习的机制使机构和企业无需数据交换就可以共享一个统一的模型。此外，联邦学习可以借助区块链技术的共识机制制定公平的利润分配规则。数据拥有者，无论他们拥有的数据规模如何，都将被激励加入数据联盟并获得自己的利润。我们认为，应该一起进行数据联盟业务模型的建立和联邦学习的技术机制。我们还将制定各个领域的联邦学习标准，以尽快将其投入使用。</p>
+<h1 id="Conclusions-and-Prospects"><a href="#Conclusions-and-Prospects" class="headerlink" title="Conclusions and Prospects"></a>Conclusions and Prospects</h1><p>近年来，数据的隔离和对数据隐私的重视正成为人工智能的下一个挑战，但是联邦学习为我们带来了新的希望。 它可以在保护本地数据的同时为多个企业建立统一的模型，从而使企业可以在以数据安全为前提的情况下共同取胜。 本文通常介绍联邦学习的基本概念，体系结构和技术，并讨论其在各种应用中的潜力。 预计在不久的将来，联邦学习将打破行业之间的障碍，并建立一个可以安全共享数据和知识的社区，并且可以根据每个参与者的贡献公平地分配利益。 人工智能的好处将最终带到我们生活的每个角落。</p>
+<hr>
+<p>本期内容到这里就结束了，欢迎关注公众号《差分隐私》。您的转发，是我不懈的动力。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png" style="zoom: 33%;"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Federated-Learning/" rel="tag"><i class="fa fa-tag"></i> Federated Learning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/13/视频资源-分布式机器学习（下）/" rel="next" title="公开课学习-分布式机器学习（下）">
+                <i class="fa fa-chevron-left"></i> 公开课学习-分布式机器学习（下）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/02/论文阅读-FedSel-Federated-SGD-under-Local-Differential-Privacy-with-Top-k-Dimension-Selection/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-FedSel Federated SGD under Local Differential Privacy with Top-k Dimension Selection">
+                <span style="background:green;"><font color="#000000">论文阅读</font></span>-FedSel Federated SGD under Local Differential Privacy with Top-k Dimension Selection <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">99</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#An-overview-of-federated-learning"><span class="nav-number">2.</span> <span class="nav-text">An overview of federated learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Definition-of-Federated-Learning"><span class="nav-number">2.1.</span> <span class="nav-text">Definition of Federated Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Privacy-of-Federated-Learning"><span class="nav-number">2.2.</span> <span class="nav-text">Privacy of Federated Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#间接信息泄漏"><span class="nav-number">2.2.1.</span> <span class="nav-text">间接信息泄漏</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-Categorization-of-Federated-Learning"><span class="nav-number">2.3.</span> <span class="nav-text">A Categorization of Federated Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Horizontal-Federated-Learning"><span class="nav-number">2.3.1.</span> <span class="nav-text">Horizontal Federated Learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Verical-Federated-Learning"><span class="nav-number">2.3.2.</span> <span class="nav-text">Verical Federated Learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Federated-Transfer-Learning-FTL"><span class="nav-number">2.3.3.</span> <span class="nav-text">Federated Transfer Learning (FTL)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Acchitecture-for-a-federated-learning-sysmte"><span class="nav-number">2.4.</span> <span class="nav-text">Acchitecture for a federated learning sysmte</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Horizontal-Federated-Learning-1"><span class="nav-number">2.4.1.</span> <span class="nav-text">Horizontal Federated Learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vertical-Federated-Learning"><span class="nav-number">2.4.2.</span> <span class="nav-text">Vertical Federated Learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Federated-Transfer-Learning"><span class="nav-number">2.4.3.</span> <span class="nav-text">Federated Transfer Learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Incentives-Mechanism"><span class="nav-number">2.4.4.</span> <span class="nav-text">Incentives Mechanism</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Related-Works"><span class="nav-number">3.</span> <span class="nav-text">Related Works</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Privacy-preserving-machine-learning"><span class="nav-number">3.1.</span> <span class="nav-text">Privacy-preserving machine learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Federated-Learning-vs-Distributed-Machine-Learning"><span class="nav-number">3.2.</span> <span class="nav-text">Federated Learning vs Distributed Machine Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Federated-Learning-vs-Edge-Computing"><span class="nav-number">3.3.</span> <span class="nav-text">Federated Learning vs Edge Computing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Federated-Learning-vs-Federated-Database-Systems"><span class="nav-number">3.4.</span> <span class="nav-text">Federated Learning vs Federated Database Systems</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Applications"><span class="nav-number">4.</span> <span class="nav-text">Applications</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Federated-Learning-and-Data-Alliance-of-Enterprises"><span class="nav-number">5.</span> <span class="nav-text">Federated Learning and Data Alliance of Enterprises</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusions-and-Prospects"><span class="nav-number">6.</span> <span class="nav-text">Conclusions and Prospects</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

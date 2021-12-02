@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="文章地址：https://dl.acm.org/citation.cfm?id=3271703&amp;amp;dl=ACM&amp;amp;coll=DL标题：Randomized Bit Vector：Privacy-Preserving Encoding Mechanism作者：Lin Sun; Lan Zhang; Xiaojun Ye发表会议：Proceedings of the 27th ACM In">
+<meta name="keywords" content="Differential Privacy,Privacy Preserving Record Linkage,Distance-aware Encoding">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Randomized Bit Vector：Privacy-Preserving Encoding Mechanism">
+<meta property="og:url" content="http://forestneo.com/2019/01/08/论文阅读-Randomized-Bit-Vector-Privacy-Preserving-Encoding-Mechanism/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="文章地址：https://dl.acm.org/citation.cfm?id=3271703&amp;amp;dl=ACM&amp;amp;coll=DL标题：Randomized Bit Vector：Privacy-Preserving Encoding Mechanism作者：Lin Sun; Lan Zhang; Xiaojun Ye发表会议：Proceedings of the 27th ACM In">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-bv.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-rbv.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-rbv-2.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp1.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp2.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp3.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp3.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp5.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp6.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp6.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp8.png">
+<meta property="og:image" content="http://forestneo.com/images/QRcode.png">
+<meta property="og:updated_time" content="2021-10-10T12:31:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Randomized Bit Vector：Privacy-Preserving Encoding Mechanism">
+<meta name="twitter:description" content="文章地址：https://dl.acm.org/citation.cfm?id=3271703&amp;amp;dl=ACM&amp;amp;coll=DL标题：Randomized Bit Vector：Privacy-Preserving Encoding Mechanism作者：Lin Sun; Lan Zhang; Xiaojun Ye发表会议：Proceedings of the 27th ACM In">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-bv.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2019/01/08/论文阅读-Randomized-Bit-Vector-Privacy-Preserving-Encoding-Mechanism/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title><span style="background:green;"><font color="#000000">论文阅读</font></span>-Randomized Bit Vector：Privacy-Preserving Encoding Mechanism | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2019/01/08/论文阅读-Randomized-Bit-Vector-Privacy-Preserving-Encoding-Mechanism/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">论文阅读</font></span>-Randomized Bit Vector：Privacy-Preserving Encoding Mechanism
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-01-08 14:53:53" itemprop="dateCreated datePublished" datetime="2019-01-08T14:53:53+08:00">2019-01-08</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-10-10 20:31:50" itemprop="dateModified" datetime="2021-10-10T20:31:50+08:00">2021-10-10</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>文章地址：<a href="https://dl.acm.org/citation.cfm?id=3271703&amp;dl=ACM&amp;coll=DL" target="_blank" rel="noopener">https://dl.acm.org/citation.cfm?id=3271703&amp;dl=ACM&amp;coll=DL</a><br>标题：Randomized Bit Vector：Privacy-Preserving Encoding Mechanism<br>作者：Lin Sun; Lan Zhang; <a href="https://dblp.uni-trier.de/pers/hd/y/Ye:Xiaojun" target="_blank" rel="noopener">Xiaojun Ye</a><br>发表会议：<a href="http://www.cikm2018.units.it/" target="_blank" rel="noopener">Proceedings of the 27th ACM International Conference on Information and Knowledge Management</a></p>
+<hr>
+<p>本文发表于CIKM18，是上篇BV工作内容的扩展，由BV机制扩展到RBV机制，同时将RBV进行了两个方面的扩充：1、将差分隐私性质加入到RBV中形成了DPRL编码方案；2、将河豚机制（Pufferfish Mechanism）机制的性质假如到RBV中形成PMRL方案。实验表明这些方法都可以在PPRL问题中取得不错的实验效果。</p>
+<p>下面是本文的笔记，序号和论文中的序号一样，有些地方我觉得对这篇文章的理解不重要，我跳过了，建议先看一下原文再来看我的笔记。</p>
+<ul>
+<li>1 Introduction</li>
+<li>2 Related Work</li>
+<li>3 Embedding Numerical Values with Randomized Hashing Functions<ul>
+<li>3.1 The fundamental RBV algorithm</li>
+<li>3.2 Optimal number of random variables</li>
+<li>3.3 Differential Privacy with Record Linkage</li>
+</ul>
+</li>
+<li>4 Pufferfish Mechanism with Laplace Noise</li>
+<li>5 Experiments</li>
+<li>6 总结与反思</li>
+</ul>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>在之前的文章《Distance-Aware Encoding of Numerical Values for Privacy-Preserving Record Linkage》中，我们介绍了什么是基本的 PPRL 问题，也介绍了当前 PPRL for Numerical Values 面对的挑战，因此背景部分这里就不再提及，可以参考那篇文章。</p>
+<h1 id="2-Related-Work"><a href="#2-Related-Work" class="headerlink" title="2 Related Work"></a>2 Related Work</h1><p>这部分作者介绍了文章中用到的隐私保护理论基础和当前的相关工作，在当前的技术中提到了布隆过滤器（bloom filter）。在很多方面，布隆过滤器都发挥着很大的作用，下次将会更新基于布隆过滤器的数字Record Linkage方案，本文就先不详细介绍了。背景中的Bit Vectors方案在上一篇文章中已经提及，就不再细说了，虽然在介绍的时候是发在ICDE上的短文，可是这个工作现在已经经过扩充，发表在期刊TKDE中，其论文名为：FEDERAL: A Framework for Distance-Aware Privacy-Preserving Record Linkage。在理论上，这方面的工作和之前的短文相比，并没有很多扩充。</p>
+<p>同时，这里需要知道一个叫Pufferfish Mechanism的东西。之前我们在提到隐私保护的时候，都是提到的差分隐私。本文中提到了一个叫做河豚机制的东西（Pufferfish Mechanism，当然，我也不知道为什么取这个名字）。河豚机制中有几个要素：</p>
+<ul>
+<li>秘密集$S$</li>
+<li>秘密对$Q$</li>
+<li>可能的数据分布</li>
+</ul>
+<p>其中，秘密对$Q$是$S\times S$的子集，即$Q \subseteq S \times S$。河豚机制的定义和差分隐私差不多，可以用这个方程表示：</p>
+<script type="math/tex; mode=display">
+e^{-\epsilon} \le \frac{\Pr_{\mathcal{M,\theta}}[\mathcal{M}(X)=w|s_i,\theta]}{\Pr_{\mathcal{M,\theta}}[\mathcal{M}(X)=w|s_j,\theta]} \le e^\epsilon</script><p>即在已知 $s_i$ 的情况下观测的结果和在已知 $s_j$ 的情况下观测得到的结果是类似的，这里的 $(s_i,s_j)$ 就是 $Q$ 的元素。</p>
+<p>即河豚机制的出发点和 DP 不同，我们不需要保证任意的两个元素都具备不可区分的特性（这是差分隐私的保证），我们只需要保证给定的两个元素不可区分就好了，所以河豚机制中的 $Q$ 是 $S\times S$ 的子集。也正因如此，当 $Q=S\times S$ 的时候，河豚机制其实就等价于差分隐私机制了。</p>
+<h1 id="3-Embedding-Numerical-Values-with-Randomized-Hashing-Functions"><a href="#3-Embedding-Numerical-Values-with-Randomized-Hashing-Functions" class="headerlink" title="3 Embedding Numerical Values with Randomized Hashing Functions"></a>3 Embedding Numerical Values with Randomized Hashing Functions</h1><p>接触RBV之前，还是需要提及一下之前的BV方案。在BV方案中，首先定义了基于随机数的哈希函数：</p>
+<script type="math/tex; mode=display">
+h_i(x) = \begin{cases}
+1 & x \in [r_i - t, r_i + t] \\
+0 & \text{Otherwise} \\
+\end{cases}</script><p>也就是说，根据当前随机数生成一个定长的区间。那么如果两个数相近的话，那么这两个数很可能就在同样的一个区间里面了。所以，BV的编码过程是这样的：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-bv.png" alt="fig-bv"></p>
+<p>由于BV的编码机制，其缺点也非常明显，即只能比较的差最多为 $2t$，因为当距离大于 $2t$ 时，所有的区间都不会有重叠。</p>
+<h2 id="3-1-The-fundamental-RBV-algorithm"><a href="#3-1-The-fundamental-RBV-algorithm" class="headerlink" title="3.1 The fundamental RBV algorithm"></a>3.1 The fundamental RBV algorithm</h2><p>那么如何解决BV的限制呢，我们可以尝试改变BV中的哈希函数，如下：</p>
+<script type="math/tex; mode=display">
+h_i(x) = \begin{cases}
+1 & x \ge r_i \\
+0 & x < r_i \\
+\end{cases}</script><p>也就是说，将原本的定长区间改成现在的不定长区间，在这种情况下，编码的过程就变成这样了（给定s个随机数）：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-rbv.png" alt="fig-rbv"></p>
+<p>然后论文中给了几个引理：</p>
+<blockquote>
+<p><strong>Lemma 3.1 Excepted elemetns: </strong> The expected number $w(x)$ of elements which are set in $rbv$ is:</p>
+<script type="math/tex; mode=display">
+E[w(x)] = s \cdot \frac{x-lower}{u}</script><p><strong>Lemma 3.2 Expected common elements: </strong> The excepted number $v(x_1,x_2)$ of common elements that are set in a pair of binary vectors of $(x_1, x_2)$ with $x_1 &lt; x_2$ is:</p>
+<script type="math/tex; mode=display">
+E[v(x)] = s \cdot \frac{x_1-lower}{u}</script><p><strong>Theorem 3.3 Expected Hamming distance: </strong> Let $d_E = |x_2-x_1|$, then the expected Hamming distance $E[d_H]$ of pair $(x_1, x_2)$ is:</p>
+<script type="math/tex; mode=display">
+E[d_H(x_1, x_2)] = s \cdot \frac{d_E}{u}</script></blockquote>
+<p>定理3的证明过程用到了引理3.1和引理3.2。定理3.3 说明欧几里得距离和汉明距离之间有着一种“模糊”的对应关系，比如我们的参数为s=1000，u=100，那么如果欧几里得距离为2的话，期望的汉明距离就是20了，当然每次计算的结果不一样，可能是19，可能是22之类，不过其期望是20。</p>
+<h2 id="3-2-Optimal-number-of-random-variables"><a href="#3-2-Optimal-number-of-random-variables" class="headerlink" title="3.2 Optimal number of random variables"></a>3.2 Optimal number of random variables</h2><p>3.1节中说了欧几里得距离和汉明距离之间的模糊对应关系，我们当然希望得到的数据更加接近期望的数据，这样数据估计就会越精确。</p>
+<p>只管上来说，如果编码的长度越短，那么对数据差的估计效果就越差，如果编码的长度越长，那么数据差可以更好地还原。那么有没有理论的方法去指导我们如何设置参数呢？作者给出了这样的结论：</p>
+<blockquote>
+<p><strong>Theorem 3.4 </strong> Given $\epsilon&gt;0$ and $0&lt;\delta&lt;1$, to ensure $\Pr[d_H\le(1+\epsilon)E[d_H]] \le \delta$, it is sufficient to set:</p>
+<script type="math/tex; mode=display">
+s \ge \lceil \frac{2u \ln \frac{1}{\delta}}{\epsilon \ln(1+\epsilon) d_E} \rceil</script></blockquote>
+<p>值得注意的是，定理标题中的一个符号产生了错误，其概率中的第一个小于等于号应该为大于号，否则这个公式就没有意义了。</p>
+<p>这个定理是说，只要给定$\epsilon, \delta$表示准确率，那么欧几里得距离几乎可以以任意准确率得以保证，这个公式也说明：$\epsilon, \delta$ 越小，准确率越高，用于编码时的 $s$ 就越大，即编码长度越大。这也符合一开始的理解。</p>
+<p>因此，给定任意准确率，我们都可以设置对应的 $s$ 的值，以此来保证编码过程中欧几里得距离估计的准确性。</p>
+<h2 id="3-3-Differential-Privacy-with-Record-Linkage"><a href="#3-3-Differential-Privacy-with-Record-Linkage" class="headerlink" title="3.3 Differential Privacy with Record Linkage"></a>3.3 Differential Privacy with Record Linkage</h2><p>对于“安全”这个东西，有着这样一个问题，即，有些东西可能感觉上面是安全的，但是缺乏数学定义。我们只能说那些有理论基础的方案是安全的。</p>
+<p>3.1节中提到的RBV方案也是一样的，直观上感觉可能是安全的（因为数据范围和随机数仅仅在双方直接互相协商，不公开）。但是却无法根据现有的隐私保护模型推到而出。当然，这个东西也很奇妙，你也不能说没有隐私保护模型的方案就是不安全的，或许是当前隐私保护模型不够好也不一定，虽然这种可能性较低。</p>
+<p>回到RBV方案上来，我们注意到好像当前没有什么模型能说明这个方案是 privacy-preserving 的。所以作者将 Random Response 的机制加到了RBV中。</p>
+<p>即数据的编码过程分为两步（和RAPPOR这篇文章中提到的一样）：</p>
+<ol>
+<li>Encoding：将x编码到randomized bit vector</li>
+<li>Perturbation：对Encoding的结果中的每一位进行一个替代</li>
+</ol>
+<p>现在的过程用图示的话就是这个样子：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-rbv-2.png" alt="fig-rbv-2"></p>
+<p>作者说如果只用一位的话，那么这个方案是保持差分隐私的，其隐私保护等级为$ \ln \frac{1+p}{1-p}$。这个证明过程也很容易，就是基于Random Response，没啥技术含量.接下来，作者证明了这个方案在s位的情况下的隐私保护特性：</p>
+<blockquote>
+<p><strong>Theorem 3.6 DP-Composition: </strong> The DPRL mechanism with $s$ bits is $(\epsilon, \delta)$-differentially private, when</p>
+<script type="math/tex; mode=display">
+e^\epsilon\cdot(\frac{1-p}{2})^s+\delta=(\frac{1+p}{2})^s</script></blockquote>
+<p>证明过程这里就略过了。当然，编码的一切任务都是为了估计出欧几里得距离，所以我们要找到欧几里得距离和汉明距离之间的关系，不能说你提供了安全性就啥也不管了，那样也没有意义。接下来作者给出了两种距离之间的对应关系：</p>
+<blockquote>
+<p><strong>Corollary 3.7 (DP-Hamming Distance):</strong> In DPRL, The Ex- pected Hamming Distance $E[d_H]$ of pair $(x1,x2)$ with $d_E = |x1−x2|$ is:</p>
+<script type="math/tex; mode=display">
+E[d_H(x_1,x_2)] =s \cdot (\frac{1-p^2}{2}+\frac{d_E p^2}{u} )</script></blockquote>
+<p>证明过程有点长，这里就不贴出来了，只需要基本的数学知识就可以理解了。可以参考原文给出的解释。通过这个公式，我们也可以发现，当p=1时，DPRL机制其实就是RBV机制。</p>
+<h1 id="4-Pufferfish-Mechanism-with-Laplace-Noise"><a href="#4-Pufferfish-Mechanism-with-Laplace-Noise" class="headerlink" title="4 Pufferfish Mechanism with Laplace Noise"></a>4 Pufferfish Mechanism with Laplace Noise</h1><p>第三节提出DPRL的出发点是为了提供更强的安全性，而DP提供了全局不可区分性，即任意两个数据在编码结果上来看都是不可区分的。那么我们有必要采用DP吗？</p>
+<p>以年龄为例，夸张点来看，如果一个问问你你多大了，你肯定不会说你才三岁，当然你也不想说出具体的年纪大小，特别是如果你是一个女孩子的话。当然，如果在多想一步的话，你也不可能说出你的具体年龄大小，精确到天？还是精确到小时？</p>
+<p>所以，“在一定程度上回答”会在一定程度上降低数据有效性，但是会很大程度上提高隐私性。年龄精确到天和精确到年其实数据有效性是差不多的，同样的道理，如果在精确到年的基础上再进行模糊化呢？比如：精确到“十年”？其实数据也是有效的，只不过有效性降低了而已。所以，作者说那我们干脆搞一个数据有效性范围吧，即我们只保证 x 和 [x-△t, x+△t] 中的数据不可区分就好了。所以作者用了 pufferfish mechanism 的机制，即提供局部数据保护。</p>
+<p>因此作者又提了一个叫做PMRL的方案，过程很简单：</p>
+<script type="math/tex; mode=display">
+PMRL(x) = RBV(x+\mathcal{N})</script><p>其中N是要给拉普拉斯噪声，其均值为0，方差为$\sigma$ ，那么怎么设置方差呢？作者给了一个定理。</p>
+<blockquote>
+<p><strong>Theorem 4.1 (PMRL Privacy). </strong> To provide $\epsilon$-Pufferfish private in<br>the PMRL mechanism with single bit, the $\sigma$ in Laplace noise should be:</p>
+<script type="math/tex; mode=display">
+\sigma = \frac{\triangle t}{\epsilon}</script></blockquote>
+<p>至于为什么加上这个噪声就可以了，可以参考论文中给出的证明。当然，礼节上来看的话也可以和DP联系到一起，△t可以看成DP中的敏感度，这样的话这个公式就很容易理解了，但是这个结论不能直接这么给出，因为RBV的方案中实际上是自带噪声的，所以需要结合RBV的编码过程一起给出。</p>
+<h1 id="5-Experiments"><a href="#5-Experiments" class="headerlink" title="5 Experiments"></a>5 Experiments</h1><p>理论部分讲解完了，我们就来看实验了。在看实验之前，可以先看一个不同方案编码的例子：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp1.png" alt="fig-exp1"></p>
+<p>上图是本文中三种方案编码数字18的编码结果。可以看到，不同的方法还是有区别的。</p>
+<p>为了让实验过程更具有科学代表性，作者采用了不同的数据分布进行实验，数据集中有公开的数据集和根据一定分布合成的数据集（正态分布和均匀分布）：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp2.png" alt="fig-exp2"></p>
+<p>上图是作者画出的不同数据集的数据分布情况，还有一个均匀分布的数据集出于画图美观的需求，就没有列出来了。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp3.png" alt="fig-exp3"></p>
+<p>我么可以先来看一下不同方法编码结果的展示，横坐标为precision，纵坐标为recall，可以看到，和当前的其他方案比较来看，效果还是不错的。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp3.png" alt=""></p>
+<p>另外，再DBLP数据集下也可以看到效果还是很好的，同时我们可以看到DPRL和PMRL方案都有隐私保护理论基础，同时效果还很好。</p>
+<p>另外一组实验是来说明BV的缺陷的：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp5.png" alt="fig-exp5"></p>
+<p>我们之前说过BV机制只能提供2t范围内的欧几里得距离估计，这个实验也说明了这一点。那么这会带来什么缺陷呢？</p>
+<p>就是这些方案不支持低相似度数据比较，可以看这个图：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp6.png" alt="fig-exp6"></p>
+<p>这个图里面我们就发现了BV机制和NBF机制的相似度不是线性的，所以只能用来比较高相似度的数据。</p>
+<p>作者进行的最后的实验是探究编码过程的参数对实验效果的影响，首先是编码长度的影响：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp6.png" alt=""></p>
+<p>可以看到编码的长度越长，实验的效果越好。</p>
+<p>同时，作者也通过实验的方式告诉了读者，如果实验追求的是f-score，那么该如何再汉明空间中设置欧几里得距离对应的阈值：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig-exp8.png" alt="fig-exp8"></p>
+<p>当然，这个是缺乏理论基础的，仅仅实验方式给出的数据可能因为数据集而存在偏差。</p>
+<h1 id="6-总结与反思"><a href="#6-总结与反思" class="headerlink" title="6 总结与反思"></a>6 总结与反思</h1><p>我们通常提到差分隐私的时候都是采用的 ε-DP，而在DPRL中的证明过程中却采用的 (ε, δ)-DP，为什么不用ε-DP呢？</p>
+<p>首先，用ε-DP是可以的，不过这样的结果不太好看，在采用ε-DP的前提下，组合性质说其隐私保护程度为 [(1+p)(1-p)]^s，而 s 是一个很大的数，简单来说，就是这个结果不能看。</p>
+<p>那么，仅仅使用ε-DP是否合理呢？我们重新看一下组合性质，文章《The algorithmic foundations of differential privacy》：</p>
+<p>组合性质说对同一数据进行多次查询。而本方案是对RBV的结果进行的加噪处理，在RBV的方案中，随机数是给定的，我们假定 r = [3,7]，数据分布范围为 [0,10]，也就是说如果编码的第一位为0那么编码的第二位一定也是0，即编码的结果中是有着数据相关性的（前提是随机数已经给定并且不变），所以组合机制提供的仅仅是一个隐私保护的下界。</p>
+<p>当然，并不是说使用(ε, δ)-DP就可以解决这个问题，不过结果比较好看。毕竟可以说这个方案几乎是(0,0)-DP的。直观感觉来看，给定编码的结果，是难以确定原始数据的。</p>
+<hr>
+<p>本篇内容到这里就结束了，若想知道更多和信息安全有关的技术可在公众号留言。识别以下二维码可以成文本公众号的小粉丝，关注更多前沿技术。</p>
+<p><img src="/images/QRcode.png" alt=""></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+          
+            <a href="/tags/Privacy-Preserving-Record-Linkage/" rel="tag"><i class="fa fa-tag"></i> Privacy Preserving Record Linkage</a>
+          
+            <a href="/tags/Distance-aware-Encoding/" rel="tag"><i class="fa fa-tag"></i> Distance-aware Encoding</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/05/随笔-《围城》/" rel="next" title="《围城》摘抄">
+                <i class="fa fa-chevron-left"></i> 《围城》摘抄
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/26/论文阅读-Collecting-Telemetry-Data-Privately/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Collecting Telemetry Data Privately">
+                <span style="background:green;"><font color="#000000">论文阅读</font></span>-Collecting Telemetry Data Privately <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">99</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Introduction"><span class="nav-number">1.</span> <span class="nav-text">1 Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Related-Work"><span class="nav-number">2.</span> <span class="nav-text">2 Related Work</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Embedding-Numerical-Values-with-Randomized-Hashing-Functions"><span class="nav-number">3.</span> <span class="nav-text">3 Embedding Numerical Values with Randomized Hashing Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-The-fundamental-RBV-algorithm"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 The fundamental RBV algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-Optimal-number-of-random-variables"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Optimal number of random variables</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-Differential-Privacy-with-Record-Linkage"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 Differential Privacy with Record Linkage</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Pufferfish-Mechanism-with-Laplace-Noise"><span class="nav-number">4.</span> <span class="nav-text">4 Pufferfish Mechanism with Laplace Noise</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Experiments"><span class="nav-number">5.</span> <span class="nav-text">5 Experiments</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-总结与反思"><span class="nav-number">6.</span> <span class="nav-text">6 总结与反思</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
