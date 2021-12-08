@@ -100,7 +100,7 @@
 <meta name="keywords" content="Local Differential Privacy,Federated Learning">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-FedSel Federated SGD under Local Differential Privacy with Top-k Dimension Selection">
-<meta property="og:url" content="http://forestneo.com/2020/04/02/PAPER-FedSel Federated SGD under Local Differential Privacy with Top-k Dimension Selection/index.html">
+<meta property="og:url" content="http://forestneo.top/2020/04/02/PAPER-FedSel Federated SGD under Local Differential Privacy with Top-k Dimension Selection/index.html">
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
 <meta property="og:description" content="文章地址：tbd标题：FedSel: ederated SGD under Local Differential Privacy with Top-k Dimension Selection作者：Ruixuan Liu, Yang Cao, Masatoshi Yoshikawa, Hong Chen发表会议：DASFAA 2020   Introduction Preliminaries Fed">
 <meta property="og:locale" content="zh-CN">
@@ -122,7 +122,7 @@
 
 
 
-  <link rel="canonical" href="http://forestneo.com/2020/04/02/PAPER-FedSel Federated SGD under Local Differential Privacy with Top-k Dimension Selection/">
+  <link rel="canonical" href="http://forestneo.top/2020/04/02/PAPER-FedSel Federated SGD under Local Differential Privacy with Top-k Dimension Selection/">
 
 
 
@@ -369,7 +369,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2020/04/02/PAPER-FedSel Federated SGD under Local Differential Privacy with Top-k Dimension Selection/">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.top/2020/04/02/PAPER-FedSel Federated SGD under Local Differential Privacy with Top-k Dimension Selection/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="DPer">
@@ -519,7 +519,7 @@
 </ul>
 <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>第一段大概讲了一下 SGD 和 LDP 广泛应用。第二段讲了LDP方法用到SGD上面存在的噪声问题，总结大概就是如下表所示。</p>
 <p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200404231502.png" style="zoom:67%;"></p>
-<p>背景知识可以看这个博客，里面说的很清楚了：<a href="http://forestneo.com/2020/03/13/视频资源-分布式机器学习（下）/#more">分布式机器学习：联邦学习</a>。大概就是在联邦学习中，每个本地client需要计算梯度发送给服务器，这个梯度是 $d$ 维的，但是处于隐私保护，我们不能直接发送梯度。</p>
+<p>背景知识可以看这个博客，里面说的很清楚了：<a href="http://forestneo.com/2020/03/13/视频资源-分布式机器学习（下）/#more" target="_blank" rel="noopener">分布式机器学习：联邦学习</a>。大概就是在联邦学习中，每个本地client需要计算梯度发送给服务器，这个梯度是 $d$ 维的，但是处于隐私保护，我们不能直接发送梯度。</p>
 <p>然后，本文的核心点是，我们认为对于本地数据来说，并不是所有的维度都是同等重要的，我们认为绝对值大的维度对于数据传输显然更重要，所以作者提出了基于 top-k 的数据传输。总体来说，贡献点如下：</p>
 <ul>
 <li>本文提出了一个双阶段框架：FedSel，首先经过 Dimension Selection，然后对值进行替代，即 Value Perturbation。理论分析本文的工作有着更小的error bound。（Value Perturbation实际上用的是已有的方案）</li>

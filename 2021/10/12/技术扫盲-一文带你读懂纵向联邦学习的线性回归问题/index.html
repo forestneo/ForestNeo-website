@@ -97,10 +97,10 @@
 
 
   <meta name="description" content="本篇内容讲一下论文《Federated Machine Learning: Concept and Applications》中的纵向联邦学习中的回归方法，因为在阅读论文的过程中，我觉得论文当中的写法比较confusing，所以重新梳理了一遍，争取公式的写法上不存在歧义。在阅读的过程中，主要有以下两个困惑的点：  公式7认为 $\left[!\left[L\right]!\right] = [!">
-<meta name="keywords" content="密码学,技术扫盲,联邦学习">
+<meta name="keywords" content="技术扫盲,联邦学习,密码学">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;技术扫盲&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-一文带你读懂纵向联邦学习中的线性回归模型">
-<meta property="og:url" content="http://forestneo.com/2021/10/12/技术扫盲-一文带你读懂纵向联邦学习的线性回归问题/index.html">
+<meta property="og:url" content="http://forestneo.top/2021/10/12/技术扫盲-一文带你读懂纵向联邦学习的线性回归问题/index.html">
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
 <meta property="og:description" content="本篇内容讲一下论文《Federated Machine Learning: Concept and Applications》中的纵向联邦学习中的回归方法，因为在阅读论文的过程中，我觉得论文当中的写法比较confusing，所以重新梳理了一遍，争取公式的写法上不存在歧义。在阅读的过程中，主要有以下两个困惑的点：  公式7认为 $\left[!\left[L\right]!\right] = [!">
 <meta property="og:locale" content="zh-CN">
@@ -118,7 +118,7 @@
 
 
 
-  <link rel="canonical" href="http://forestneo.com/2021/10/12/技术扫盲-一文带你读懂纵向联邦学习的线性回归问题/">
+  <link rel="canonical" href="http://forestneo.top/2021/10/12/技术扫盲-一文带你读懂纵向联邦学习的线性回归问题/">
 
 
 
@@ -365,7 +365,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2021/10/12/技术扫盲-一文带你读懂纵向联邦学习的线性回归问题/">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.top/2021/10/12/技术扫盲-一文带你读懂纵向联邦学习的线性回归问题/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="DPer">
@@ -489,7 +489,7 @@
 <p>所以本篇博客重新梳理一下这个问题，首先对线性回归算法和同态加密进行一个简单的回顾，然后按照这篇论文中的思路对纵向联邦学习中的线性回归进行讲解。</p>
 <p>上传后发现网页端加密的符号 $[[\cdot]]$​​ 被显示成了 $[![\cdot]!]$​，读者自行体会一下。</p>
 <p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202110122148207.png" alt="image-20211012214844123"></p>
-<h1 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h1><h2 id="线性回归算法"><a href="#线性回归算法" class="headerlink" title="线性回归算法"></a>线性回归算法</h2><p>线性回归的内容可以参考 <a href="http://forestneo.com/2020/02/26/ML-吴恩达机器学习课程-04-Linear Regression with Multiple Variables/">吴恩达机器学习课程(4)-Linear Regression with Multiple Variables</a>。为了方便描述，我们采用了论文《Federated Machine Learning: Concept and Applications》中的 loss 函数，当然我们默认这个文章中的 loss 中少写了一个 $\frac{1}{2}$ 的校正，下一节会提到。假如有 $m$ 条数据 $n$ 个特征， loss 函数为：</p>
+<h1 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h1><h2 id="线性回归算法"><a href="#线性回归算法" class="headerlink" title="线性回归算法"></a>线性回归算法</h2><p>线性回归的内容可以参考 <a href="http://forestneo.com/2020/02/26/ML-吴恩达机器学习课程-04-Linear Regression with Multiple Variables/" target="_blank" rel="noopener">吴恩达机器学习课程(4)-Linear Regression with Multiple Variables</a>。为了方便描述，我们采用了论文《Federated Machine Learning: Concept and Applications》中的 loss 函数，当然我们默认这个文章中的 loss 中少写了一个 $\frac{1}{2}$ 的校正，下一节会提到。假如有 $m$ 条数据 $n$ 个特征， loss 函数为：</p>
 <script type="math/tex; mode=display">
 \begin{align}
 L &= \sum_{i=1}^{m} \frac{1}{2}\left( h(x_i)-y_i \right)^2\\
@@ -502,7 +502,7 @@ L &= \sum_{i=1}^{m} \frac{1}{2}\left( h(x_i)-y_i \right)^2\\
 <li>同态乘法：$[![x\times y]!] = [![x]!] ^ y$</li>
 </ul>
 <p>为了使得含义更明确，就这么记一下：$[![x+y]!] = [![x]!] \oplus [![y]!]$，以及 $[![x\times y]!] = [![x]!] \otimes y$，这样子根据就可以直接看出来密文上的操作是想做加法还是做乘法了。</p>
-<p>关于 Paillier 算法系统是如何实现同态加法和同态乘法的，可以参考：<a href="http://forestneo.com/2021/10/08/技术扫盲-Paillier/#more">密码学-公钥加密算法 Paillier</a>。</p>
+<p>关于 Paillier 算法系统是如何实现同态加法和同态乘法的，可以参考：<a href="http://forestneo.com/2021/10/08/技术扫盲-Paillier/#more" target="_blank" rel="noopener">密码学-公钥加密算法 Paillier</a>。</p>
 <h1 id="联邦学习下线性回归算法"><a href="#联邦学习下线性回归算法" class="headerlink" title="联邦学习下线性回归算法"></a>联邦学习下线性回归算法</h1><p>我们假设 A 端的数据为 $x_i^A$，B 端的数据为 $x_i^B, y_i$，那么线性回归对应的参数就是 $\Theta_A, \Theta_B$，假设归一化参数为 $\lambda$，那么优化目标就可以表示为（论文里面少了一个$\frac{1}{2}$）：</p>
 <script type="math/tex; mode=display">
 \min _{\Theta_{A}, \Theta_{B}} \sum_{i} \frac{1}{2}\left\|\Theta_{A} x_{i}^{A}+\Theta_{B} x_{i}^{B}-y_{i}\right\|^{2}+\frac{\lambda}{2}\left(\left\|\Theta_{A}\right\|^{2}+\left\|\Theta_{B}\right\|^{2}\right)</script><p>为了方便描述，我们简化一下，令 $u_{i}^{A}=\Theta_{A} x_{i}^{A}, u_{i}^{B}=\Theta_{B} x_{i}^{B}$，那么加密之后对应的 Loss 函数就可以写成以下形式。当然，也是为了方便，加密过程用双括号 $[![\cdot]!]$ 表示（在 Latex 中，用<code>[\![ ]\!]</code>表示，其中 <code>\!</code>表示一个单位的负距离 ），正常的括号还是用圆括号表示。</p>
@@ -583,7 +583,7 @@ y=\theta_A x^A + \theta_B x^B</script><p>所以各自计算然后汇总一下就
 <p>这个我目前也没想到好的方法，可能一种潜在的解决方案是把某些特征都加上一个量使得中间结果不出现负数吧。但是感觉这个解决方案不完美，因为 $u_i^B-y_i=\theta_B x^B - y_i$，这个 $\theta_B$ 是在训练过程中出现的，不可控的。对于第二个疑问，$y$ 出现负数，这个感觉可以解决，直接对所有的 $y_i$ 加上一个偏移量估计就好了。</p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
 <li>Federated Machine Learning: Concept and Applications</li>
-<li><a href="http://forestneo.com/2020/02/26/ML-吴恩达机器学习课程-04-Linear Regression with Multiple Variables/">吴恩达机器学习课程(4)-Linear Regression with Multiple Variables</a></li>
+<li><a href="http://forestneo.com/2020/02/26/ML-吴恩达机器学习课程-04-Linear Regression with Multiple Variables/" target="_blank" rel="noopener">吴恩达机器学习课程(4)-Linear Regression with Multiple Variables</a></li>
 </ul>
 <hr>
 <p>本篇内容到这里就结束了，若想知道更多和信息安全有关的技术可在公众号留言。识别以下二维码可以成为本公众号的小粉丝，关注更多前沿技术。</p>
@@ -640,11 +640,11 @@ y=\theta_A x^A + \theta_B x^B</script><p>所以各自计算然后汇总一下就
       
         <div class="post-tags">
           
-            <a href="/tags/密码学/" rel="tag"><i class="fa fa-tag"></i> 密码学</a>
-          
             <a href="/tags/技术扫盲/" rel="tag"><i class="fa fa-tag"></i> 技术扫盲</a>
           
             <a href="/tags/联邦学习/" rel="tag"><i class="fa fa-tag"></i> 联邦学习</a>
+          
+            <a href="/tags/密码学/" rel="tag"><i class="fa fa-tag"></i> 密码学</a>
           
         </div>
       

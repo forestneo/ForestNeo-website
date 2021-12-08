@@ -100,7 +100,7 @@
 <meta name="keywords" content="Local Differential Privacy,Mean Estimation,Key-Value Data,Differential Privacy,Histogram Estimation">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility">
-<meta property="og:url" content="http://forestneo.com/2020/02/28/PAPER-PCKV Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility/index.html">
+<meta property="og:url" content="http://forestneo.top/2020/02/28/PAPER-PCKV Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility/index.html">
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
 <meta property="og:description" content="文章地址：标题：PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility作者：发表会议：   Introduction Related Work Preliminaries Local Differential Privacy Mechanisms under L">
 <meta property="og:locale" content="zh-CN">
@@ -130,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="http://forestneo.com/2020/02/28/PAPER-PCKV Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility/">
+  <link rel="canonical" href="http://forestneo.top/2020/02/28/PAPER-PCKV Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility/">
 
 
 
@@ -377,7 +377,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2020/02/28/PAPER-PCKV Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility/">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.top/2020/02/28/PAPER-PCKV Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="DPer">
@@ -525,7 +525,7 @@
 </li>
 <li>Conclusion</li>
 </ul>
-<p>这篇文章做的工作和 PrivKV 那篇是一样的，参考 PrivKV 那篇文章的连接：<a href="http://forestneo.com/2019/03/25/论文阅读-PrivKV/">http://forestneo.com/2019/03/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-PrivKV/</a></p>
+<p>这篇文章做的工作和 PrivKV 那篇是一样的，参考 PrivKV 那篇文章的连接：<a href="http://forestneo.com/2019/03/25/论文阅读-PrivKV/" target="_blank" rel="noopener">http://forestneo.com/2019/03/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-PrivKV/</a></p>
 <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200131205236.png" style="zoom:50%;"></p>
 <p>前两段引入了 LDP 和 Key-Value data 的概念。然后指出了什么是 KV 数据中的频率估计和均值估计，以图1为例，每个数据表示用户对电影的评分，那么频率估计就是估计每部电影评分的数目，均值估计就是估计每部电影的平均评分。</p>
 <p>KV 数据中是有着一定挑战的：1. 某个用户是拥有多个 KV 数据的，这就意味着如果要把 epsilon 分配给每个 KV 对，那么每个 KV 对的 epsilon 就会很小，导致误差很大。2.  Key 和 Value 之间有着一定的联系，单单把 key 和 value 用已有的方法去实现 LDP 效果不是特别好。</p>
