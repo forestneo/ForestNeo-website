@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="文章地址：https://ieeexplore.ieee.org/document/7929954标题：Distance-Aware Encoding of Numerical Values for Privacy-Preserving Record Linkage作者：Dimitrios Karapiperis; Aris Gkoulalas-Divanis; Vassilios S. Very">
+<meta name="keywords" content="Differential Privacy,Privacy Preserving Record Linkage,Distance-aware Encoding">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Distance-Aware Encoding of Numerical Values for Privacy-Preserving Record Linkage">
+<meta property="og:url" content="http://forestneo.com/2018/11/05/PAPER-Distance Aware Encoding of Numerical Values for Privacy Preserving Record Linkage/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="文章地址：https://ieeexplore.ieee.org/document/7929954标题：Distance-Aware Encoding of Numerical Values for Privacy-Preserving Record Linkage作者：Dimitrios Karapiperis; Aris Gkoulalas-Divanis; Vassilios S. Very">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig02.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig03.png">
+<meta property="og:image" content="http://forestneo.com/images/QRcode.png">
+<meta property="og:updated_time" content="2021-10-10T12:31:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Distance-Aware Encoding of Numerical Values for Privacy-Preserving Record Linkage">
+<meta name="twitter:description" content="文章地址：https://ieeexplore.ieee.org/document/7929954标题：Distance-Aware Encoding of Numerical Values for Privacy-Preserving Record Linkage作者：Dimitrios Karapiperis; Aris Gkoulalas-Divanis; Vassilios S. Very">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2018/11/05/PAPER-Distance Aware Encoding of Numerical Values for Privacy Preserving Record Linkage/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title><span style="background:green;"><font color="#000000">论文阅读</font></span>-Distance-Aware Encoding of Numerical Values for Privacy-Preserving Record Linkage | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2018/11/05/PAPER-Distance Aware Encoding of Numerical Values for Privacy Preserving Record Linkage/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">论文阅读</font></span>-Distance-Aware Encoding of Numerical Values for Privacy-Preserving Record Linkage
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-05 00:00:00" itemprop="dateCreated datePublished" datetime="2018-11-05T00:00:00+08:00">2018-11-05</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-10-10 20:31:15" itemprop="dateModified" datetime="2021-10-10T20:31:15+08:00">2021-10-10</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>文章地址：<a href="https://ieeexplore.ieee.org/document/7929954" target="_blank" rel="noopener">https://ieeexplore.ieee.org/document/7929954</a><br>标题：Distance-Aware Encoding of Numerical Values for Privacy-Preserving Record Linkage<br>作者：<a href="https://dblp.uni-trier.de/pers/hd/k/Karapiperis:Dimitrios" target="_blank" rel="noopener">Dimitrios Karapiperis</a>; <a href="https://dblp.uni-trier.de/pers/hd/g/Gkoulalas=Divanis:Aris" target="_blank" rel="noopener">Aris Gkoulalas-Divanis</a>; <a href="https://dblp.uni-trier.de/pers/hd/v/Verykios:Vassilios_S=" target="_blank" rel="noopener">Vassilios S. Verykios</a><br>发表会议：<a href="https://dblp.uni-trier.de/db/conf/icde/icde2017.html" target="_blank" rel="noopener">33rd IEEE International Conference on Data Engineering, ICDE 2017</a><br>目前被引用次数：4(2019.01.08)</p>
+<hr>
+<p>本文是ICDE上面的一篇短文，讲了一种数据编码方案，可以用在PPRL(Privacy-Preserving Record Linkage) 中。简单来说就是可以在匿名空间大致求出两个数据的差。直观感知上来看有点像密码学中的在密文中计算。</p>
+<p>下面是本文的笔记，序号和论文中的序号一样，有些地方我觉得对这篇文章的理解不重要，我跳过了，建议先看一下原文再来看我的笔记。</p>
+<ul>
+<li>1 Introduction</li>
+<li>2 Embedding Numerical Values into the Binary Hamming Space<ul>
+<li>2.1 Specifying the Optimal Size of Bit Vectors</li>
+<li>2.2 Specifying the Distance Threshold</li>
+</ul>
+</li>
+<li>3 Experimental Evaluation</li>
+</ul>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>在接触本文之前首先应该对 Record Linkage 概念有一个基本的理解。我们看一下Wiki中的定义：</p>
+<blockquote>
+<p>Record Linkage (RL) is the task of finding records in a data set that refer to the same entity across different data sources (e.g., data files, books, websites, and databases).</p>
+</blockquote>
+<p>简单地来说就是在不同的数据库中，如何识别两个记录项是描述的同一个实体？最简单的方法自然是看每个字段是否一样了。比如：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Data set</th>
+<th style="text-align:center">Name</th>
+<th style="text-align:center">Date of birth</th>
+<th style="text-align:center">City</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Data set 1</td>
+<td style="text-align:center">William J. Smith</td>
+<td style="text-align:center">1/2/73</td>
+<td style="text-align:center">Berkeley</td>
+</tr>
+<tr>
+<td style="text-align:center">Data set 2</td>
+<td style="text-align:center">William J. Smith</td>
+<td style="text-align:center">1/2/73</td>
+<td style="text-align:center">Berkeley</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>那么很显然我们就知道数据集1中的 William J.Smith 和数据集2中的 William J.Smith 是描述的同一个人了，或者说非要找茬的话，我们会认为这两个 William 很可能是同一个人。</p>
+<p>当然，现实的问题肯定是会慢慢出现的，比如，由于数据收集者的习惯不同，在数据集2中的数据可能是这样的：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Data set</th>
+<th style="text-align:center">Name</th>
+<th style="text-align:center">Date of birth</th>
+<th style="text-align:center">City</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Data set 1</td>
+<td style="text-align:center">William J. Smith</td>
+<td style="text-align:center">1/2/73</td>
+<td style="text-align:center">Berkeley</td>
+</tr>
+<tr>
+<td style="text-align:center">Data set 2</td>
+<td style="text-align:center">William J. Smith</td>
+<td style="text-align:center">1973.01.02</td>
+<td style="text-align:center">Berkeley</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>所以一般来说在进行数据比较之前，需要进行一个数据预处理的过程 (Data Pre-processing)，把数据变成统一的格式，如日期，姓名顺序以及城市名称等。</p>
+<p>并不是数据经过预处理就可以进行精确匹配了，因为现实生活中收集到的数据通常是含有噪声的，或者通常是不太精确的。比如数据集1中的William和数据集2中的Wiliam可能是同一个人，因为数据收集的时候少看了一个字母。所以我们一般来说不进行精确匹配，而是看两个记录项的相似度。比如对于字符串，比较相似度可以采用 Edit Distance 的方法。</p>
+<p>应用的需求总是越来越高，在之前的假定中，假如数据集A中有m条记录，数据集B中有n条记录，那么他们比较的时候需要比较mn次，对于庞大的数据集来说，这个复杂度是比较高的。所以为了加速，有了很多索引技术(Indexing)，用了索引之后，可能就不需要比较那么多次了。索引技术我们这里暂不涉及。</p>
+<p>在这个流程下，经过 “Pre-processing, Indexing, Comparison” 之后，Record Linkage 基本上就解决了。大致思路就是把数据处理好，然后放到一起来比较。</p>
+<p>仔细思考之后，其实还存在一个潜在的问题：数据放到一起，意味着有人要交出自己的数据，而数据又是和个人隐私息息相关的，所以人们就想，能不能在不泄露数据的情况下完成这么个任务呢？所以就有了我们的 Privacy-preserving record linkage 这个大框架了。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png" alt="fig01"></p>
+<p>PPRL中的过程和RL其实是一模一样的，大致上分为预处理，索引，比较三个过程，不过所有的操作过程都要是满足privacy-preserving的。</p>
+<p>一想到privacy-preserving，一个很自然的想法就是我们把字符串加密，然后在密文上面进行相似度比较不就好了嘛。这个愿景看上去是很好的，可是操作起来好像没有这么容易。</p>
+<p>在当前的研究中，对于字符串的PPRL方案，一个很经典的方案就是采用布隆过滤器 (bloom filter)。这个方法由于大多数论文都会引用，所以我在下一篇文章中也会讲一下。</p>
+<p>当前已经很多文献提出了PPRL的一些方法，但是很多方法在处理的过程中都是将数字类型的数据当成是字符串来求解，这无疑会带来很多误差，比如数字199和99，如果认为是字符串的话，他们只相差一个字符，因而会被认为是很相近的，但是实际上199和99相差很多。另一个例子是99和100，如果认为是字符串，99和100相差很多，如果认为是数字则99和100是很接近的。本篇论文结局的实际上就是在PPRL中如何处理数字。</p>
+<h1 id="2-Embedding-Numerical-Values-into-the-Binary-Hamming-Space"><a href="#2-Embedding-Numerical-Values-into-the-Binary-Hamming-Space" class="headerlink" title="2 Embedding Numerical Values into the Binary Hamming Space"></a>2 Embedding Numerical Values into the Binary Hamming Space</h1><p>本文中提到的 BV 方案是将原始数据编码到一个匿名空间，然后再匿名空间中求得两个数据的相似性。在编码之前，我们首先需要知道以下一些信息：</p>
+<ul>
+<li>$s$ 个分布在 $[b1, b2]$ 的随机数，其中 $[b1,b2]$ 是原始数据分布范围，并且 $u=b2-b1$ 表示原始数据分布区间长度。</li>
+<li>数据区间参数 $t$，待会会说明这个参数的作用</li>
+</ul>
+<h2 id="2-1-Specifying-the-Optimal-Size-of-Bit-Vectors"><a href="#2-1-Specifying-the-Optimal-Size-of-Bit-Vectors" class="headerlink" title="2.1 Specifying the Optimal Size of Bit Vectors"></a>2.1 Specifying the Optimal Size of Bit Vectors</h2><p>假如我们要编码的数据是 $x$，给定随机数$r_i$, 首先我们定义一个哈希方程：</p>
+<script type="math/tex; mode=display">
+h_i(x) = \begin{cases}
+1 & x \in [r_i - t, r_i + t] \\
+0 & \text{Otherwise} \\
+\end{cases}</script><p>这个哈希方程的意思是，根据随机数 $r_i$ 产生一个随机区间，然后如果 $x$ 在这个区间中，则编码结果是1，如果不在这个区间中，编码结果是0。为了更加形象地说明这个编码过程，论文里面给了一个编码的案例：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig02.png" alt="fig02"></p>
+<p>假如 $t=2$，需要编码的数据分别是9和10，然后给定地随机数是 $\{7.4, 18.2, 46.5, 8.3, 76.4, 9.1, …, 80.1\}$，那么经过BV方案编码的结果分别如上面所示。</p>
+<p>根据这个方案，我们可以发现，如果两个数据很接近，那么他们就很可能同样的位置都是0或者都是1。那么如何去看这之间的 “相近” 关联呢？接下来作者提了几个定理 (引理)：</p>
+<blockquote>
+<p><strong>Lemma 1</strong> The expected number $w$ of the components which are set in each bit vector is:</p>
+<script type="math/tex; mode=display">
+E[w]=s \cdot \frac{2t}{u}</script></blockquote>
+<p>这个引理其实就是说一个数据编码的结果中有多少个1，这个引理很简单也很重要，根据这个引理，我们可以发现，在匿名空间中，每个数对应的1的个数都差不多，所以对于拿到匿名数据的人来说，他很难获得关于原始数据的信息。</p>
+<blockquote>
+<p><strong>Lemma 2</strong> The expected number $v$ of common components that are set in a pair of bit vectors, which correspond to numerical values with $d_E &lt; 2t$, is:</p>
+<script type="math/tex; mode=display">
+E[v]=\frac{s(2t-d_E)}{u}</script></blockquote>
+<p>这个引理是说两个数据 $x,y$ 编码的结果中有多少位都是1。自己思考一下也可以得到结论，因为我也不给出具体证明过程了。</p>
+<h2 id="2-2-Specifying-the-Distance-Threshold"><a href="#2-2-Specifying-the-Distance-Threshold" class="headerlink" title="2.2 Specifying the Distance Threshold"></a>2.2 Specifying the Distance Threshold</h2><p>接下来就给出铭文空间中对应的数值差和匿名空间中对应的汉明距离之间的关系了。</p>
+<blockquote>
+<p><strong>Theorem 1</strong> The expected Hamming distance $E[d_H]$ between a pair of bit vectors which correspond to numerical values with $d_E &lt; 2t$ is:</p>
+<script type="math/tex; mode=display">
+E[d_H]=2s\cdot\frac{d_E}{u}</script></blockquote>
+<p>通过这个定理我们可以发现明文中的差值 $d_E$ 和匿名空间中的汉明距离$d_H$是有一定的对应关系的，所以可以用来做相似度比较。</p>
+<h1 id="3-Experimental-Evaluation"><a href="#3-Experimental-Evaluation" class="headerlink" title="3 Experimental Evaluation"></a>3 Experimental Evaluation</h1><p>由于是短文，本文没有涉及很多的实验，并且这个方法已经有了理论支持，也不那么受实验影响，本文中的实验还是比较少的。由于目前没有很多的对数字进行PPRL的成果，所以对比对象仅仅有NBF着一个方法，这个方法可以参考论文<em>“Privacy-preserving matching of similar patients”</em>。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig03.png" alt="fig03"></p>
+<p>这里的PC指的是recall，我们可以看出，和NBF相比较，BV机制还是好一些的。由于没有给出其他实验，这个方法暂且来说还是很不错的。</p>
+<p>当然，在本文中作者还分析了一些误差计算和参数的选取，本文目前只介绍了这篇文章的大致方法，对于论文中公式不了解的地方可以和我单独讨论。</p>
+<hr>
+<p>本篇内容到这里就结束了，若想知道更多和信息安全有关的技术可在公众号留言。识别以下二维码可以成文本公众号的小粉丝，关注更多前沿技术。</p>
+<p><img src="/images/QRcode.png" alt=""></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+          
+            <a href="/tags/Privacy-Preserving-Record-Linkage/" rel="tag"><i class="fa fa-tag"></i> Privacy Preserving Record Linkage</a>
+          
+            <a href="/tags/Distance-aware-Encoding/" rel="tag"><i class="fa fa-tag"></i> Distance-aware Encoding</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/05/PAPER-Privacy Preserving Triangle Counting in Large Graphs/" rel="next" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Privacy Preserving Triangle Counting in Large Graphs">
+                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">论文阅读</font></span>-Privacy Preserving Triangle Counting in Large Graphs
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/01/系统配置-Hexo-NexT主题鼠标点击爱心特效/" rel="prev" title="Hexo NexT主题鼠标点击爱心特效">
+                Hexo NexT主题鼠标点击爱心特效 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">100</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Introduction"><span class="nav-number">1.</span> <span class="nav-text">1 Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Embedding-Numerical-Values-into-the-Binary-Hamming-Space"><span class="nav-number">2.</span> <span class="nav-text">2 Embedding Numerical Values into the Binary Hamming Space</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Specifying-the-Optimal-Size-of-Bit-Vectors"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Specifying the Optimal Size of Bit Vectors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-Specifying-the-Distance-Threshold"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Specifying the Distance Threshold</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Experimental-Evaluation"><span class="nav-number">3.</span> <span class="nav-text">3 Experimental Evaluation</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

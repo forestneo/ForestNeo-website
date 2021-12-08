@@ -96,19 +96,19 @@
 
 
 
-  <meta name="description" content="这两天读论文《PROchlo: Strong Privacy for Analytics in the Clowd》的时候，发现了一个之前查过的概念一直没有总结。这次总结一个密码学中的概念，叫做  Secret Sharing，因为这个东西一开始用来分享密钥的，所以中文名称也有人叫做密钥分享。提到密钥有点 confusing，本文中就叫做秘密共享吧。 需求Secret Sharing 的核心在于：">
+  <meta name="description" content="这两天发现了一个之前查过的概念一直没有总结。这次总结一个密码学中的概念，叫做  Secret Sharing，因为这个东西一开始用来分享密钥的，所以中文名称也有人叫做密钥分享。提到密钥有点 confusing，本文中就叫做秘密共享吧。 需求Secret Sharing 的核心在于：能否设计一个方案，将一个信息分发给 $n$ 个用户，只有当这 $n$ 个用户在一起的时候才能共同还原出原始数据。 为了">
 <meta name="keywords" content="密码学">
 <meta property="og:type" content="article">
 <meta property="og:title" content="密码学-Secret Sharing">
 <meta property="og:url" content="http://forestneo.com/2019/11/06/技术扫盲-Secret-Sharing/index.html">
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
-<meta property="og:description" content="这两天读论文《PROchlo: Strong Privacy for Analytics in the Clowd》的时候，发现了一个之前查过的概念一直没有总结。这次总结一个密码学中的概念，叫做  Secret Sharing，因为这个东西一开始用来分享密钥的，所以中文名称也有人叫做密钥分享。提到密钥有点 confusing，本文中就叫做秘密共享吧。 需求Secret Sharing 的核心在于：">
+<meta property="og:description" content="这两天发现了一个之前查过的概念一直没有总结。这次总结一个密码学中的概念，叫做  Secret Sharing，因为这个东西一开始用来分享密钥的，所以中文名称也有人叫做密钥分享。提到密钥有点 confusing，本文中就叫做秘密共享吧。 需求Secret Sharing 的核心在于：能否设计一个方案，将一个信息分发给 $n$ 个用户，只有当这 $n$ 个用户在一起的时候才能共同还原出原始数据。 为了">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
-<meta property="og:updated_time" content="2021-11-03T14:45:18.227Z">
+<meta property="og:updated_time" content="2021-12-06T06:44:31.665Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="密码学-Secret Sharing">
-<meta name="twitter:description" content="这两天读论文《PROchlo: Strong Privacy for Analytics in the Clowd》的时候，发现了一个之前查过的概念一直没有总结。这次总结一个密码学中的概念，叫做  Secret Sharing，因为这个东西一开始用来分享密钥的，所以中文名称也有人叫做密钥分享。提到密钥有点 confusing，本文中就叫做秘密共享吧。 需求Secret Sharing 的核心在于：">
+<meta name="twitter:description" content="这两天发现了一个之前查过的概念一直没有总结。这次总结一个密码学中的概念，叫做  Secret Sharing，因为这个东西一开始用来分享密钥的，所以中文名称也有人叫做密钥分享。提到密钥有点 confusing，本文中就叫做秘密共享吧。 需求Secret Sharing 的核心在于：能否设计一个方案，将一个信息分发给 $n$ 个用户，只有当这 $n$ 个用户在一起的时候才能共同还原出原始数据。 为了">
 <meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
 
 
@@ -424,7 +424,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-11-03 22:45:18" itemprop="dateModified" datetime="2021-11-03T22:45:18+08:00">2021-11-03</time>
+                <time title="修改时间：2021-12-06 14:44:31" itemprop="dateModified" datetime="2021-12-06T14:44:31+08:00">2021-12-06</time>
               
             
           </span>
@@ -489,7 +489,7 @@
       
 
       
-        <p>这两天读论文《PROchlo: Strong Privacy for Analytics in the Clowd》的时候，发现了一个之前查过的概念一直没有总结。这次总结一个密码学中的概念，叫做  <strong>Secret Sharing</strong>，因为这个东西一开始用来分享密钥的，所以中文名称也有人叫做密钥分享。提到密钥有点 confusing，本文中就叫做秘密共享吧。</p>
+        <p>这两天发现了一个之前查过的概念一直没有总结。这次总结一个密码学中的概念，叫做  <strong>Secret Sharing</strong>，因为这个东西一开始用来分享密钥的，所以中文名称也有人叫做密钥分享。提到密钥有点 confusing，本文中就叫做秘密共享吧。</p>
 <h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><p>Secret Sharing 的核心在于：<strong>能否设计一个方案，将一个信息分发给 $n$ 个用户，只有当这 $n$ 个用户在一起的时候才能共同还原出原始数据。</strong></p>
 <p>为了更好的理解这个问题，我们先来搞一个虽然不正确，但是能理解 Secret Sharing 的解决方案。假设我有一个秘密，这个秘密是数字 $S=253$，我需要将这个秘密分发给三个人。那么用字符串的拼接就好了，我告诉第一个人2，告诉第二个人5，然后告诉第三个人3。不就解决了这个问题。</p>
 <p>这么说好像也没啥不对的，但是有一些小的问题。首先，这个顺序怎么定，这三个人在一起可能是253也可能是523啊。当然为了解决问题的话，我们可以定一个索引，这样就可以唯一确定顺序了。但是给定索引会导致安全性的问题，比如第一个用户和第二个用户在一起，就知道数字是 $S=25x$，只需要进行10次猜测就能猜测出秘密了。当然，这个方案还有着不足，那要是把 $253$ 分给四个人咋分。</p>
@@ -581,7 +581,7 @@ D_{0}=(1,1494) ; D_{1}=(2,1942) ; D_{2}=(3,2578) ; D_{3}=(4,3402) ; D_{4}=(5,441
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/11/05/论文阅读-PROCHLO-Strong-Privacy-for-Analytics-in-the-Crowd/" rel="next" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-PROCHLO Strong Privacy for Analytics in the Crowd">
+              <a href="/2019/11/05/PAPER-PROCHLO Strong Privacy for Analytics in theCrowd/" rel="next" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-PROCHLO Strong Privacy for Analytics in the Crowd">
                 <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">论文阅读</font></span>-PROCHLO Strong Privacy for Analytics in the Crowd
               </a>
             
@@ -669,7 +669,7 @@ D_{0}=(1,1494) ; D_{1}=(2,1942) ; D_{2}=(3,2578) ; D_{3}=(4,3402) ; D_{4}=(5,441
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">99</span>
+                    <span class="site-state-item-count">100</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -857,7 +857,9 @@ D_{0}=(1,1494) ; D_{1}=(2,1942) ; D_{2}=(3,2578) ; D_{3}=(4,3402) ; D_{4}=(5,441
                     
                       
                     
-                    <span class="site-state-item-count">61</span>
+                      
+                    
+                    <span class="site-state-item-count">62</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

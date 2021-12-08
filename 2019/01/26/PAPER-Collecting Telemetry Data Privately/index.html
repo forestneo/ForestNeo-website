@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="文章地址：https://papers.nips.cc/paper/6948-collecting-telemetry-data-privately.pdf标题：Collecting Telemetry Data Privately作者：Bolin Ding, Janardhan Kulkarni, Sergey Yekhanin发表会议：NIPS 2017  从用户那里搜集数据并进行统计分析是很">
+<meta name="keywords" content="Differential Privacy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Collecting Telemetry Data Privately">
+<meta property="og:url" content="http://forestneo.com/2019/01/26/PAPER-Collecting Telemetry Data Privately/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="文章地址：https://papers.nips.cc/paper/6948-collecting-telemetry-data-privately.pdf标题：Collecting Telemetry Data Privately作者：Bolin Ding, Janardhan Kulkarni, Sergey Yekhanin发表会议：NIPS 2017  从用户那里搜集数据并进行统计分析是很">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig03.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig04.png">
+<meta property="og:image" content="http://forestneo.com/images/QRcode.png">
+<meta property="og:updated_time" content="2021-10-10T12:31:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Collecting Telemetry Data Privately">
+<meta name="twitter:description" content="文章地址：https://papers.nips.cc/paper/6948-collecting-telemetry-data-privately.pdf标题：Collecting Telemetry Data Privately作者：Bolin Ding, Janardhan Kulkarni, Sergey Yekhanin发表会议：NIPS 2017  从用户那里搜集数据并进行统计分析是很">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.com/2019/01/26/PAPER-Collecting Telemetry Data Privately/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title><span style="background:green;"><font color="#000000">论文阅读</font></span>-Collecting Telemetry Data Privately | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.com/2019/01/26/PAPER-Collecting Telemetry Data Privately/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">论文阅读</font></span>-Collecting Telemetry Data Privately
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-01-26 00:00:00" itemprop="dateCreated datePublished" datetime="2019-01-26T00:00:00+08:00">2019-01-26</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-10-10 20:31:12" itemprop="dateModified" datetime="2021-10-10T20:31:12+08:00">2021-10-10</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>文章地址：<a href="https://papers.nips.cc/paper/6948-collecting-telemetry-data-privately.pdf" target="_blank" rel="noopener">https://papers.nips.cc/paper/6948-collecting-telemetry-data-privately.pdf</a><br>标题：Collecting Telemetry Data Privately<br>作者：<a href="https://scholar.google.com/citations?user=AjYkTi8AAAAJ&amp;hl=zh-CN" target="_blank" rel="noopener">Bolin Ding</a>, Janardhan Kulkarni, Sergey Yekhanin<br>发表会议：NIPS 2017</p>
+<hr>
+<p>从用户那里搜集数据并进行统计分析是很重要的，也是和用户隐私密切相关的。传统情况下根据组合机制，对同一个数据持续收集会导致隐私保护程度的急剧下降。本文针对计数的数据，提出了基于LDP的数据收集方法，并且在收集的数据上可以对原始数据进行统计分析，支持均值估计（mean-estimation）和直方图估计（histogram estimation）。</p>
+<p>本文的主要框架如下：</p>
+<ul>
+<li>1 Introduction<ul>
+<li>1.1. Preliminaries and problem formulation</li>
+<li>1.2. Repeated collection and over of privacy framework</li>
+</ul>
+</li>
+<li>2 Single-round LDP mechanisms for mean and histogram Estimation<ul>
+<li>2.1. 1-Bit Mechanism for mean estimation</li>
+<li>2.2. d-Bit Mechanism for histogram estimation</li>
+</ul>
+</li>
+<li>3 Memoization for ontinual collection of counter <ul>
+<li>3.1. α-point rounding for mean estimation</li>
+<li>3.2 Privacy definition using permanent memoization</li>
+</ul>
+</li>
+<li>4 Output Perturbation</li>
+<li>5 Empirical Evaluation</li>
+<li>6 反思与总结</li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>为了保护隐私，数据收集一般遵循着这么一个流程，首先对原始数据进行一个变换，再将变换之后的数据（暂且称为匿名数据吧）发送给数据接收者。因为收集的数据是需要进行使用的，所以我们需要在匿名的数据中反推出原始数据的信息。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png" alt="fig01"></p>
+<p>在数据收集的过程中，根据DP的组合机制，持续收集数据会使得隐私保护程度急剧降低。我们之前提过的RAPPOR就利用memoization来解决持续收集中的隐私保护下降问题。根据本文作者的阐述，RAPPOR存在这样的问题：</p>
+<blockquote>
+<p>RAPPOR cannot allow for even very small but frequent changes in users’ private values, making it inappropriate for collecting counter data. </p>
+</blockquote>
+<p>本文提出的方法就是针对counter data的数据收集方案，当用户的数据在小幅度变化的时候，依然可以有强有力的有效性保证。论文有以下贡献：</p>
+<ol>
+<li>提出对于单次数据收集的1-bit机制，用来做均值估计和直方图估计。</li>
+<li>提出了α-point round机制，可以用于长期数据收集（在这一点上，作者形容这个贡献用的technical contribution）。</li>
+<li>本机制已经被微软用在了Win10当中对数据进行统计分析。</li>
+</ol>
+<h2 id="1-1-Preliminaries-and-problem-formulation"><a href="#1-1-Preliminaries-and-problem-formulation" class="headerlink" title="1.1 Preliminaries and problem formulation"></a>1.1 Preliminaries and problem formulation</h2><p>既然要讨论数据收集的问题，就先要有一个假定，或者说问题背景：</p>
+<p>假定有n个用户，每个用户在时刻t都有一个私密的counter数据，并且满足这个数据 $x_i(t)\in[0,m]$，所以数据收集者（我一般称之为服务器）收集到的数据就是这样的$\{x_i(t)\}_{i\in[n]}$，利用收集到的数据，服务器就可以进行对数据的统计分析。</p>
+<p>当前的应用场景中我们是没有考虑到数据的隐私保护性的，接下来作者介绍了LDP的概念。</p>
+<blockquote>
+<p>Definition 1. A randomized algorithm $\mathcal{A}:\mathcal{V}\rightarrow\mathcal{Z}$ is $\epsilon$-locally differentially private if for any pair of values $v, v’\in\mathcal{V}$ and any subset of output $S\subset \mathcal{Z}$, we have that:</p>
+<script type="math/tex; mode=display">
+\Pr[\mathcal{A}(v)\in S] \le e^{\epsilon}\Pr[\mathcal{A}(v')\in S]</script></blockquote>
+<p>和DP有关的概念这里就不在细述了，由于之前没有正式地介绍LDP和DP的差别，这里用直白的话说一下：DP的概念里面说的是去掉和不去掉任意一个元素对查询结果没有很大的影响，所以此元素的隐私得到保证。LDP里面说的是对于任意一个其他元素V’，对V的查询和对V’的查询结果相差不大，所以V和V’不好区分，由于对所有的V’都有这个性质，所以V是符合隐私保护要求的。实际上我理解的LDP的区别和DP的区别就是应用场景的限制。即我就是要收集数据，还没涉及到对数据集的查询，那么我们就用LDP来作为隐私保护的工具。</p>
+<p>接下来作者就讲了本文要对数据的使用方法了，即数据是用来做均值估计和直方图估计的。简单理解来看均值估计就是要知道一串数据的均值，直方图估计就是要知道数据的直方图分布。</p>
+<p>看起来也不费劲，我就将作者的话在这里贴一下，让读者明白数据是做什么的：</p>
+<ul>
+<li>Mean estimation: For each time stamp $t$, the data collector wants to obtain an estimation $\hat{\sigma}(t)$<br>for $\sigma(\vec{x_t}) = \frac{1}{n}\sum_{i\in[n] }x_i(t)$. The error of an estimation algorithm for mean is defined to be $\max_{\vec{x_t}\in[m]^n} |\hat{\sigma}(\vec{x_t})-\sigma(\vec{x_t})|$. In other words, we do worst case analysis. We abuse notation and denote $\sigma(t)$ to mean $\sigma (\vec{x_t})$ for a fixed input $\vec{x_t}$.</li>
+<li>Histogram estimation: Suppose the domain of counter values is partitioned into k buckets (e.g., with equal widths), and a counter value $x_i(t)\in [0, m]$ can be mapped to a bucket number $v_i(t)\in[k]$. For each time stamp $t$, the data collector wants to estimate frequency of $v\in[k]:h_t(v) = \frac{1}{n} |{i:v_i(t)=v}|$ as $\hat{h}_t(v)$. The error of a histogram estimation is measured by $\max_{v\in[k]} |\hat{h}_t(v)-h_t(v)|$. Again, we do worst case analysis of our algorithms.</li>
+</ul>
+<p>当然也顺带可以看一下作者是怎么做误差分析的，都是选取的worst case的相差结果作为误差。</p>
+<h2 id="1-2-Repeated-collection-and-overview-of-privacy-framework-Privacy-leakage-in-repeated-data-collection"><a href="#1-2-Repeated-collection-and-overview-of-privacy-framework-Privacy-leakage-in-repeated-data-collection" class="headerlink" title="1.2 Repeated collection and overview of privacy framework Privacy leakage in repeated data collection."></a>1.2 Repeated collection and overview of privacy framework Privacy leakage in repeated data collection.</h2><p>接下来就可以说一下本文数据收集框架图了：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png" alt=""></p>
+<p>总的来说数据收集的过程中涉及4个组件：</p>
+<ol>
+<li>1-bit机制组件，用于提供LDP的单次数据收集</li>
+<li>α-point round组件，用于将数据discretize，同时使得期望不变。</li>
+<li>针对持续数据收集的Memoization组件</li>
+<li>输出替代组件</li>
+</ol>
+<h1 id="2-Single-round-LDP-mechanisms-for-mean-and-histogram-Estimation"><a href="#2-Single-round-LDP-mechanisms-for-mean-and-histogram-Estimation" class="headerlink" title="2 Single-round LDP mechanisms for mean and histogram Estimation"></a>2 Single-round LDP mechanisms for mean and histogram Estimation</h1><p>这一节讲的是单次数据收集的方法，介绍了用于均值估计和直方图估计的1-Bit机制。</p>
+<h2 id="1-Bit-Mechanism-for-mean-estimation"><a href="#1-Bit-Mechanism-for-mean-estimation" class="headerlink" title="1-Bit Mechanism for mean estimation"></a>1-Bit Mechanism for mean estimation</h2><p>在1-BitMean机制中，作者首先给出了满足epsilon-LDP的规则（天知道他咋想到这东西的，不过我们以后会介绍这东西咋想出来的）。然后介绍了这个机制的一些性质。</p>
+<p>首先是1BitMean机制，由于涉及一些符号，我将原文摘抄下来：</p>
+<blockquote>
+<p><strong>Collection mechanism 1BitMean:</strong> When the collection of counter $x_i(t)$ at time $t$ is requested by the data collector, each user $i$ sends one bit $b_i(t)$, which is independently drawn from the distribution:</p>
+<script type="math/tex; mode=display">
+b_i(t) = \begin{cases}
+1 & \text{with probability} \frac{1}{e^\epsilon+1}+\frac{x_i(t)}{m}\cdot\frac{e^\epsilon-1}{e^\epsilon+1} \\
+0 & \text{otherwise} \\
+\end{cases}</script></blockquote>
+<p>在阅读的1BitMean机制的时候，其实t可以省略，均值估计可以简化为这样一个过程：<strong>已知原始数据x_1, x_2, …, x_n，和其对应的满足LDP的变化b_1, b_2, …, b_n，如何在收到的b上面估计x的均值。</strong></p>
+<p>当然，给出了这个变化之后，作者给出了如何去估计均值：</p>
+<blockquote>
+<p><strong>Mean estimation:</strong> Data collector obtains the bits $\{b_i(t)\}_{i\in[n]}$ from $n$ users and estimates $\sigma(t)$ as:</p>
+<script type="math/tex; mode=display">
+\hat{\sigma}(t)=\frac{m}{n}\sum_{i=1}^{n}\frac{b_i(t)\cdot(e^\epsilon+1)-1}{e^\epsilon-1}</script></blockquote>
+<p>细心的读者在给出了1BitMean之后，是可以很容易推导出公式（2）的，这里也就不说明了。</p>
+<p>在均值估计中，接下来作者还分析了一下的几点：</p>
+<ol>
+<li>1BitMean的误差分析（Theorem 1）</li>
+<li>1BitMean是符合ε-LDP的（Lemma 1）</li>
+<li>公式(2)的均值估计是无偏估计（Lemma 2）</li>
+<li>1BitMean的误差分析（Lemma 3）</li>
+</ol>
+<p>在证明的过程中，使用到了chernoff界，这是一个很重要的知识点，在很多和DP有关的证明中都有使用到。</p>
+<h2 id="d-Bit-Mechanism-for-histogram-estimation"><a href="#d-Bit-Mechanism-for-histogram-estimation" class="headerlink" title="d-Bit Mechanism for histogram estimation"></a>d-Bit Mechanism for histogram estimation</h2><p>好了，现在我们假定已经可以安全地估计出一系列数据的均值，然后基于这个性质，我们要做直方图估计，该怎么做呢？</p>
+<p>首先，数据收集的过程是这样的：</p>
+<blockquote>
+<p><strong>Collection mechanism dBitFlip:</strong> Each user $i$ randomly draws $d$ bucket numbers without replacement from $[k]$, denoted by $j_1, j_2, …, j_d$. When the collection of discretized bucket number $v_i(t)\in[k]$ at time $t$ is requested by the data collector, each user $i$ sents a vector: $b_i(t)=[(j_1, b_{i, j_1}(t)), (j_2, b_{i, j_2}(t)), …, (j_d, b_{i, j_d}(t))]$, where $b_{i,j_p}$ is a random 0-1 bit with:</p>
+<script type="math/tex; mode=display">
+\Pr[b_{i, j_p}(t)=1] = \begin{cases}
+e^{\epsilon/2}/(e^{\epsilon/2}+1) & \text{if } v_i(t)=j_p \\
+1/(e^{\epsilon/2}+1) & \text{if } v_i(t)\not=j_p \\
+\end{cases}</script></blockquote>
+<p>然后，根据收集到的数据，我们可以这样去估计直方图：</p>
+<blockquote>
+<p><strong>Histogram estimation:</strong> Data collector estimates histogram $h_t$ as: for $v\in[k]$:</p>
+<script type="math/tex; mode=display">
+\hat{h}_t(v)=\frac{k}{nd}\sum_{b_{i,v}(t) \text{is received}} \frac{b_{i,v}(t)\cdot (e^{\epsilon/2+1}-1)}{e^{\epsilon/2}-1}</script></blockquote>
+<p>因为这个机制论文里面说的不是很清楚，所以打算分一篇单独的推送来说一下。这里先挖个坑，让读者自己先思考一下，我以后再把这个坑补起来。</p>
+<h1 id="Memoization-for-continual-collection-of-counter-data"><a href="#Memoization-for-continual-collection-of-counter-data" class="headerlink" title="Memoization for continual collection of counter data"></a>Memoization for continual collection of counter data</h1><p>我们知道：当一个数据很小，或者这个数据变化范围很小的时候，重复查询得到的LDP保证的数据依然会有很大的精度或得到原始的数据。那么我们怎么解决这个问题呢？</p>
+<p>其实在读到这里之前，我一直以为标题里面的memoization是memorization，还天真地以为是作者写错了，因为RAPPOR里面利用存储的方式来解决长期数据收集的问题，所以自然而然想到了记忆。读到这里才发现自己太naive了。</p>
+<p>先来看下什么是memoization：</p>
+<blockquote>
+<p>Memoization is a simple rule that says that: At the account setup phase each user pre-computes and stores his responses to data collector for all possible values of the private counter. At data collection users do not use fresh randomness, but respond with pre-computed responses corresponding to their current counter values. Memoization (to a certain degree) takes care of situations when the private value xi stays constant. Note that the use of memoization violates differential privacy. If memoization is employed, data collector can easily distinguish a user whose value keeps changing, from a user whose value is constant; no matter how small the ε is. However, privacy leakage is limited. When data collector observes that user’s response had changed, this only indicates that user’s value had changed, but not what it was and not what it is.</p>
+</blockquote>
+<p>简单的来说是什么呢，就是对于计数数据，每个人现在本地按照一定规则计算出每个 x_i 对应的 x_i’，（这里要注意到的是，比如 1，用户 A 那里的 1 对应的 x’ 和用于 B 那里的 1 对应的 x’ 可能是不一样的），然后在数据上传的过程中，用户A的数据如果是1，那么就发送他对应的 x’。这种情况下，所有的 respond 都是 pre-computed，由于不是每次重新加入噪声，所以没有用到 fresh randomness。</p>
+<p>所以如果一个人的数据保持不变，利用memoization可以很好地保证他的隐私保护需求。</p>
+<p>文中提到，memoization和dp是冲突的，因为服务器可以很简单地区分这样两个用户：用户 A 的值保持不变，用户 B 的值存在变化。当然，也仅限于此，服务器仍然不知道具体的数值，所以 privacy leakage 依然是 limited。</p>
+<p>在现实应用中，通常来说用户的 counter data 不是一成不变的，而是会在小范围内波动。因此这时候简单地加上DP就不太适用了。所以该怎么办呢：</p>
+<p>一个想法就是分组嘛，比如数据分布为0-100，那么我分个十组，这样微小的变化依然是在一个分组里面，比如数据从在15-17之间变动，那么一直都在第二个分组里面。不过想都不用想，这个方法的局限很高。所以这里提供了一个更好的方法：α-point rounding。</p>
+<h2 id="α-point-rounding-for-mean-estimation"><a href="#α-point-rounding-for-mean-estimation" class="headerlink" title="α-point rounding for mean estimation"></a>α-point rounding for mean estimation</h2><p>rounding的最关键作用就是将原始数据范围离散化（分组也是这么做的），但是离散化又不一定好（就像前面提到的分组）。离散化是会对数据准确性造成影响的，所以怎么办呢：<strong>making the discretization rule independent across different users</strong>。</p>
+<p>所以基于1bitMean，作者又加上了α-point rounding，我们来看看怎么做的:</p>
+<ol>
+<li>定义一个离散化系数s，同时我们假定s整除m（要是你非要问不整除咋办，那就重新回顾一下应用场景，m只是一个人为规定的数据范围）。s表示的含义是步长，m/s是分组个数。</li>
+<li>每个用户从0到s-1这么多数之间单独选取一个值作为他本地的α值。</li>
+<li>每个用户创建一个等差数列，形成很多区间，我待会会举给例子。</li>
+<li>每个用户根据自己的等差数列将自己的值进行rounding操作，把数据归约到区间左边或者归约到区间右边。</li>
+</ol>
+<p>好了，讲着这么多很绕口，举个例子就明白了。</p>
+<ol>
+<li><p>我们假如数据分布范围为100，即m=100，然后s取10吧，挺标准的。那么m/s=10。这意味着把数据分成了10组。</p>
+</li>
+<li><p>这时候有个用户，他要选一个α，假如是α=2。</p>
+</li>
+<li><p>用户在本地创建一个等差数列（所有用户都是一样的）：</p>
+<p>A={0,10,20,30,40,50,60,70,80,90,100}</p>
+</li>
+<li><p>接下来就到数据的处理过程了，我们假如用户本地的数据是x=37，那么这时候先对37分组到原始数据中，因为37∈[30,40]，所以L=30, R=40。接下来再看由于37+α&lt;R，所以把x归约到30，否则就把x归约到40。</p>
+</li>
+</ol>
+<p>好，接下来我们再来看为什么这个方法依然可以做均值估计呢？实际上过程是这样的，我们先看这个图：</p>
+<p>todo</p>
+<p>然后思考这样一个问题，假如以a的概率将x归约到L，以b的概率将x归约到R，那么期望会怎么变化呢？可以由以下方程给出：</p>
+<p>todo</p>
+<p>所以上面的这个过程对于期望的估计依然是无偏的。实际上，α-point rounding 就是我所说的这个过程，其概率a即用的是x+α&lt;R，因为α是随机选取的，和x无关，所以上述过程和α-point rounding是等价的。</p>
+<p>定理三也就是把rounding和1BitMean结合起来，说这个过程依然是满足LDP的：</p>
+<p>todo</p>
+<p>其中论文中有一个拼写错误，已经改正了。</p>
+<h2 id="Privacy-definition-using-permanent-memoization"><a href="#Privacy-definition-using-permanent-memoization" class="headerlink" title="Privacy definition using permanent memoization"></a>Privacy definition using permanent memoization</h2><p>这一节大部分都是文字性和叙述性的东西，说实话，我也没有完全get懂。到3.4节这部分就先略过了，读者觉得有意思可以再和我讨论。</p>
+<h1 id="Output-Perturbation"><a href="#Output-Perturbation" class="headerlink" title="Output Perturbation"></a>Output Perturbation</h1><p>在输出前，还进行了一个output perturbation操作，实际上就是进一步替代。按照以下公式：</p>
+<script type="math/tex; mode=display">
+\hat{b}_i(t) = \begin{cases}
+b_i(t) & \text{with probability} 1-\gamma \\
+1-b_i(t) & \text{otherwise} \\
+\end{cases}</script><p>实际上，加上了Perturbation之后，就等价于以下式子：</p>
+<script type="math/tex; mode=display">
+\hat{b}_i(t) = \begin{cases}
+b_i(t) & \text{with probability} (1-2\gamma)(\frac{1}{e^\epsilon+1}+\frac{x_i(t)}{m}\cdot\frac{e^\epsilon-1}{e^\epsilon+1})+\gamma \\
+1-b_i(t) & \text{otherwise} \\
+\end{cases}</script><p>读者也可以自行证明结合1BitMean和output perturbation之后，总的保护程度为：</p>
+<script type="math/tex; mode=display">
+\epsilon'=\ln(\frac{(1-2\gamma)(\frac{e^\epsilon}{e^\epsilon+1})+\gamma}{(1-2\gamma)(\frac{1}{e^\epsilon+1})+\gamma})</script><p>实际上，这个是可以有一个通式可以表述出来的，我将会在Random Response中说明。在这里读者只需要知道这里是为了在喊噪声的结果之上进一步加噪就好了（一定要注意这个噪声是和原始数据有关的，比如你不能加一个Laplace噪声，因为Laplace噪声和数据是多少无关，会破坏原始数据的统隐私保护特性）。</p>
+<h1 id="Empirical-Experiment"><a href="#Empirical-Experiment" class="headerlink" title="Empirical Experiment"></a>Empirical Experiment</h1><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig03.png" alt="fig03"></p>
+<p>上图是 Mean Estimation 和Histogram Estimation的误差结果，其实怎么说呢，由于其统计特性，在数据量不那么大的时候其实误差还是比较大的。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig04.png" alt="fig04"></p>
+<p>作者也看了不同数据分布下的误差，可以看到不同数据分布的实验效果其实是差不多的，毕竟方法在那里。</p>
+<p>读论文的时候经常想到的一个问题是，作者是怎么想到的符合DP的机制的，比如本文中的1-bit机制。而不是给了你这个机制之后，你知道他是符合DP的。有的时候看到作者提出的机制，会感觉很奇妙：哇，这怎么想到的。</p>
+<p>有的时候其实也是可以想到的。本来打算在本篇推送里面解释一下本文中作者的想法和公式的推导的，后来由于刘奇同学想单独写一篇random response的推送，所以就打算好好写一下random response了。</p>
+<p>所以证明部分就先耽搁一下（反正一般证明过程也没人看~）。</p>
+<p>当然，今天讲的这篇文章讲的比较粗泛，毕竟是NIPS上面的，我无法用很少的语言就把这个东西说明白，所以这次挖了几个坑需要我下次来补上：</p>
+<ul>
+<li>1BitMean机制是怎么想到的？</li>
+<li>dBitFlip是如何做直方图估计的？</li>
+<li>Output Perturbation的privacy-preserving level通式推导。</li>
+</ul>
+<p>每个坑我都会单独再给大家一一介绍。</p>
+<hr>
+<p>本篇内容到这里就结束了，若想知道更多和信息安全有关的技术可在公众号留言。识别以下二维码可以成文本公众号的小粉丝，关注更多前沿技术。</p>
+<p><img src="/images/QRcode.png" alt=""></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/08/PAPER-Randomized Bit Vector Privacy Preserving Encoding Mechanism/" rel="next" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Randomized Bit Vector：Privacy-Preserving Encoding Mechanism">
+                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">论文阅读</font></span>-Randomized Bit Vector：Privacy-Preserving Encoding Mechanism
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/16/PAPER-Collecting and Analyzing Multidimensional Data with Local Differential Privacy/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Collecting and Analyzing Multidimensional Data with Local Differential Privacy">
+                <span style="background:green;"><font color="#000000">论文阅读</font></span>-Collecting and Analyzing Multidimensional Data with Local Differential Privacy <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">100</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Preliminaries-and-problem-formulation"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Preliminaries and problem formulation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-Repeated-collection-and-overview-of-privacy-framework-Privacy-leakage-in-repeated-data-collection"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Repeated collection and overview of privacy framework Privacy leakage in repeated data collection.</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Single-round-LDP-mechanisms-for-mean-and-histogram-Estimation"><span class="nav-number">2.</span> <span class="nav-text">2 Single-round LDP mechanisms for mean and histogram Estimation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Bit-Mechanism-for-mean-estimation"><span class="nav-number">2.1.</span> <span class="nav-text">1-Bit Mechanism for mean estimation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#d-Bit-Mechanism-for-histogram-estimation"><span class="nav-number">2.2.</span> <span class="nav-text">d-Bit Mechanism for histogram estimation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Memoization-for-continual-collection-of-counter-data"><span class="nav-number">3.</span> <span class="nav-text">Memoization for continual collection of counter data</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#α-point-rounding-for-mean-estimation"><span class="nav-number">3.1.</span> <span class="nav-text">α-point rounding for mean estimation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Privacy-definition-using-permanent-memoization"><span class="nav-number">3.2.</span> <span class="nav-text">Privacy definition using permanent memoization</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Output-Perturbation"><span class="nav-number">4.</span> <span class="nav-text">Output Perturbation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Empirical-Experiment"><span class="nav-number">5.</span> <span class="nav-text">Empirical Experiment</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

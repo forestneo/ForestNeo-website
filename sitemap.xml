@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://forestneo.com/2021/12/06/PAPER-Practical%20Secure%20Aggregation%20for%20Privacy-Preserving%20Machine%20Learning/</loc>
+    
+    <lastmod>2021-12-08T02:59:57.474Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://forestneo.com/2019/11/06/%E6%8A%80%E6%9C%AF%E6%89%AB%E7%9B%B2-Secret-Sharing/</loc>
+    
+    <lastmod>2021-12-06T06:44:31.665Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://forestneo.com/2021/11/29/%E6%8A%80%E6%9C%AF%E6%89%AB%E7%9B%B2-%E6%A0%91%E6%A8%A1%E5%9E%8B/</loc>
     
     <lastmod>2021-11-30T08:10:54.502Z</lastmod>
@@ -9,7 +23,7 @@
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/03/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-PrivKV/</loc>
+    <loc>http://forestneo.com/2019/03/25/PAPER-PrivKV%20Key-Value%20Data%20Collection%20with%20Local%20Differential%20Privacy/</loc>
     
     <lastmod>2021-11-29T07:59:01.383Z</lastmod>
     
@@ -58,16 +72,9 @@
   </url>
   
   <url>
-    <loc>http://forestneo.com/2021/11/02/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-How%20to%20Backdoor%20Federated%20Learning/</loc>
+    <loc>http://forestneo.com/2021/11/02/PAPER-How%20to%20Backdoor%20Federated%20Learning/</loc>
     
     <lastmod>2021-11-08T14:57:14.357Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://forestneo.com/2019/11/06/%E6%8A%80%E6%9C%AF%E6%89%AB%E7%9B%B2-Secret-Sharing/</loc>
-    
-    <lastmod>2021-11-03T14:45:18.227Z</lastmod>
     
   </url>
   
@@ -219,7 +226,7 @@
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/07/04/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Private-weighted-histogram-aggregation-in-crowdsourcing/</loc>
+    <loc>http://forestneo.com/2019/07/04/PAPER-Private%20Weighted%20Histogram%20Aggregation%20in%20Crowdsourcing/</loc>
     
     <lastmod>2021-10-10T15:08:30.000Z</lastmod>
     
@@ -240,140 +247,140 @@
   </url>
   
   <url>
-    <loc>http://forestneo.com/2020/05/14/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Hadamard-Response/</loc>
+    <loc>http://forestneo.com/2020/05/14/PAPER-Hadamard%20Response/</loc>
     
     <lastmod>2021-10-10T12:33:10.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/01/02/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-RAPPOR/</loc>
+    <loc>http://forestneo.com/2019/01/02/PAPER-RAPPOR/</loc>
     
     <lastmod>2021-10-10T12:32:53.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/11/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-The-Prevention-and-Handling-of-the-Missing-Data/</loc>
+    <loc>http://forestneo.com/2019/11/11/PAPER-The%20Prevention%20and%20Handling%20of%20the%20Missing%20Data/</loc>
     
     <lastmod>2021-10-10T12:32:26.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2020/06/15/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-TGM/</loc>
+    <loc>http://forestneo.com/2020/06/15/PAPER-TGM/</loc>
     
     <lastmod>2021-10-10T12:32:23.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2018/09/19/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Secure-Two-Party-Differentially-Private-Data-Release-for-Vertically-Partitioned-Data/</loc>
+    <loc>http://forestneo.com/2018/09/19/PAPER-Secure%20Two%20Party%20Differentially%20Private%20Data%20Release%20for%20Vertically%20Partitioned%20Data/</loc>
     
     <lastmod>2021-10-10T12:32:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/12/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Resolving-Conflicts-in-Heterogeneous-Data-by-Truth-Discovery-and-Source-Reliability-Estimation/</loc>
+    <loc>http://forestneo.com/2019/12/25/PAPER-Resolving%20Conflicts%20in%20Heterogeneous%20Data%20by%20Truth%20Discovery%20and%20Source%20Reliability%20Estimation/</loc>
     
     <lastmod>2021-10-10T12:32:17.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/01/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Randomized-Bit-Vector-Privacy-Preserving-Encoding-Mechanism/</loc>
+    <loc>http://forestneo.com/2019/01/08/PAPER-Randomized%20Bit%20Vector%20Privacy%20Preserving%20Encoding%20Mechanism/</loc>
     
     <lastmod>2021-10-10T12:31:50.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/11/05/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-PROCHLO-Strong-Privacy-for-Analytics-in-the-Crowd/</loc>
+    <loc>http://forestneo.com/2019/11/05/PAPER-PROCHLO%20Strong%20Privacy%20for%20Analytics%20in%20theCrowd/</loc>
     
     <lastmod>2021-10-10T12:31:47.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2018/11/05/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Privacy-Preserving-triangle-counting-in-large-graphs/</loc>
+    <loc>http://forestneo.com/2018/11/05/PAPER-Privacy%20Preserving%20Triangle%20Counting%20in%20Large%20Graphs/</loc>
     
     <lastmod>2021-10-10T12:31:39.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2020/05/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Federated%20Learning%20in%20Mobile%20Edge%20Networks%20A%20Comprehensive%20Survey/</loc>
+    <loc>http://forestneo.com/2020/05/07/PAPER-Federated%20Learning%20in%20Mobile%20Edge%20Networks%20A%20Comprehensive%20Survey/</loc>
     
     <lastmod>2021-10-10T12:31:35.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2020/02/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-BiSample/</loc>
+    <loc>http://forestneo.com/2020/02/25/PAPER-BiSample/</loc>
     
     <lastmod>2021-10-10T12:31:23.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/02/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Collecting-and-Analyzing-Multidimensional-Data-with-Local-Differential-Privacy/</loc>
+    <loc>http://forestneo.com/2019/02/16/PAPER-Collecting%20and%20Analyzing%20Multidimensional%20Data%20with%20Local%20Differential%20Privacy/</loc>
     
     <lastmod>2021-10-10T12:31:19.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2018/11/05/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Distance-Aware-Encoding-of-Numerical-Values-for-Privacy-Preserving-Record-Linkage/</loc>
+    <loc>http://forestneo.com/2018/11/05/PAPER-Distance%20Aware%20Encoding%20of%20Numerical%20Values%20for%20Privacy%20Preserving%20Record%20Linkage/</loc>
     
     <lastmod>2021-10-10T12:31:15.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/01/26/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Collecting-Telemetry-Data-Privately/</loc>
+    <loc>http://forestneo.com/2019/01/26/PAPER-Collecting%20Telemetry%20Data%20Privately/</loc>
     
     <lastmod>2021-10-10T12:31:12.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/04/29/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-A-Utility-optimized-Framework-for-Personalized-Private-Histogram-Estimation/</loc>
+    <loc>http://forestneo.com/2019/04/29/PAPER-A%20Utility-optimized%20Framework%20for%20Personalized%20Private%20Histogram%20Estimation/</loc>
     
     <lastmod>2021-10-10T12:31:07.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2020/03/14/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Federated-Machine-Learning-Concept-and-Applications/</loc>
+    <loc>http://forestneo.com/2020/03/14/PAPER-Federated%20Machine%20Learning%20Concept%20and%20Applications/</loc>
     
     <lastmod>2021-10-10T12:31:04.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2021/09/19/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Federated%20learning%20of%20deep%20networks%20using%20model%20averaging/</loc>
+    <loc>http://forestneo.com/2021/09/19/PAPER-Federated%20Learning%20of%20Deep%20Networks%20using%20Model%20Averaging/</loc>
     
     <lastmod>2021-10-10T12:30:59.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2020/02/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-PCKV/</loc>
+    <loc>http://forestneo.com/2020/02/28/PAPER-PCKV%20Locally%20Differentially%20Private%20Correlated%20Key-Value%20Data%20Collection%20with%20Optimized%20Utility/</loc>
     
     <lastmod>2021-10-10T12:30:56.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2020/04/02/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-FedSel-Federated-SGD-under-Local-Differential-Privacy-with-Top-k-Dimension-Selection/</loc>
+    <loc>http://forestneo.com/2020/04/02/PAPER-FedSel%20Federated%20SGD%20under%20Local%20Differential%20Privacy%20with%20Top-k%20Dimension%20Selection/</loc>
     
     <lastmod>2021-10-10T12:30:52.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/09/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-The-Staircase-Mechanism-in-Differential-Privacy/</loc>
+    <loc>http://forestneo.com/2019/09/16/PAPER-The%20Staircase%20Mechanism%20in%20Differential%20Privacy/</loc>
     
     <lastmod>2021-10-10T12:30:07.000Z</lastmod>
     
@@ -534,14 +541,14 @@
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/06/17/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Approximate-multiple-count-in-Wireless-Sensor-Networks/</loc>
+    <loc>http://forestneo.com/2019/06/17/PAPER-Approximate%20multiple%20count%20in%20Wireless%20Sensor%20Networks/</loc>
     
     <lastmod>2021-09-19T07:39:48.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/12/25/%E8%AE%BA%E6%96%87%E6%8E%A8%E8%8D%90/</loc>
+    <loc>http://forestneo.com/2019/12/25/PAPER%20List/</loc>
     
     <lastmod>2021-09-19T07:39:29.000Z</lastmod>
     
@@ -576,7 +583,7 @@
   </url>
   
   <url>
-    <loc>http://forestneo.com/2019/07/17/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Locally-Differentially-private-Protocols-for-Frequency-Estimation/</loc>
+    <loc>http://forestneo.com/2019/07/17/PAPER-Locally%20Differentially%20Private%20Protocols%20for%20Frequency%20Estimation/</loc>
     
     <lastmod>2021-08-08T11:53:16.000Z</lastmod>
     
