@@ -96,13 +96,13 @@
 
 
 
-  <meta name="description" content="文章地址：标题：PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility作者：发表会议：   Introduction Related Work Preliminaries Local Differential Privacy Mechanisms under L">
+  <meta name="description" content="文章地址：https://www.usenix.org/system/files/sec20summer_gu_prepub.pdf标题：PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility作者：Xiaolan Gu, Ming Li, Yueqiang Ch">
 <meta name="keywords" content="Local Differential Privacy,Mean Estimation,Key-Value Data,Differential Privacy,Histogram Estimation">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility">
 <meta property="og:url" content="http://forestneo.top/2020/02/28/PAPER-PCKV Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility/index.html">
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
-<meta property="og:description" content="文章地址：标题：PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility作者：发表会议：   Introduction Related Work Preliminaries Local Differential Privacy Mechanisms under L">
+<meta property="og:description" content="文章地址：https://www.usenix.org/system/files/sec20summer_gu_prepub.pdf标题：PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility作者：Xiaolan Gu, Ming Li, Yueqiang Ch">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200131205236.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200131205149.png">
@@ -119,10 +119,11 @@
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200202014211.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200131205119.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200202013336.png">
-<meta property="og:updated_time" content="2021-10-10T12:30:56.000Z">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
+<meta property="og:updated_time" content="2021-12-09T02:37:11.409Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility">
-<meta name="twitter:description" content="文章地址：标题：PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility作者：发表会议：   Introduction Related Work Preliminaries Local Differential Privacy Mechanisms under L">
+<meta name="twitter:description" content="文章地址：https://www.usenix.org/system/files/sec20summer_gu_prepub.pdf标题：PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility作者：Xiaolan Gu, Ming Li, Yueqiang Ch">
 <meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200131205236.png">
 
 
@@ -438,7 +439,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-10-10 20:30:56" itemprop="dateModified" datetime="2021-10-10T20:30:56+08:00">2021-10-10</time>
+                <time title="修改时间：2021-12-09 10:37:11" itemprop="dateModified" datetime="2021-12-09T10:37:11+08:00">2021-12-09</time>
               
             
           </span>
@@ -496,7 +497,7 @@
       
 
       
-        <p>文章地址：<br>标题：PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility<br>作者：<br>发表会议：</p>
+        <p>文章地址：<a href="https://www.usenix.org/system/files/sec20summer_gu_prepub.pdf" target="_blank" rel="noopener">https://www.usenix.org/system/files/sec20summer_gu_prepub.pdf</a><br>标题：PCKV: Locally Differentially Private Correlated Key-Value Data Collection with Optimized Utility<br>作者：Xiaolan Gu, Ming Li, Yueqiang Cheng, Li Xiong, Yang Cao<br>发表会议：USENIX20</p>
 <hr>
 <ul>
 <li>Introduction</li>
@@ -685,6 +686,9 @@ a=\frac{\ell\left(e^{\varepsilon}-1\right)+2}{\ell\left(e^{\varepsilon}-1\right)
 \begin{array}{l}\operatorname{Pr}(\mathbf{y} | S)=\eta \sum_{k \in S} \frac{\operatorname{Pr}(\mathbf{y} | S, k)}{|S|}+(1-\eta) \sum_{k=d+1}^{d^{\prime}} \frac{\operatorname{Pr}(\mathbf{y} | S, k)}{\ell} \\ =\Phi(\mathbf{y})\left[\frac{\eta}{|S|} \sum_{k \in S} \Psi(\mathbf{y}, k)+\frac{1-\eta}{\ell} \sum_{k=d+1}^{d^{\prime}} \Psi(\mathbf{y}, k)\right] \\ \leqslant \Phi(\mathbf{y})\left[\frac{\eta}{|S|} \cdot|S| \Psi_{\text {upper }}+\frac{1-\eta}{\ell} \cdot \ell \Psi_{\text {upper }}^{\prime}\right] \leqslant \Phi(\mathbf{y}) \cdot \Psi_{\text {upper }}\end{array}</script><p>再根据 LDP 的定义，我们有：</p>
 <script type="math/tex; mode=display">
 \begin{array}{l}\frac{\operatorname{Pr}\left(\mathbf{y} | S_{1}\right)}{\operatorname{Pr}\left(\mathbf{y} | S_{2}\right)} \leqslant \frac{\Phi(\mathbf{y}) \cdot \Psi_{\text {upper }}}{\Phi(\mathbf{y}) \cdot \Psi_{\text {lower }}}=\frac{\Psi_{\text {upper }}}{\Psi_{\text {lower }}}=\frac{2 p a / b}{\min \left\{\frac{1-a}{1-b}, \frac{2(1-p) a}{b}\right\}} \\ =\max \left\{2 p \cdot \frac{a(1-b)}{b(1-a)}, \frac{p}{1-p}\right\}=\max \left\{\frac{2 e^{\varepsilon_{1}}}{1+e^{-\varepsilon_{2}}}, e^{\varepsilon_{2}}\right\}=e^{\varepsilon}\end{array}</script><p>所以这个定理就证明完毕了。</p>
+<hr>
+<p>本篇内容到这里就结束了，欢迎关注公众号《差分隐私》，获取更多前沿技术。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png" alt="《差分隐私》"></p>
 
       
     </div>

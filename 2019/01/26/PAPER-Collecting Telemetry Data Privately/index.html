@@ -104,16 +104,16 @@
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
 <meta property="og:description" content="文章地址：https://papers.nips.cc/paper/6948-collecting-telemetry-data-privately.pdf标题：Collecting Telemetry Data Privately作者：Bolin Ding, Janardhan Kulkarni, Sergey Yekhanin发表会议：NIPS 2017  从用户那里搜集数据并进行统计分析是很">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png">
-<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112091033509.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112091033718.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig03.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig04.png">
-<meta property="og:image" content="http://forestneo.top/images/QRcode.png">
-<meta property="og:updated_time" content="2021-10-10T12:31:12.000Z">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
+<meta property="og:updated_time" content="2021-12-09T02:35:57.386Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Collecting Telemetry Data Privately">
 <meta name="twitter:description" content="文章地址：https://papers.nips.cc/paper/6948-collecting-telemetry-data-privately.pdf标题：Collecting Telemetry Data Privately作者：Bolin Ding, Janardhan Kulkarni, Sergey Yekhanin发表会议：NIPS 2017  从用户那里搜集数据并进行统计分析是很">
-<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112091033509.png">
 
 
 
@@ -428,7 +428,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-10-10 20:31:12" itemprop="dateModified" datetime="2021-10-10T20:31:12+08:00">2021-10-10</time>
+                <time title="修改时间：2021-12-09 10:35:57" itemprop="dateModified" datetime="2021-12-09T10:35:57+08:00">2021-12-09</time>
               
             
           </span>
@@ -511,7 +511,7 @@
 <li>6 反思与总结</li>
 </ul>
 <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>为了保护隐私，数据收集一般遵循着这么一个流程，首先对原始数据进行一个变换，再将变换之后的数据（暂且称为匿名数据吧）发送给数据接收者。因为收集的数据是需要进行使用的，所以我们需要在匿名的数据中反推出原始数据的信息。</p>
-<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png" alt="fig01"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112091033509.png" alt="image-20211209103337476"></p>
 <p>在数据收集的过程中，根据DP的组合机制，持续收集数据会使得隐私保护程度急剧降低。我们之前提过的RAPPOR就利用memoization来解决持续收集中的隐私保护下降问题。根据本文作者的阐述，RAPPOR存在这样的问题：</p>
 <blockquote>
 <p>RAPPOR cannot allow for even very small but frequent changes in users’ private values, making it inappropriate for collecting counter data. </p>
@@ -538,7 +538,7 @@
 </ul>
 <p>当然也顺带可以看一下作者是怎么做误差分析的，都是选取的worst case的相差结果作为误差。</p>
 <h2 id="1-2-Repeated-collection-and-overview-of-privacy-framework-Privacy-leakage-in-repeated-data-collection"><a href="#1-2-Repeated-collection-and-overview-of-privacy-framework-Privacy-leakage-in-repeated-data-collection" class="headerlink" title="1.2 Repeated collection and overview of privacy framework Privacy leakage in repeated data collection."></a>1.2 Repeated collection and overview of privacy framework Privacy leakage in repeated data collection.</h2><p>接下来就可以说一下本文数据收集框架图了：</p>
-<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/fig01.png" alt=""></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112091033718.png" alt="image-20211209103351693" style="zoom:50%;"></p>
 <p>总的来说数据收集的过程中涉及4个组件：</p>
 <ol>
 <li>1-bit机制组件，用于提供LDP的单次数据收集</li>
@@ -654,8 +654,8 @@ b_i(t) & \text{with probability} (1-2\gamma)(\frac{1}{e^\epsilon+1}+\frac{x_i(t)
 </ul>
 <p>每个坑我都会单独再给大家一一介绍。</p>
 <hr>
-<p>本篇内容到这里就结束了，若想知道更多和信息安全有关的技术可在公众号留言。识别以下二维码可以成文本公众号的小粉丝，关注更多前沿技术。</p>
-<p><img src="/images/QRcode.png" alt=""></p>
+<p>本篇内容到这里就结束了，欢迎关注公众号《差分隐私》，获取更多前沿技术。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png" alt="《差分隐私》"></p>
 
       
     </div>
