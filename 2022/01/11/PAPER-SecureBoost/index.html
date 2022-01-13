@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="文章地址：https://arxiv.org/abs/1901.08755标题：SecureBoost: A Lossless Federated Learning Framework作者：Kewei Cheng, Tao Fan, Yilun Jin, Yang Liu, Tianjian Chen, Dimitrios Papadopoulos, Qiang Yang  先简单梳理一下本文总的">
+<meta name="keywords" content="Federated Learning,XGBoost">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-SecureBoost-A Lossless Federated Learning Framework">
+<meta property="og:url" content="http://forestneo.top/2022/01/11/PAPER-SecureBoost/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="文章地址：https://arxiv.org/abs/1901.08755标题：SecureBoost: A Lossless Federated Learning Framework作者：Kewei Cheng, Tao Fan, Yilun Jin, Yang Liu, Tianjian Chen, Dimitrios Papadopoulos, Qiang Yang  先简单梳理一下本文总的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111717438.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111718896.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111719916.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111718504.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111719188.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111718425.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111719414.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111718794.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111719338.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
+<meta property="og:updated_time" content="2022-01-13T03:27:05.405Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-SecureBoost-A Lossless Federated Learning Framework">
+<meta name="twitter:description" content="文章地址：https://arxiv.org/abs/1901.08755标题：SecureBoost: A Lossless Federated Learning Framework作者：Kewei Cheng, Tao Fan, Yilun Jin, Yang Liu, Tianjian Chen, Dimitrios Papadopoulos, Qiang Yang  先简单梳理一下本文总的">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111717438.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.top/2022/01/11/PAPER-SecureBoost/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title><span style="background:green;"><font color="#000000">论文阅读</font></span>-SecureBoost-A Lossless Federated Learning Framework | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.top/2022/01/11/PAPER-SecureBoost/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">论文阅读</font></span>-SecureBoost-A Lossless Federated Learning Framework
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-01-11 19:14:04" itemprop="dateCreated datePublished" datetime="2022-01-11T19:14:04+08:00">2022-01-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-01-13 11:27:05" itemprop="dateModified" datetime="2022-01-13T11:27:05+08:00">2022-01-13</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>文章地址：<a href="https://arxiv.org/abs/1901.08755" target="_blank" rel="noopener">https://arxiv.org/abs/1901.08755</a><br>标题：SecureBoost: A Lossless Federated Learning Framework<br>作者：Kewei Cheng, Tao Fan, Yilun Jin, Yang Liu, Tianjian Chen, Dimitrios Papadopoulos, Qiang Yang</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111717438.png" alt=""></p>
+<p>先简单梳理一下本文总的脉络吧，论文结构分为9个章节，如下：</p>
+<ul>
+<li>0 摘要</li>
+<li>1 介绍</li>
+<li>2 背景知识&amp;相关工作</li>
+<li>3 问题阐述</li>
+<li>4 SecureBoost 下的联邦学习</li>
+<li>5 联邦推理</li>
+<li>6 理论分析</li>
+<li>7 安全性探讨</li>
+<li>8 实验分析</li>
+<li>9 总结</li>
+</ul>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>用户隐私保护是机器学习中的一个重要问题，2018 年 5 月欧盟 (EU) 推出的通用数据保护条例 (GDPR) 就是一打证据。GDPR 旨在让用户更好地控制个人数据，这促使我们探索隐私保护的数据共享机器学习框架。为了实现这一目标，本文在联邦学习的环境中提出了一种称为 SecureBoost 的新型无损隐私保护的提升树系统。SecureBoost 首先在隐私保护协议下进行实体对齐，然后通过加密策略跨多方构建提升树。这种联合学习系统允许学习过程在多方共同进行，具有共同的用户样本但不同的特征集（纵向联邦学习）。 SecureBoost 的一个优点是它提供了与非隐私保护方法相同的准确性，同时不透露每个私人数据提供者的信息。本文表明，SecureBoost 框架与其他需要集中数据的非联合梯度树增强算法一样准确，因此对于信用风险分析等应用具有高度可扩展性和实用性。同时，本文讨论了协议执行期间的信息泄漏，并提出了可证明减少它的方法。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>现代社会越来越关注个人数据的非法使用和利用。 在个人层面，不当使用个人数据可能会对用户隐私造成潜在风险。 在企业层面，数据泄露可能对商业利益造成严重后果。 当前也采取了一些行动， 例如，欧盟颁布了一项称为通用数据保护条例 (GDPR) 的法律，旨在让用户更好地控制他们的个人数据。 在此背景下，许多严重依赖机器学习的企业将不得不进行彻底的改变。</p>
+<p>尽管用户隐私保护的目标很难实现，不同组织在构建机器学习模型的同时进行协作的需求仍然很强烈。 实际上，许多数据所有者没有足够的数据量来构建高质量的模型。 例如，零售公司拥有用户的购买和交易数据，如果将其提供给银行进行信用评级应用，这些数据将非常有用。 同样，手机公司也有用户使用数据，但每家公司可能只有少量用户，不足以训练出高质量的用户偏好模型。 这些公司有强烈的动机联合开发出联合数据价值。</p>
+<p>到目前为止，让不同的数据所有者协同构建高质量的机器学习模型，同时保护用户数据隐私和机密性仍然是一个挑战。当前已经进行了一些尝试来解决机器学习中的用户隐私问题。例如，Apple 提出使用差分隐私（DP 来解决隐私保护问题。 DP 的基本思想是在数据被第三方交换和分析时，向数据中添加经过适当校准的噪声，以尝试消除个人的可识别性。但是，DP只能在一定程度上防止用户数据泄露，并不能完全排除个人身份。此外，DP 下的数据交换仍然需要数据在组织之间转手，这可能是 GDPR 等严格法律所不允许的。此外，DP 方法在机器学习中是有损的，因为在注入噪声后建立的模型可能在预测精度上表现不令人满意。</p>
+<p>最近，谷歌引入了联邦学习 (FL) 框架并将其部署在 Android 云上。 基本思想是允许单个客户端仅将模型更新到聚合模型的中央服务器，而不是将原始数据上传。 谷歌进一步引入了安全聚合协议，以确保模型参数不会将用户信息泄漏到服务器。 该框架也称为横向联邦=或数据分区联邦，其中每个分区对应于从一个或多个用户收集的数据样本的子集。</p>
+<p>本文考虑了另一种情况，即多方协作构建他们的机器学习模型，同时保护用户和数据隐私。 我们的设置如图 2 所示，因为数据是按不同方之间的特征划分的，此场景通常被称为纵向联邦。 此设置具有广泛的实际应用。 例如，金融机构可以利用第三方的替代数据来提高用户和中小企业的信用评级。 来自多家医院的专利记录可以一起用于诊断。 我们可以将位于不同方的数据看作是对不同方的所有数据进行并集得到的虚拟大数据表的一个子集。</p>
+<p>不同参与方的数据拥有以下性质：</p>
+<ul>
+<li>大数据表是垂直分割的，或者说按特征分割的；</li>
+<li>只有 data provider 有 label 信息；</li>
+<li>有一些用户是被所有参与方所共同拥有的。</li>
+</ul>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111718896.png" alt="image-20220111171801868" style="zoom: 50%;"></p>
+<p>我们的目标是让各方共同构建预测模型，同时保护各方不将数据信息泄露给其他方。 与大多数现有的隐私保护数据挖掘和机器学习工作相比，我们设置的复杂性显着增加。 与横向联邦不同，纵向联邦设置需要更复杂的机制来分解每一方的损失函数。 此外，由于只有一个数据提供者拥有标签信息，我们需要提出一种安全协议来指导学习过程，而不是在各方之间明确共享标签信息。 最后，数据机密性和隐私问题防止各方暴露自己的用户。 因此，实体对齐也应该以足够安全的方式进行。</p>
+<p>提升树（Boosting Tree）是一种高效且应用广泛的机器学习方法，由于其高效性和可解释性强，在许多机器学习任务中表现出色。例如，XGBoost 已广泛用于各种应用，包括信用风险分析和用户行为研究。在本文中，我们提出了一种新颖的端到端隐私保护提升树算法框架，称为 SecureBoost，以在联邦环境中实现机器学习。Secureboost 已在开源项目 FATE 中实施，以支持工业应用。我们的联邦学习框架分两步运行。首先，我们在隐私保护约束下找到各方之间的共同用户。然后，我们协作学习共享分类或回归模型，而不会相互泄露任何用户信息。本文的主要贡献总结如下：</p>
+<ul>
+<li>我们正式定义了在联邦学习设置中对垂直分区数据进行隐私保护机器学习的新问题（纵向联邦）。</li>
+<li>我们提出了一种协同训练高质量提升树模型的方法，同时将训练数据保持在多方的本地。我们的协议不需要受信任的第三方的参与。</li>
+<li>我们证明了我们的方法是无损的，因为它与任何将所有数据集中到一个中心位置的集中式非隐私保护方法一样准确。</li>
+<li>此外，除了安全证明之外，我们还讨论了使协议完全安全所需的条件。</li>
+</ul>
+<h1 id="背景知识-amp-相关工作"><a href="#背景知识-amp-相关工作" class="headerlink" title="背景知识&amp;相关工作"></a>背景知识&amp;相关工作</h1><p>为了保护模型训练中数据的隐私，论文[18]提出利用差分隐私 (DP) 来学习深度学习模型。 最近，谷歌引入了一个联邦学习框架，通过在每个移动终端模型训练来防止数据传输。 其基本思想是每个本地移动终端使用本地数据来训练本地模型。 全局模型可以简单地通过平均所有局部模型来更新。 遵循相同的想法，不同的机器学习模型也在联邦环境下进行实现，包括决策树、线性/逻辑回归和神经网络。</p>
+<p>上述所有方法都是为水平分区的数据设计的。与纵向 FL 不同，横向 FL 需要更复杂的机制来分解每一方的损失函数。纵向 FL 的概念首先在线性模型和神经网络上提出了对应的协议。纵向上面也有一些方法，比如决策树。然而，这些方法必须揭示给定属性的类分布，这将导致潜在的安全风险。此外，它们只能处理离散数据，这对于现实生活场景不太实用。相比之下，本文提出的方法保证了对数据的保护，并且可以很容易地应用于连续数据种。 [29] 中提出的另一项工作通过泰勒展开近似非线性逻辑损失，对加密的纵向数据联合执行逻辑回归，这将不可避免地损害模型的性能。与这些方案相比，本文提出方法本质上是无损的。</p>
+<h1 id="问题阐述"><a href="#问题阐述" class="headerlink" title="问题阐述"></a>问题阐述</h1><p>令 $\left\{\mathbf{X}^{k} \in \mathbb{R}^{n_{k} \times d_{k}}\right\}_{k=1}^{m}$ 表示分布在 m 个纵向分割的实体的数据，其中每行 $\mathbf{X}_{i *}^{k} \in \mathbb{R}^{1 \times d_{k}}$ 表示一条数据。 我们用 $\mathcal{F}^{k}=\left\{f_{1}, \ldots, f_{d_{k}}\right\}$ 来表示对应数据矩阵 $\mathbf{X}^{k}$ 的特征集。 任意两方 $p$ 和 $q$ 具有不同的特征集，即 $\mathcal{F}^{p} \cap \mathcal{F}^{q}=\varnothing, \forall p \neq q \in\{1 \ldots m\}$。 不同的各方也可能拥有不同的用户集，允许一定程度的重叠。 只有一方持有标签 $\mathbf{y}$。</p>
+<p><strong>Active Party</strong>： 我们将主动方定义为同时拥有数据矩阵和类标签的数据提供者。 由于类标签信息对于监督学习是必不可少的，因此主动方自然会承担起联邦学习中的主导服务器的责任。</p>
+<p><strong>Passive Party</strong>：我们将只有数据矩阵的数据提供者定义为被动方。 被动方在联邦学习环境中扮演客户的角色。</p>
+<p>纵向数据下隐私保护的机器学习（纵向联邦）过程可以表示为：<strong>给定</strong>分布在 $m$ 个参与方上的纵向分割数据 $\left\{\mathbf{X}^{k}\right\}_{k=1}^{m}$ 和某个主动方的label数据 $\mathbf{y}$，<strong>学习</strong>一个机器学习模型 $M$，并且不泄露任何一方数据，其中 $M_i$ 是参与方 $i$ 上的数据映射，$M_i$ 的输入是 $X_i$。同时有<strong>lossless限制</strong>，即如果不考虑隐私保护，把数据收集起来训练的模型是 $M’$，我们要求 $M$ 和 $M’$ 的 loss 相同。</p>
+<h1 id="SecureBoost-下的联邦学习"><a href="#SecureBoost-下的联邦学习" class="headerlink" title="SecureBoost 下的联邦学习"></a>SecureBoost 下的联邦学习</h1><p>作为最流行的机器学习算法之一，梯度提升决策树在许多机器学习任务中表现出色，如欺诈检测、特征选择和产品推荐。 在本节中，我们在联邦学习设置中提出了一种称为 SecureBoost 的新型梯度提升算法。 它包括两个主要步骤。 首先，它在隐私约束下进行数据对齐（其实就是PSI）。 其次，它协同学习一个共享的梯度提升树模型，同时对所有训练数据保密。后文详细解释。</p>
+<p>我们的第一个目标是在所有参与方中找到一组共同的数据样本，从而用这些数据建立一个联合模型 $M$。当数据在各方之间进行垂直划分时，不同方持有不同但部分重叠的用户，可以通过他们的 ID 来识别这些用户。问题是如何在不暴露非共享部分的情况下找到各方的共同数据样本。为了实现这一目标，我们在数据库间求交做隐私保护的数据对齐。</p>
+<p>数据对齐之后，我们现在考虑不侵犯隐私的情况下，在多方上联合构建树模型的问题。在进一步讨论算法的细节之前，我们首先介绍联邦学习的一般框架。在联邦学习中，典型的迭代包括四个步骤。首先，每个客户端从服务器下载当前的全局模型。其次，每个客户端根据其本地数据和当前全局模型计算更新的模型。第三，每个客户端在加密的情况下将模型更新发送回服务器。最后，服务器聚合这些模型更新并构建更新的全局模型。</p>
+<p>遵循联邦学习的一般框架，我们看到在联邦学习的设置中设计一个隐私保护的树提升框架，本质上我们必须回答以下三个问题：（1）每个客户端（即被动方) 不拿到标签的情况下如何根据本地数据计算更新的模型？ （2）服务器（即主动方）如何聚合所有更新的模型，得到一个新的全局模型？ （3）如何在不泄露任何信息的情况下，在各方之间共享更新后的全局模型？为了回答这三个问题，我们首先在非联合环境中回顾 XGBoost。</p>
+<p>给定数据集 $\mathbf{X} \in \mathbb{R}^{n \times d}$，表示 $n$ 个样本 $d$ 个特征，XGBoost利用 $K$个回归树预测结果：</p>
+<script type="math/tex; mode=display">
+\hat{y}_{i}=\sum_{k=1}^{K} f_{k}\left(\mathbf{x}_{i}\right)</script><p>为了学习到上述的 $f_k$ ，在第 $t$ 轮，XGBoost采用贪心的方式学习模型 $f_t$，通过最小化以下目标：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}^{(t)} \simeq \sum_{i=1}^{n}\left[l\left(y_{i}, \hat{y}_{i}^{(t-1)}\right)+g_{i} f_{t}\left(\mathbf{x}_{i}\right)+\frac{1}{2} h_{i} f_{t}^{2}\left(\mathbf{x}_{i}\right)\right]+\Omega\left(f_{t}\right)</script><p>其中：$\Omega\left(f_{t}\right)=\gamma T+\frac{1}{2} \lambda|w|^{2}$， $g_{i}=\partial_{\hat{y}^{(t-1)}} l\left(y_{i}, \hat{y}^{(t-1)}\right)$，以及 $h_{i}=\partial_{\hat{u}^{(t-1)}}^{2} l\left(y_{i}, \hat{y}^{(t-1)}\right)$。</p>
+<p>在构建第决策树的第 $t$ 轮的过程中，模型从深度为0的节点开始分裂，直到到达最大深度。最佳的分裂节点根据以下方程给出（其中$I_L, I_R$表示分裂之后左节点和右节点的数据）：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{s p}=\frac{1}{2}\left[\frac{\left(\sum_{i \in I_{L}} g_{i}\right)^{2}}{\sum_{i \in I_{L}} h_{i}+\lambda}+\frac{\left(\sum_{i \in I_{R}} g_{i}\right)^{2}}{\sum_{i \in I_{R}} h_{i}+\lambda}-\frac{\left(\sum_{i \in I} g_{i}\right)^{2}}{\sum_{i \in I} h_{i}+\lambda}\right]-\gamma</script><p>构建好了最优的树结构（分裂结果）之后，叶子节点 $j$ 的权重 $w_j^*$ 可以根据下式进行计算，其中 $I_j$ 是叶子 $j$ 上的数据：</p>
+<script type="math/tex; mode=display">
+w_{j}^{*}=-\frac{\sum_{i \in I_{j}} g_{i}}{\sum_{i \in I_{j}} h_{i}+\lambda}</script><p>从上面过程中，我们有以下观察：</p>
+<ul>
+<li>（1）分割候选，和叶子最优权重的计算仅取决于 $g$ 和 $h$ ，<br>使其很容易适应联邦学习的设置。</li>
+<li>（2）label 可以从 $g_i$ 和 $h_i$ 中推测出来，比如，当采用平方误差的时候，我们有 $g_i = \hat{y}_{i}^{(t-1)}-y_{i}$，所以要保护。</li>
+</ul>
+<p>在上述观察基础上，我们现在介绍我们的联邦梯度提升树算法。 根据观察（1），我们可以看到被动方可以仅使用其本地数据和 $g_i, h_i$ 来确定他们的局部最优分割，这促使我们遵循这种方法来分解每一方的学习任务。 然而，根据观察（2），$g_i , h_i$ 应该被视为敏感数据，因为它们能够向被动方披露类标签信息。 因此，为了对 $g_i$ 和 $h_i$ 保密，主动方需要在发送给被动方之前对 $g_i$ 和 $h_i$ 进行加密。 剩下的挑战是在米问下，如何为每个被动方确定局部最优分割。</p>
+<p>根据计算最佳分裂的公式（$\mathcal{L}_{s p}$），如果为每个可能的拆分计算$g_{l}=\sum_{i \in I_{L}} g_{i}, h_{l}=\sum_{i \in I_{L}} h_{i}$，则就可以找到最佳拆分。 因此，接下来，我们将展示如何使用加法同态加密方案通过使用加密的 $g_i$ 和 $h_i$ 获得 $g_l$ 和 $h_l$。 本文采用了Paillier 方案。</p>
+<p>Paillier中，假定数据 $u$ 的密文对应 $\langle u\rangle$，那么Paillier系统有以下特性：$\langle u\rangle\cdot \langle v\rangle = \langle u + v \rangle$。因此有：$\left\langle h_{l}\right\rangle=\prod_{i \in I_{L}}\left\langle h_{i}\right\rangle, \left\langle g_{l}\right\rangle=\prod_{i \in I_{L}}\left\langle g_{i}\right\rangle$。因此，最佳分裂可以按照以下步骤进行找到：被动方计算对于本地所有的可能分裂，计算 $\langle g_l\rangle, \langle h_l\rangle$，然后发送给主动方。然后主动方解密，并根据最佳分裂公式计算最佳分裂节点，本文采用了论文[31]中的近似方法，这样就不用穷举所有的可能值，可以进行一定的优化。细节的流程如算法1所示。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111719916.png" alt="image-20220111171945892" style="zoom:45%;"></p>
+<p>基于观察 (1) ，联邦情况下的拆分查找算法与 XGBoost 基本相同，只是为了适应联邦学习框架进行了细微调整。由于特征分离，SecureBoost 需要不同方为每个拆分存储一定的信息，以便对新样本进行预测。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111718504.png" alt="image-20220111171834473" style="zoom:50%;"></p>
+<p>被动方应该保留一个查找表，如图 3 所示。它包含 [feature id $k$, threshold value $v$] 和用于记录的唯一 id $r$，这样就可以进行拆分。同时，由于主动方没有被动方的特征，为了让主动方知道将数据传递给哪个被动方，以及在推理时指示被动方使用哪个拆分条件，它关联每个树节点都有一对（party id $i$，record id $r$）。有关 SecureBoost 的拆分查找算法的具体细节如算法 2所示。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111719188.png" alt="image-20220111171958149" style="zoom:45%;"></p>
+<p>剩下的问题是计算最佳叶权重。根据权重公式 $w_j^*$，叶子 $j$ 的最优权重仅取决于 $\sum_{i \in I_{i}} g_{i}$ 和 $\sum_{i \in I_{i}} h_{i}$。因此，它遵循与分裂过程类似的程序。当到达叶节点时，被动方将 $\langle \sum_{i \in I_{i}} g_{i} \rangle$ 和 $\langle \sum_{i \in I_{i}} g_{i} \rangle$ 发送给主动方，然后通过权重计算公式对其进行解密以计算相应的权重。</p>
+<h1 id="联邦推理"><a href="#联邦推理" class="headerlink" title="联邦推理"></a>联邦推理</h1><p>本节描述了如何使用学习模型（分布在各方之间）对新实例进行分类，即使要分类的实例的特征是私有的并且分布在各方之间。由于每一方都知道自己的特征，但对其他方一无所知，因此我们需要一个安全的分布式推理协议来根据做出的决定来控制从一方到另一方的传递。为了说明推理过程，我们考虑一个具有三方的系统，如图 3 所示。具体而言，第一方是主动方，它收集的信息包括用户的每月账单支付、教育以及标签，用户 $X$ 是否做过按时付款。乙方和丙方为被动方，分别持有年龄、性别、婚姻状况和授信额度等特征。假设我们希望预测用户 $X_6$ 是否会按时付款，那么所有参与方都必须协作进行预测。整个过程由主动方协调。从根开始，通过参考记录[party id:1,record id:1]，主动方知道party 1持有根节点，从而要求party 1从其查找表中检索相应的属性Bill Payment基于记录 id 1。由于分类属性是账单支付，并且参与方 1 知道用户 $X_6$ 的账单支付是 4367，小于阈值 5000，所以它决定它应该向下移动到它的左子节点节点1. 然后，主动方引用节点1关联的记录[party id:3,record id:1]，要求3方进行同样的操作。这个过程一直持续到到达叶子为止。</p>
+<h1 id="理论分析"><a href="#理论分析" class="headerlink" title="理论分析"></a>理论分析</h1><blockquote>
+<p>定理1. SecureBoost 是无损的，即在同样的数据下，联邦学习的 SecureBoost 模型 $M$ 与数据集中的 XGBoost 模型 $M’$ 完全一致（给定相同的初始条件）。</p>
+</blockquote>
+<p>所谓的证明过程其实就是把 Paillier 同态加密的性质又放过来了一遍。又由于同态加密不像加噪声的机制一样，本身就是不会对数据造成影响，因此很显然，SecureBoost 是无损的。</p>
+<h1 id="安全性探讨"><a href="#安全性探讨" class="headerlink" title="安全性探讨"></a>安全性探讨</h1><p>SecureBoost 避免在训练和推理过程中将各方持有的数据记录泄露给其他人，从而保护各方数据的隐私。但是，我们也强调在协议执行期间可能会有一些泄漏，这对于被动方和主动方来说是完全不同的。</p>
+<p>主动方在 Secure-Boost 中处于有利位置，因为它了解每个拆分的实例空间以及哪一方负责每个节点的决策。此外，它在学习过程中学习了 $g_l,g_r$ 和 $h_l,h_r$ 的所有可能值。在这种情况下，前者似乎是不可避免的，除非人们愿意在推理阶段大幅增加开销。然而，后者可以通过使用安全的多方计算技术来比较加密值（例如，[33]、[34]）来避免。这样，主动方只学习每个方的最优 $g_l, g_r , h_l , h_r$ ，当然，这会显着影响学习过程中的效率。</p>
+<p>同时注意到，与同一叶子关联的实例强烈表明它们属于同一类（权重相同）。我们将属于多数类的样本比例表示为<strong>叶子纯度</strong>。被动方的信息泄露与 SecureBoost 第一棵树的叶子纯度直接相关。此外，第一棵树的叶子纯度可以从叶子的权重推断出来。</p>
+<blockquote>
+<p>定理2，给定学习好了的 SecureBoost 模型，其第一棵树的叶子纯度可以从叶子的权重推测。</p>
+</blockquote>
+<p>证明过程如下。首先，二分类问题的loss，定义如下：</p>
+<script type="math/tex; mode=display">
+L=y_{i} \log \left(1+e^{-\hat{y}_{i}}\right)+\left(1-y_{i}\right) \log \left(1+e^{\hat{y}_{i}}\right)</script><p>根据这个loss，在第一轮决策树的构建过程中我们有：$g_{i}=\hat{y}_{i}^{(0)}-y_{i}$ 以及 $g_{i}=\hat{y}_{i}^{(0)}\left(1-\hat{y}_{i}^{(0)}\right)$，其中 $\hat{y}_{i}^{(0)}$ 表示初始值。不妨假定我们的所有初始值都定义为 $a$ 吧，其中 $ (0&lt; a &lt; 1)$。那么根据权重计算过程，对于叶子节点 $j$ ，有：$\hat{y}_{i}^{(1)} = S\left(w_{j}^{*}\right)=S\left(-\frac{\sum_{i \in I_{j}} g_{i}}{\sum_{i \in I_{j}} h_{i}+\lambda}\right)$，其中 $S(x)$ 表示 Sigmoid 函数。假定和叶子 $j$ 关联的数据量是 $n_j$，然后正类样本比例是 $\theta_J$，其中 $n_j$ 是比较大的，我们可以忽略 $-\frac{\sum_{i \in I_{j}} g_{i}}{\sum_{i \in I_{j}} h_{i}+\lambda}$ 中分母的 $\lambda$，并且把权重计算重新写成：</p>
+<script type="math/tex; mode=display">
+\begin{align}w_{j}^{*}&=-\frac{\sum_{i \in I_{j}} g_{i}}{\sum_{i \in I_{j}} h_{i}}=-\frac{\theta_{j} * n *(a-1)+\left(1-\theta_{j}\right) * n * a}{n * a *(1-a)}\nonumber\\
+&= -\frac{\theta_{j} * n *(a-1)+\left(1-\theta_{j}\right) * n * a}{n * a *(1-a)}\nonumber\\
+&=\frac{a-\theta_{j}}{a(a-1)}
+\end{align}</script><p>也就是说我们有 $\theta_j = a - a(a-1)w_j^<em>$，这其中 $a$ 是初始化参数。因此 $w_j^</em>$ 是推断出 $\theta_j$ 的关键。然后 $\theta_j$ 可以用来表示叶子 $j$ 的纯度，因为纯度可以写成 $\max(\theta_j, 1-\theta_j)$。所以给定第一棵树，叶子节点的纯度就能推断出来了。证明完毕。</p>
+<p>根据定理 2，给定 SecureBoost 模型，其第一棵树的叶子的权重可以揭示敏感信息。 为了减少被动方的信息泄漏，我们选择将决策树叶存储在主动方，并提出我们框架的修改版本，称为 Reduced-Leakage SecureBoost (RL-SecureBoost)。 使用 RL-SecureBoost，主动方仅根据自己的特征独立学习第一棵树，充分保护其叶子的数据空间。 因此，被动方学习的所有信息都是基于残差的。 尽管残差也可能揭示信息，但我们证明随着第一棵树的纯度增加，残差信息将会减少。</p>
+<blockquote>
+<p>定理3，随着第一棵树的纯度降低，残差信息将会下降。</p>
+</blockquote>
+<p>证明：如前文所示，对于二分类问题，我们有 $g_{i}=\hat{y}_{i}^{(t-1)}-y_{i}, h_{i}=\hat{y}_{i}^{(t-1)} *\left(1-\hat{y}_{i}^{(t-1)}\right)$，其中 $g_i \in [-1,1]$。因此，有：</p>
+<script type="math/tex; mode=display">
+\left\{\begin{array}{cc}
+h_{i}=g_{i}\left(1-g_{i}\right), & \text { if } \quad  y_{i}=0 \nonumber\\
+h_{i}=-g_{i}\left(g_{i}+1\right), & \text { if }  \quad y_{i}=1 \nonumber
+\end{array}\right.</script><p>当我们在第 $t$ 次迭代中用第 $k$ 个叶子构建决策树以拟合前一棵树的残差时，本质上，我们将数据分成 $k$ 个簇以最小化以下损失：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+L &=-\sum_{j=1}^{k} \frac{\left(\sum_{i \in I_{j}} g_{i}\right)^{2}}{\sum_{i \in I_{j}} h_{i}} \nonumber\\
+&=-\sum_{j=1}^{k} \frac{\left(\sum_{i \in I_{j}} g_{i}\right)^{2}}{\sum_{i \in I_{j}^{N}} g_{i}\left(1-g_{i}\right)+\sum_{i \in I_{j}^{P}}-g_{i}\left(1+g_{i}\right)} \nonumber
+\end{aligned}</script><p>同时，我们知道 $\hat{y}_{i}^{(t-1)} \in[0,1], g_{i}=\hat{y}_{i}^{(t-1)}-y_{i}$，因此我们有对于正样本 $g_i \in [-1,0]$，对于负样本 $g_i\in[0,1]$。考虑到 $g_i$ 的取值范围，上述方程可写成：</p>
+<script type="math/tex; mode=display">
+\sum_{j=1}^{k} \frac{\left(\sum_{i \in I_{j}^{N}}\left|g_{i}\right|-\sum_{i \in I_{j}^{P}}\left|g_{i}\right|\right)^{2}}{\sum_{i \in I_{j}^{N}}\left|g_{i}\right|\left(\left|g_{i}\right|-1\right)+\sum_{i \in I_{j}^{P}}\left|g_{i}\right|\left(\left|g_{i}\right|-1\right)}</script><p>其中 $I_j^N$ 和 $I_j^P$ 分别表示叶子节点 $j$ 上的正样本和负样本集合。然后我们假设正样本和负样本 $|g_i|$ 的期望分别是 $\mu_p$ 和 $\mu_n$，那么样本量足够大的时候，上述的公式就又可以大致写成：</p>
+<script type="math/tex; mode=display">
+\sum_{j=1}^{k} \frac{\left(n_{j}^{n} \mu_{n}-n_{j}^{p} \mu_{p}\right)^{2}}{n_{j}^{n} \mu_{n}\left(\mu_{n}-1\right)+n_{j}^{p} \mu_{p}\left(\mu_{p}-1\right)}</script><p>其中 $n_j^n, n_j^p$ 表示节点 $j$ 上正样本和负样本的数量。由于 $u_n, u_p\in [0,1]$，上式的分子肯定是正数，分母是负数。所以最小化上式就等价于最大化分子，最小化分母。注意到分子是形如 $\sum x^2$，分母是形如 $(\sum x)^2$，其中 $in [0,1]$，上式主要被分子所通知，因此最小化上式可等价于最大化 $\left(n_{j}^{n} \mu_{n}-n_{j}^{p} \mu_{p}\right)^{2}$。理想情况下，我们希望正样本数量和负样本数量相平衡，即 $n_j^n = n_j^p$。对于负样本有 $\left|g_{i}\right|=\left|\hat{y}_{i}^{(t-1)}-y_{i}\right|=\hat{y}_{i}^{(t-1)}$，以及正样本有 $\left|g_{i}\right|=\left|\hat{y}_{i}^{(t-1)}-y_{i}\right|=1-\hat{y}_{i}^{(t-1)}$，因此有，$\mu_{n}=\frac{1}{N_{n}} \sum_{j=1}^{k}\left(1-\theta_{j}\right) n_{j} \hat{y}_{i}^{(t-1)},\mu_{p}=\frac{1}{N_{n}} \sum_{j=1}^{k} \theta_{j} n_{j}\left(1-\hat{y}_{i}^{(t-1)}\right)$，所以，$|u_n-u_p|$可以计算为：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\left|\mu_{n}-\mu_{p}\right| \\
+=&\left|\frac{1}{N_{n}} \sum_{j=1}^{k}\left(1-\theta_{j}\right) n_{j} \hat{y}_{i}{ }^{(t-1)}-\frac{1}{N_{p}} \sum_{j=1}^{k} \theta_{j} n_{j}\left(1-\hat{y}_{i}{ }^{(t-1)}\right)\right|
+\end{aligned}</script><p>当正负样本平衡的时候，我们就有：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\left|\mu_{n}-\mu_{p}\right| \\
+=& \frac{1}{N_{n}} \mid \sum_{j=1}^{k}\left(\left(1-\theta_{j}\right) n_{j} S\left(w_{j}\right)-\theta_{j} n_{j}\left(1-S\left(w_{j}\right)\right) \mid\right.\\
+=& \frac{1}{N_{n}} \sum_{j=1}^{k} n_{j}\left|\left(S\left(w_{j}\right)-\theta_{j}\right)\right| \\
+=& \frac{1}{N_{n}} \sum_{j=1}^{k} n_{j}\left|\left(S\left(\frac{a-\theta_{j}}{a(a-1)}\right)-\theta_{j}\right)\right|
+\end{aligned}</script><p>从上式可以看出来，当 $S\left(\frac{a-\theta_{j}}{a(a-1)}\right)=a$的时候，达到最小值，所以 $\theta_j$ 的最优值为 $\theta_j^<em> = \left.a\left(1+(1-a) \ln \left(\frac{a}{1-a}\right)\right)\right)$。为了达到更大的$u_n-u_p$，我们希望从 $\theta_j$ 到 $\theta_j^</em>$ 的偏离尽可能大。当我们的初始化比较好，比如 $\alpha = 0.5, \theta_j^<em>=0.5$，这时候最大化 $|\theta_j = \theta_j^</em>|$ 就等价于最大化  $\max(\theta_j, 1-\theta_j)$，刚好是纯度。因此叶子节点的高纯度将会导致 $u_p,u_n$ 之间的高差异，最后导致更少的隐私泄露。证明完毕</p>
+<p>（证明过程，感觉假设太多了，又是平衡又是在一定程度上近似表示的，以及，我也没太搞懂，）</p>
+<p>给定定理 3，本文证明 RL-SecureBoost 是安全的，只要它的第一棵树学习到足够的信息来用残差掩盖实际标签。 此外，正如我们后续通过实验证明的那样，RL-SecureBoost 在预测准确性方面的表现与 SecureBoost 相同。</p>
+<h1 id="实验分析"><a href="#实验分析" class="headerlink" title="实验分析"></a>实验分析</h1><p>本文采用了以下两个公开数据集：</p>
+<ul>
+<li><strong>Credit 1</strong>: 分类数据集，表示每个人是否受到严重的经济困难，包含15万个样本10个属性。</li>
+<li><strong>Credit 2</strong>: 也是信用评分数据集，与预测用户是否会按时付款的任务相关。 它总共包含 30000 个数据和 25 个属性。</li>
+</ul>
+<p>实验采用了 2/3 数据训练，剩下的用于测试。实验过程用了两方测试，也就是两方下的纵向联邦学习。为了公平比较不同的方法，最大树深度设置为了3，对于所有的方法，用于拟合单个回归树的样本比例为 0.8，学习率为 0.3。 加密方案采用 Paillier，密钥大小为 512 位。 实验环境是 8GB RAM 和 Intel Core i5-7200u CPU。</p>
+<h2 id="Scalability"><a href="#Scalability" class="headerlink" title="Scalability"></a>Scalability</h2><p>SecureBoost 的效率可能会通过收敛速度和运行时间来反映，这可能会受到 (1) 单个回归树的最大深度的影响； (2) 数据集的大小。在本小节中，我们进行收敛分析以及研究所有变量对学习运行时间的影响。所有实验均在数据集 Credit2 上进行。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111718425.png" alt="image-20220111171852391" style="zoom: 25%;"></p>
+<p>首先，我们对收敛速度感兴趣。我们将 SecureBoost 的收敛行为与非联邦算法比较，包括 GBDT 和 XGBoost。从图 4 可以看出，SecureBoost 在训练数据集上显示出与其他非联邦方法相似的学习曲线，甚至在测试数据集上的表现略好于其他方法。此外，SecureBoost 的训练和测试损失的收敛行为与 GBDT 和 XGBoost 非常相似。（我没搞懂，我觉得收敛速度应该和XGBoost一样的啊）</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111719414.png" alt="image-20220111171916386" style="zoom: 50%;"></p>
+<p>接下来，为了研究单个树的最大深度如何影响学习的运行时间，我们在 {3,4,5,6,7,8} 之间改变单个树的最大深度，并记录运行时间。如图 5 (a) 所示，运行时间几乎随着单个树的最大深度线性增加，这表明我们可以用相对较少的额外时间来训练深度树，这在实践中非常有吸引力，尤其是在大型场景中数据。</p>
+<p>最后，我们研究了数据大小对我们提出的系统运行时间的影响。我们通过求点积对特征进行增广。我们将单个回归树的最大深度固定为 3，并改变 {50, 500, 1000, 5000} 中的特征数和 {5000, 10000, 30000} 中的样本数。我们比较了运行时间，以研究每个变体如何影响算法的效率。我们对图 5 (b) 和图 5 (c) 进行了类似的观察，这意味着样本数和特征数对运行时间的贡献相同。此外，我们可以看到我们提出的框架即使在相对大的数据下也能很好地扩展。</p>
+<h2 id="Performance-of-RL-SecureBoost"><a href="#Performance-of-RL-SecureBoost" class="headerlink" title="Performance of RL-SecureBoost"></a>Performance of RL-SecureBoost</h2><p>为了研究 RL-SecureBoost 在安全性和预测准确性方面的性能，我们的目标是回答以下问题：（1）第一棵树是否仅基于主动方持有的特征，学习到足够的信息以减少信息泄漏？ (2) 与 SecureBoost 相比，RL-SecureBoost 是否存在精度损失？</p>
+<p>首先，我们研究了 RL-SecureBoost 在安全方面的表现。根据第理论分析，我们根据叶片纯度评估信息泄漏。此外，我们知道随着第一棵树中叶子纯度的增加，泄露的信息会减少。因此，为了验证 RL-SecureBoost 的安全性，我们必须说明 RL-SecureBoost 的第一棵树的性能足以减少从第二棵树泄露的信息。如表 1 所示，我们比较了第一棵树和第二棵树的平均叶子纯度。特别是，平均叶片纯度是加权平均值，由 $\sum_{i=0}^{k} \frac{n_{i}}{n} p_{i}$ 计算得出。这里，$k$ 和 $n$ 表示叶子的数量和样本的总数。 $p_i$ 和 $n_i$ 定义为叶子纯度和与叶子 $i$ 相关的样本数。根据表 1，两个数据集上从第一棵树到第二棵树的平均叶子纯度显着降低，这反映了信息泄漏的大大减少。此外，第二棵树的平均叶子纯度在两个数据集上都刚刚超过 0.6，这足以确保安全协议。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111718794.png" alt="image-20220111171859780" style="zoom:25%;"></p>
+<p>接下来，为了研究 RL-SecureBoost 的预测性能，我们将 RL-SecureBoost 与 SecureBoost 在第一棵树的性能和整体性能方面进行比较。我们考虑常用的指标，包括准确度、ROC 曲线下面积 (AUC) 和 f1-score。结果如表 2 所示。正如观察到的，与 SecureBoost 相比，RL-SecureBoost 在几乎所有情况下的表现都一样好。我们还在 RL-SecureBoost 和 SecureBoost 之间进行了pairwise Wilcoxon signed-rank test。比较结果表明，RL-SecureBoost 与 SecureBoost 一样准确，显着性水平为 0.05。 RL-SecureBoost 的无损特性仍然得到保证。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202201111719338.png" alt="image-20220111171922304" style="zoom:40%;"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文提出了一种无损隐私保护树提升算法 SecureBoost，以在纵向联邦环境下训练一个高质量的提升树模型。 我们从理论上证明，我们提出的框架与非联邦算法一样准确。 此外，我们分析了协议执行过程中的信息泄露，并提出了可证明的减少泄露的方法。</p>
+<hr>
+<p>本篇内容到这里就结束了，欢迎关注公众号《差分隐私》，获取更多前沿技术。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png" alt="《差分隐私》"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Federated-Learning/" rel="tag"><i class="fa fa-tag"></i> Federated Learning</a>
+          
+            <a href="/tags/XGBoost/" rel="tag"><i class="fa fa-tag"></i> XGBoost</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/12/06/PAPER-Practical Secure Aggregation for Privacy-Preserving Machine Learning-ForestNeo/" rel="next" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Practical Secure Aggregation for Privacy-Preserving Machine Learning">
+                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">论文阅读</font></span>-Practical Secure Aggregation for Privacy-Preserving Machine Learning
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#背景知识-amp-相关工作"><span class="nav-number">3.</span> <span class="nav-text">背景知识&amp;相关工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题阐述"><span class="nav-number">4.</span> <span class="nav-text">问题阐述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SecureBoost-下的联邦学习"><span class="nav-number">5.</span> <span class="nav-text">SecureBoost 下的联邦学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#联邦推理"><span class="nav-number">6.</span> <span class="nav-text">联邦推理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#理论分析"><span class="nav-number">7.</span> <span class="nav-text">理论分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安全性探讨"><span class="nav-number">8.</span> <span class="nav-text">安全性探讨</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验分析"><span class="nav-number">9.</span> <span class="nav-text">实验分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Scalability"><span class="nav-number">9.1.</span> <span class="nav-text">Scalability</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Performance-of-RL-SecureBoost"><span class="nav-number">9.2.</span> <span class="nav-text">Performance of RL-SecureBoost</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

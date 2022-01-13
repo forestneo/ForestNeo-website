@@ -100,7 +100,7 @@
 <meta name="keywords" content="Secure Aggregation">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Practical Secure Aggregation for Privacy-Preserving Machine Learning">
-<meta property="og:url" content="http://forestneo.top/2021/12/06/PAPER-Practical Secure Aggregation for Privacy-Preserving Machine Learning/index.html">
+<meta property="og:url" content="http://forestneo.top/2021/12/06/PAPER-Practical Secure Aggregation for Privacy-Preserving Machine Learning-ForestNeo/index.html">
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
 <meta property="og:description" content="文章地址：https://dl.acm.org/doi/10.1145/3133956.3133982标题：Practical Secure Aggregation for Privacy-Preserving Machine Learning作者：Keith Bonawitz, Vladimir Ivanov, Ben Kreuter, Antonio Marcedone, H. Brendan">
 <meta property="og:locale" content="zh-CN">
@@ -111,7 +111,7 @@
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112141143495.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112141149481.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
-<meta property="og:updated_time" content="2021-12-14T04:03:36.942Z">
+<meta property="og:updated_time" content="2021-12-15T06:34:53.284Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Practical Secure Aggregation for Privacy-Preserving Machine Learning">
 <meta name="twitter:description" content="文章地址：https://dl.acm.org/doi/10.1145/3133956.3133982标题：Practical Secure Aggregation for Privacy-Preserving Machine Learning作者：Keith Bonawitz, Vladimir Ivanov, Ben Kreuter, Antonio Marcedone, H. Brendan">
@@ -122,7 +122,7 @@
 
 
 
-  <link rel="canonical" href="http://forestneo.top/2021/12/06/PAPER-Practical Secure Aggregation for Privacy-Preserving Machine Learning/">
+  <link rel="canonical" href="http://forestneo.top/2021/12/06/PAPER-Practical Secure Aggregation for Privacy-Preserving Machine Learning-ForestNeo/">
 
 
 
@@ -369,7 +369,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://forestneo.top/2021/12/06/PAPER-Practical Secure Aggregation for Privacy-Preserving Machine Learning/">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.top/2021/12/06/PAPER-Practical Secure Aggregation for Privacy-Preserving Machine Learning-ForestNeo/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="DPer">
@@ -430,7 +430,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-12-14 12:03:36" itemprop="dateModified" datetime="2021-12-14T12:03:36+08:00">2021-12-14</time>
+                <time title="修改时间：2021-12-15 14:34:53" itemprop="dateModified" datetime="2021-12-15T14:34:53+08:00">2021-12-15</time>
               
             
           </span>
@@ -500,7 +500,7 @@
 <li>Evaluation</li>
 <li>Discussion and Future Work</li>
 </ul>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112131725406.png" alt="image-20211213172501353"></p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112131725406.png" alt=""></p>
 <p>开局先来个图，大概看一下就行。</p>
 <p>本文的主要内容就是提出了 Secure Aggregation，后文就叫安全求和吧，用在联邦学习场景下从多个客户端场景下 parameter server 对每个客户端的梯度进行汇聚。所以问题定义为：</p>
 <blockquote>
@@ -530,14 +530,14 @@
 <li>Authenticated Encryption</li>
 <li>伪随机数生成器</li>
 <li>数字签名机制</li>
-<li>公钥基础设施KPI</li>
+<li>公钥基础设施PKI</li>
 </ul>
 <h2 id="秘密分享"><a href="#秘密分享" class="headerlink" title="秘密分享"></a>秘密分享</h2><p>这个东西算是密码学的相关概念，可以叫秘密分享，当这个秘密是秘钥的时候也可以叫做秘钥分享。它的功能是把一个秘密 $s$ 分给 $n$ 个用户，然后这 $n$ 个用户当中任意 $t$ 个用户即可恢复秘密 $s$。我们假定用户集是 $\mathcal{U}$。所以秘密分享包含两个部分：</p>
 <ul>
 <li>分发阶段：$\textbf{SS.share}(s,t,\mathcal{U})\rightarrow \{(u, s_u)\}_{u\in \mathcal{U}}$，表示把秘密 $s$ 分享给所有的用户，每个人的数据是秘密份额 $s_u$；</li>
 <li>重建阶段：$\textbf{SS.recon}(\{(u, s_u)\}_{u\in\mathcal{V}}, t) \rightarrow s$，表示给定一系列用户和秘密份额以及阈值 $t$，就可以重建秘密 $s$。</li>
 </ul>
-<h2 id="Key-Aggrement"><a href="#Key-Aggrement" class="headerlink" title="Key Aggrement"></a>Key Aggrement</h2><p>秘钥协商包含以下一些操作：$\textbf{KA.param, KA.gen, KA.agree}$，其中，$\textbf{KA.param}(k) \rightarrow pp$ 产生共偶那个参数，然后 $\textbf{KA.gen}(pp)\rightarrow (s_{u}^{SK},s_{u}^{PK})$ 允许任何一个用户用来产生公私钥，然后$\textbf{KA.agree}(s_{u}^{SK},s_{v}^{PK}) \rightarrow s_{u,v}$ 表示用户 $u$ 可以结合自己的私钥和对方的公钥得到一个 $u$ 和 $v$ 之间的 $s_{u,v}$ 秘密。</p>
+<h2 id="Key-Aggrement"><a href="#Key-Aggrement" class="headerlink" title="Key Aggrement"></a>Key Aggrement</h2><p>秘钥协商包含以下一些操作：$\textbf{KA.param, KA.gen, KA.agree}$，其中，$\textbf{KA.param}(k) \rightarrow pp$ 产生公共参数，然后 $\textbf{KA.gen}(pp)\rightarrow (s_{u}^{SK},s_{u}^{PK})$ 允许任何一个用户用来产生公私钥，然后$\textbf{KA.agree}(s_{u}^{SK},s_{v}^{PK}) \rightarrow s_{u,v}$ 表示用户 $u$ 可以结合自己的私钥和对方的公钥得到一个 $u$ 和 $v$ 之间的 $s_{u,v}$ 秘密。</p>
 <p>本文采用的是 Diffie-Hellman 秘钥交换协议，其中三个操作分别是：</p>
 <ul>
 <li>$\textbf { KA.param }(k) \rightarrow\left(\mathbb{G}^{\prime}, g, q, H\right)$，生成素数 $q$ 的 group $\mathbb{G}^{\prime}$，生成元为 $g$， 同时给定一个哈希函数 $H$;</li>
@@ -564,22 +564,22 @@
 <h2 id="Masking-with-One-Time-Pads"><a href="#Masking-with-One-Time-Pads" class="headerlink" title="Masking with One-Time Pads"></a>Masking with One-Time Pads</h2><p>所有的用户两两协商一个随机数，即：用户 $i$ 与用户 $j$ 协商随机数 $s_{i,j}$，然后对数据 $x_i$ 按照下式进行扰动，结果为 $y_i$：</p>
 <script type="math/tex; mode=display">
 \begin{align}
-y_{i} &= mask(x_i)\\
-&=x_{i}+\sum_{j \in U: i<j} s_{i, j}-\sum_{j \in U: i>j} s_{j, i} \quad \bmod R
+y_{i} &= mask(x_i)\nonumber\\
+&=x_{i}+\sum_{j \in U: i < j} s_{i, j}-\sum_{j \in U: i > j} s_{j, i} \quad \bmod R \nonumber
 \end{align}</script><p>当然，在FL场景中，上面的 $x$ 和 $s$ 实际上都是多维向量。为了说明问题方便，下面就不以向量的形式说明了。然后显然就可以证明：$\sum y_i = \sum x_i$ 。所以服务器就计算：</p>
 <script type="math/tex; mode=display">
 \begin{align}
-z&=\sum_{i \in U} y_{i} \\
-&=\sum_{i \in U}\left(x_{i}+\sum_{j \in U: i<j} s_{i, j}-\sum_{j \in U: i>j} s_{j, i}\right)\\
-&=\sum_{i \in U} x_{i} \quad \bmod R
+z&=\sum_{i \in U} y_{i} \nonumber\\
+&=\sum_{i \in U}\left(x_{i}+\sum_{j \in U: i < j} s_{i, j}-\sum_{j \in U: i > j} s_{j, i}\right) \nonumber\\
+&=\sum_{i \in U} x_{i} \quad \bmod R \nonumber
 \end{align}</script><p>举个例子，假如有三个数据 $x_1, x_2, x_3$，那么加掩码的过程为：</p>
 <script type="math/tex; mode=display">
 \begin{align}
-y_1 &= x_1 + s_{12} + s_{13}\\
-y_2 &= x_2 - s_{12} + s_{23}\\
-y_3 &= x_3 - s_{13} - s_{23}
+y_1 &= x_1 + s_{12} + s_{13}\nonumber\\
+y_2 &= x_2 - s_{12} + s_{23}\nonumber\\
+y_3 &= x_3 - s_{13} - s_{23}\nonumber
 \end{align}</script><p>有个图方便后面说明问题，就是：</p>
-<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112061710702.png" alt="image-20211206171045656" style="zoom: 33%;"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112061710702.png" style="zoom: 50%;"></p>
 <p>所以，<strong>就是每个随机数被减了一次，又被加了一次。</strong>因此有：</p>
 <script type="math/tex; mode=display">
 \sum y_i = \sum x_i</script><p>这个逻辑看上去挺完美了，但是还没有解决，面临以下几个问题：</p>
@@ -589,30 +589,30 @@ y_3 &= x_3 - s_{13} - s_{23}
 </ul>
 <h3 id="如何协商随机数"><a href="#如何协商随机数" class="headerlink" title="如何协商随机数"></a>如何协商随机数</h3><p>现在的算法是两两如何确定一个随机数并且这个随机数还不能被第三者知道。这个方案可以使用DH秘钥协商方案来实现，并且可以借助 pseudorandom generator(PRG) 减少通信开销。协商的秘钥作为伪随机数生成器 PRG 的种子。所以协商随机数，实际上协商的是随机数的种子。</p>
 <h3 id="客户端掉线-延迟怎么办"><a href="#客户端掉线-延迟怎么办" class="headerlink" title="客户端掉线/延迟怎么办"></a>客户端掉线/延迟怎么办</h3><p>上面的步骤好像可以解决 Secure Aggregation 的问题了，但是会产生一个新的问题，要是某个客户端“掉线”了，咋办？</p>
-<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112061720487.png" alt="image-20211206172047452" style="zoom:33%;"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112061720487.png" style="zoom: 50%;"></p>
 <p>我们不妨假设第二个客户端掉线了，那么现在的需求实际上就是求 $y_1 + y_3$ 了，所以Server可以去问第1、3个客户端要到 $s_{1,2},s_{2,3}$，这样子算下面这个公式就可以了：</p>
 <script type="math/tex; mode=display">
 \begin{align}
-y_1 + y_3 - s_{1,2}+s_{2,3} = x_1+x_3
+y_1 + y_3 - s_{1,2}+s_{2,3} = x_1+x_3 \nonumber
 \end{align}</script><p>目前好像掉线的时候没啥问题。但是想想，要是恢复阶段又有客户端掉线了，咋办？所以我们需要只要存在足够的客户端，这些随机数就能被还原回来的方法。从理解上来看的话，我么可以认为每个客户把 $s_{u,v}$ 采用秘密共享的方式分发出去了，并且只要有 $t$ 个客户端在线，就可以还原回 $s_{u,v}$。（实际上，分发的是公钥的share，然后根据公钥和$v$ 的数据，可以算出来 $s_{u,v}$）。有了这个 $t$-out-of-$n$ 的秘钥共享方案，只要有 $t$ 个用户在线，就不怕客户端掉线了。</p>
 <p>但是等等，要是不是掉线，而是<strong>因为延迟，这时候 $y_2$ 突然来了怎么办？</strong></p>
-<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112061728758.png" alt="image-20211206172801718" style="zoom:33%;"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112061728758.png" style="zoom: 50%;"></p>
 <p>这时候，我们就可以根据 $y_2 + s_{1,2}-s_{2,3}$ 算出来 $x_2$ 了，原始数据都还原出来了。大忌。所以我们<strong>不仅要能恢复出因用户掉线/延迟下回复随机数 $s$，还得确保不能恢复数据 $x$ 。</strong></p>
 <h2 id="Double-Masking"><a href="#Double-Masking" class="headerlink" title="Double-Masking"></a>Double-Masking</h2><p>所以作者尝试，引入一个新的随机数 $b$，把这个随机数和数据绑定，就是这样：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-\boldsymbol{y}_{u}=\boldsymbol{x}_{u} &+\mathbf{P R G}\left(\boldsymbol{b}_{u}\right) \\
-&+\sum_{v \in \mathcal{U}: u<v} \operatorname{PRG}\left(s_{u, v}\right) -\sum_{v \in \mathcal{U}: u>v} \operatorname{PRG}\left(s_{v, u}\right) \quad(\bmod R)
-\end{aligned}</script><p>PRG 可以不那么细究，直接理解为 $y_u = x_u + b_u + \sum_{u<v} s_{u,v}="" -="" \sum_{u="">v} s_{u,v}$ 即可。然后采用以下的策略：</v}></p>
+\boldsymbol{y}_{u}=\boldsymbol{x}_{u} &+\mathbf{P R G}\left(\boldsymbol{b}_{u}\right) \nonumber\\
+&+\sum_{v \in \mathcal{U}: u < v} \operatorname{PRG}\left(s_{u, v}\right) -\sum_{v \in \mathcal{U}: u > v} \operatorname{PRG}\left(s_{v, u}\right) \quad(\bmod R) \nonumber
+\end{aligned}</script><p>PRG 可以不那么细究，直接理解为 $y_u = x_u + b_u + \sum_{ u &lt; v } s_{u,v} - \sum_{u &gt; v} s_{u,v}$ 即可。然后采用以下的策略：</p>
 <ul>
 <li>在分发阶段，随机数 $b$ 和 $s$ 均采用秘密分享的方案分发出去，并且保证 $t$ 个用户就可以恢复。</li>
-<li>在恢复阶段，对于一个诚实的用户 $v$，他不会把 $b_u$ 和 $s_{u,v}$ 同时说出去。<strong>如果用户 $u$ 掉线了，那么 $v$ 会说出 $s_{u,v}$，如果用户 $u$ 在线，那么 $v$ 会说出 $b_u$。</strong></li>
+<li>在恢复阶段，对于一个诚实的用户 $v$，他不会把 $b_u$ 和 $s_{u,v}$ 同时说出去。<strong>如果用户 $u$ 掉线了，那么 $v$ 会说出 $s_{u,v}$，如果用户 $u$ 在线，那么 $v$ 会说出 $b_u$。</strong></li>
 </ul>
 <p>当然，上面所谓的说出 $b_u$ 实际上是说出 $b_u$ 的 share，要至少 $t$ 个 share 才能恢复出 $b_u$。因为采用了两类随机数，所以这个方法也叫做 Double-Masking。也就是说，在大家都不掉线的情况下，反正 $b$ 是可以恢复出来的，双掩码方案就相当于单掩码方案了。在有用户 $u$ 掉线的情况下，数据 $x_u$ 也就不拿来就和了，所以 $b_u$ 就不用去管它，恢复 $s_{u,v}$ 就好了。</p>
-<h2 id="总的流程"><a href="#总的流程" class="headerlink" title="总的流程"></a>总的流程</h2><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112141143495.png" alt="image-20211214114348461"></p>
+<h2 id="总的流程"><a href="#总的流程" class="headerlink" title="总的流程"></a>总的流程</h2><p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112141143495.png" alt=""></p>
 <p>结合密码学基础知识和论文涉及的 Masking 机制，总的流程就如上图所示了。其中，红色是用于应对 active-adversary 的方案，对于 HBC 安全模型可以不考虑。实际上，理解了Masking 的方法之后可以根据自己的需求去设计对应的机制，所以这个机制也不用如此地去深究。</p>
 <p>然后作者列举了不同阶段 User 侧和 Server 侧的计算、通信、存储代价，其中用户数量为 $n$，每个用户的数据维度是 $m$，各种cost如下表所示：</p>
-<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112141149481.png" alt="image-20211214114933447" style="zoom:67%;"></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202112141149481.png" style="zoom:67%;"></p>
 <h1 id="其他章节"><a href="#其他章节" class="headerlink" title="其他章节"></a>其他章节</h1><p>个人感觉这篇论文的核心到这里就已经掌握了，后文的包括这个协议的进一步细化、安全性描述、实验结果、相关工作等，这里就不继续做笔记去一步一步详细地记录了。如果以后再接触相关内容发现这里有坑，再来补一下。</p>
 <hr>
 <p>本篇内容到这里就结束了，欢迎关注公众号《差分隐私》，获取更多前沿技术。</p>
@@ -692,6 +692,10 @@ y_1 + y_3 - s_{1,2}+s_{2,3} = x_1+x_3
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2022/01/11/PAPER-SecureBoost/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-SecureBoost-A Lossless Federated Learning Framework">
+                <span style="background:green;"><font color="#000000">论文阅读</font></span>-SecureBoost-A Lossless Federated Learning Framework <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -766,7 +770,7 @@ y_1 + y_3 - s_{1,2}+s_{2,3} = x_1+x_3
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">99</span>
+                    <span class="site-state-item-count">102</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1049,7 +1053,7 @@ y_1 + y_3 - s_{1,2}+s_{2,3} = x_1+x_3
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

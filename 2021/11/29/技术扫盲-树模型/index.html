@@ -97,7 +97,7 @@
 
 
   <meta name="description" content="最近从零开始学习了树模型，因此做一个记录。最终目标是学习GBDT，但是之前没有了解过树模型，学习的过程遇到了一些困惑，比如：  只对决策树有个基本印象，会不会很难学？ 决策树是用来分类的，怎么树还能搞回归呢？ Bagging、Boosting各种专有名词听起来就很高级，感觉自己很慌！ CART、GBDT、XGBoost、各种模型傻傻分不清楚。。。  所以本篇内容的目的是一篇文章把基本脉络搞清楚，大">
-<meta name="keywords" content="CART,GBDT,XGBoost">
+<meta name="keywords" content="XGBoost,CART,GBDT">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;技术扫盲&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-树模型">
 <meta property="og:url" content="http://forestneo.top/2021/11/29/技术扫盲-树模型/index.html">
@@ -109,7 +109,7 @@
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202111251022452.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202111251107453.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
-<meta property="og:updated_time" content="2021-12-09T02:46:11.565Z">
+<meta property="og:updated_time" content="2021-12-09T02:46:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;技术扫盲&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-树模型">
 <meta name="twitter:description" content="最近从零开始学习了树模型，因此做一个记录。最终目标是学习GBDT，但是之前没有了解过树模型，学习的过程遇到了一些困惑，比如：  只对决策树有个基本印象，会不会很难学？ 决策树是用来分类的，怎么树还能搞回归呢？ Bagging、Boosting各种专有名词听起来就很高级，感觉自己很慌！ CART、GBDT、XGBoost、各种模型傻傻分不清楚。。。  所以本篇内容的目的是一篇文章把基本脉络搞清楚，大">
@@ -740,11 +740,11 @@ Gain &= Obj(0) - Obj(1)\\
       
         <div class="post-tags">
           
+            <a href="/tags/XGBoost/" rel="tag"><i class="fa fa-tag"></i> XGBoost</a>
+          
             <a href="/tags/CART/" rel="tag"><i class="fa fa-tag"></i> CART</a>
           
             <a href="/tags/GBDT/" rel="tag"><i class="fa fa-tag"></i> GBDT</a>
-          
-            <a href="/tags/XGBoost/" rel="tag"><i class="fa fa-tag"></i> XGBoost</a>
           
         </div>
       
@@ -757,8 +757,8 @@ Gain &= Obj(0) - Obj(1)\\
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/11/20/技术扫盲-OT/" rel="next" title="<span style=" background:green;"=""><font color="#000000">密码学</font>-不经意传输 Oblivious Transfer">
-                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">密码学</font></span>-不经意传输 Oblivious Transfer
+              <a href="/2021/11/29/技术扫盲-树模型-ForestNeo/" rel="next" title="<span style=" background:green;"=""><font color="#000000">技术扫盲</font>-树模型">
+                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">技术扫盲</font></span>-树模型
               </a>
             
           </div>
@@ -767,7 +767,7 @@ Gain &= Obj(0) - Obj(1)\\
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/12/06/PAPER-Practical Secure Aggregation for Privacy-Preserving Machine Learning/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Practical Secure Aggregation for Privacy-Preserving Machine Learning">
+              <a href="/2021/12/06/PAPER-Practical Secure Aggregation for Privacy-Preserving Machine Learning-ForestNeo/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Practical Secure Aggregation for Privacy-Preserving Machine Learning">
                 <span style="background:green;"><font color="#000000">论文阅读</font></span>-Practical Secure Aggregation for Privacy-Preserving Machine Learning <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -845,7 +845,7 @@ Gain &= Obj(0) - Obj(1)\\
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">99</span>
+                    <span class="site-state-item-count">102</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1128,7 +1128,7 @@ Gain &= Obj(0) - Obj(1)\\
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
