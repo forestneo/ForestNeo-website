@@ -109,7 +109,7 @@
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202111251022452.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202111251107453.png">
 <meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
-<meta property="og:updated_time" content="2021-12-09T02:46:11.000Z">
+<meta property="og:updated_time" content="2021-12-15T02:39:21.455Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;技术扫盲&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-树模型">
 <meta name="twitter:description" content="最近从零开始学习了树模型，因此做一个记录。最终目标是学习GBDT，但是之前没有了解过树模型，学习的过程遇到了一些困惑，比如：  只对决策树有个基本印象，会不会很难学？ 决策树是用来分类的，怎么树还能搞回归呢？ Bagging、Boosting各种专有名词听起来就很高级，感觉自己很慌！ CART、GBDT、XGBoost、各种模型傻傻分不清楚。。。  所以本篇内容的目的是一篇文章把基本脉络搞清楚，大">
@@ -428,7 +428,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-12-09 10:46:11" itemprop="dateModified" datetime="2021-12-09T10:46:11+08:00">2021-12-09</time>
+                <time title="修改时间：2021-12-15 10:39:21" itemprop="dateModified" datetime="2021-12-15T10:39:21+08:00">2021-12-15</time>
               
             
           </span>
@@ -505,7 +505,7 @@
 <li>决策树：从分类树到CART回归树</li>
 <li>集成学习：Boosting V.S. Bagging</li>
 </ul>
-<h1 id="决策树："><a href="#决策树：" class="headerlink" title="决策树："></a>决策树：</h1><h2 id="CART-回归树"><a href="#CART-回归树" class="headerlink" title="CART 回归树"></a>CART 回归树</h2><p>CART 全称叫做 classification and regression tree，分类与回归树。可以同时用于分类和回归任务。假如现在已经有一棵CART树了，那么预测的过程可以这么理解：</p>
+<h1 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h1><h2 id="CART-回归树"><a href="#CART-回归树" class="headerlink" title="CART 回归树"></a>CART 回归树</h2><p>CART 全称叫做 classification and regression tree，分类与回归树。可以同时用于分类和回归任务。假如现在已经有一棵CART树了，那么预测的过程可以这么理解：</p>
 <script type="math/tex; mode=display">
 f(x) = \sum_{m=1}^M c_mI(x\in R_m)</script><p>其中 $I(x\in R_m)$ 表示指示函数，如果 $x\in R_m$则函数值为1，否则为0。也就是说我们假设每个叶子节点有一个权重，如果数据属于这个叶子节点，那么预测结果就是对应叶子节点的权重。通过这种方法，树就可以用于回归。</p>
 <p>假如给定数据 $(x_1,y_1),…,(x_n,y_n)$，CART采用平方误差来衡量loss，即希望：</p>
@@ -532,9 +532,10 @@ f(x) = \sum_{m=1}^M c_mI(x\in R_m)</script><p>其中 $I(x\in R_m)$ 表示指示�
 </ul>
 <h2 id="Bagging-V-S-Boosting"><a href="#Bagging-V-S-Boosting" class="headerlink" title="Bagging V.S. Boosting"></a>Bagging V.S. Boosting</h2><p>Bagging方法最大的特点是不同的学习器之间相互独立，可以并行地预测。代表方法是：随机森林（Random Forest）。</p>
 <p>Boosting个体学习器之间存在很强的依赖关系，只能串行进行学习。代表方法是：AdaBoost、GBDT、XGBoost。</p>
-<h1 id="从CART到GBDT"><a href="#从CART到GBDT" class="headerlink" title="从CART到GBDT"></a>从CART到GBDT</h1><h2 id="提升树"><a href="#提升树" class="headerlink" title="提升树"></a>提升树</h2><p>我们把以决策数为基函数的模型方法叫做提升决策树，Boosting Tree。从名字可以看出，提升树采用了Boosting的策略。提升树可以表示为多个决策数相加，假如有 $M$ 棵树，第 $m$ 棵树为 $T_m$，那么提升树可以用加法模型表示为：</p>
+<p>Bagging 与 Boosting 都是一种集成学习，可以将弱的学习器提升为强的学习器。</p>
+<h1 id="从CART到GBDT"><a href="#从CART到GBDT" class="headerlink" title="从CART到GBDT"></a>从CART到GBDT</h1><h2 id="提升树"><a href="#提升树" class="headerlink" title="提升树"></a>提升树</h2><p>我们把以决策数为基函数的 Boosting 方法叫做提升决策树，Boosting Tree。提升树可以表示为多个决策数相加，假如有 $M$ 棵树，第 $m$ 棵树为 $T_m$，那么提升树可以用加法模型表示为：</p>
 <script type="math/tex; mode=display">
-f_{M}(x) = \sum_{i=1}^M T_m(x)</script><p>提升树的算法如下：</p>
+f_{M}(x) = \sum_{i=1}^M T_m(x)</script><p>也就是说，后一棵树学习到的是前面的树的残差。提升树的算法如下：</p>
 <ul>
 <li>初始化$f_0(x) = 0$</li>
 <li>对于 $m = 1, 2, …, M$，依次学习树 $T_m$：<ul>
@@ -575,8 +576,8 @@ f_{m}(x)=f_{m-1}(x)+\sum_{j=1}^{J} c_{m j} I\left(x \in R_{m j}\right)</script><
 <li><p>得到最终的学习结果GBDT模型：</p>
 <script type="math/tex; mode=display">
 \begin{align}
-f(x) &= f_0(x) + ... + f_M(x)\\
-&= f_0(x) + \sum_{m=1}^M\sum_{j=1}^J c_{m,j}I(x\in R_{m,j})
+f(x) &= f_0(x) + ... + f_M(x)\nonumber\\
+&= f_0(x) + \sum_{m=1}^M\sum_{j=1}^J c_{m,j}I(x\in R_{m,j})\nonumber
 \end{align}</script></li>
 </ul>
 <p>我们以平方误差举个例子：$L(y,f(x))=\left(x-f(x)\right)^2$，那么对于初始化的过程，有：</p>
@@ -584,43 +585,45 @@ f(x) &= f_0(x) + ... + f_M(x)\\
 f_0(x) = \arg\min_c \sum_{i=1}^nL(y_i,c) =\frac{1}{n} \sum_{i=1}^n y_i</script><p>然后有：</p>
 <script type="math/tex; mode=display">
 \begin{align}
-r_{m,i}=-\left[\frac{\partial L\left(y_{i}, f\left(x_{i}\right)\right)}{\partial f\left(x_{i}\right)}\right]_{f x)=f_{m-1}(x)} = 2\left(y_i - f_{m-1}(x_i)\right)
+r_{m,i}=-\left[\frac{\partial L\left(y_{i}, f\left(x_{i}\right)\right)}{\partial f\left(x_{i}\right)}\right]_{f x)=f_{m-1}(x)} = 2\left(y_i - f_{m-1}(x_i)\right)\nonumber
 \end{align}</script><p>以及在叶子节点权重的计算过程中，有：</p>
 <script type="math/tex; mode=display">
 \begin{align}
-c_{m_j} = \frac{1}{a} \sum_{i=1}^a \left(y_i - f_{m-1}(x_i)\right) = \frac{1}{a} \sum_{i=1}^a r_{m_j}
+c_{m_j} = \frac{1}{a} \sum_{i=1}^a \left(y_i - f_{m-1}(x_i)\right) = \frac{1}{a} \sum_{i=1}^a r_{m_j}\nonumber
 \end{align}</script><p>至于 GBDT 如何用于二分类、多分类以及如何实现GBDT，如果日后还需要就再详细介绍。</p>
 <blockquote>
-<p>核心问题来了，残差好好的，为啥要搞个梯度去学习呢？目前（2021年11月30日），我还没有找到能很好地说服我的回答。</p>
+<p>核心问题来了，残差好好的，为啥要搞个梯度去学习呢？目前（2021年11月30日），我还没有找到能很好地说服我的回答。而且计算叶子节点的权重如果不是平方误差的话也不好算啊。</p>
 </blockquote>
-<h1 id="XGBoost"><a href="#XGBoost" class="headerlink" title="XGBoost"></a>XGBoost</h1><h2 id="模型设计"><a href="#模型设计" class="headerlink" title="模型设计"></a>模型设计</h2><p>最终的目标是：</p>
+<h1 id="XGBoost"><a href="#XGBoost" class="headerlink" title="XGBoost"></a>XGBoost</h1><h2 id="最优化目标"><a href="#最优化目标" class="headerlink" title="最优化目标"></a>最优化目标</h2><p>前面的CART模型也好，GBDT模型也好，在进行优化的过程中，只考虑了 loss 函数这一项，没有考虑到模型复杂度带来的影响（比如过拟合之类）。如果综合考虑样本的 loss 和树本身带来的复杂度（用 $\Omega(f_k)$ 表示第$k$ 棵树的复杂度 ），那么优化目标可以写作；</p>
 <script type="math/tex; mode=display">
 Obj = \sum_{i=1}^{n} l\left(y_{i}, \hat{y}_{i}\right)+\sum_{k} \Omega\left(f_{k}\right)</script><p>假设有 $K$ 个树，那么学习过程可以这么认为</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-\hat{y}_{i}^{(0)} &=0 \\
-\hat{y}_{i}^{(1)} &=f_{1}\left(x_{i}\right)=\hat{y}_{i}^{(0)}+f_{1}\left(x_{i}\right) \\
-\hat{y}_{i}^{(2)} &=f_{1}\left(x_{i}\right)+f_{2}\left(x_{i}\right)=\hat{y}_{i}^{(1)}+f_{2}\left(x_{i}\right) \\
-& \cdots \\
-\hat{y}_{i}^{(t)} &=\sum_{k=1}^{t} f_{k}\left(x_{i}\right)=\hat{y}_{i}^{(t-1)}+f_{t}\left(x_{i}\right)
-\end{aligned}</script><p>也就是第 $t$ 个树预测的东西是</p>
+\begin{align}
+\hat{y}_{i}^{(0)} &=0 \nonumber\\
+\hat{y}_{i}^{(1)} &=f_{1}\left(x_{i}\right)=\hat{y}_{i}^{(0)}+f_{1}\left(x_{i}\right) \nonumber\\
+\hat{y}_{i}^{(2)} &=f_{1}\left(x_{i}\right)+f_{2}\left(x_{i}\right)=\hat{y}_{i}^{(1)}+f_{2}\left(x_{i}\right) \nonumber\\
+& \cdots \nonumber\\
+\hat{y}_{i}^{(t)} &=\sum_{k=1}^{t} f_{k}\left(x_{i}\right)=\hat{y}_{i}^{(t-1)}+f_{t}\left(x_{i}\right)\nonumber
+\end{align}</script><p>也就是第 $t$ 个树预测的东西是 $\hat{y}_{i}^{(t)}=\hat{y}_{i}^{(t-1)}+f_{t}\left(x_{i}\right)$。</p>
+<h2 id="目标之中的-loss"><a href="#目标之中的-loss" class="headerlink" title="目标之中的 loss"></a>目标之中的 loss</h2><p>如果我们暂时先不考虑约束项，那么目标可以写成：</p>
 <script type="math/tex; mode=display">
-\hat{y}_{i}^{(t)}=\hat{y}_{i}^{(t-1)}+f_{t}\left(x_{i}\right)</script><p>如果我们不考虑约束项，那么目标可以写成</p>
+\begin{align}
+O b j^{(t)} &=\sum_{i=1}^{n} l\left(y_{i}, \hat{y}_{i}^{(t)}\right)=\sum_{i=1}^{n} l\left(y_{i}, \hat{y}_{i}^{(t-1)}+f_{t}\left(x_{i}\right)\right)\nonumber
+\end{align}</script><p>如果我们的loss选取的是二次loss，那么就有：</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-O b j^{(t)} &=\sum_{i=1}^{n} l\left(y_{i}, \hat{y}_{i}^{(t)}\right)=\sum_{i=1}^{n} l\left(y_{i}, \hat{y}_{i}^{(t-1)}+f_{t}\left(x_{i}\right)\right)\\
-&=\sum_{i=1}^{n}\left(y_{i}-\left(\hat{y}_{i}^{(t-1)}+f_{t}\left(x_{i}\right)\right)\right)^{2} \\
-&=\sum_{i=1}^{n}\left[2\left(\hat{y}_{i}^{(t-1)}-y_{i}\right) f_{t}\left(x_{i}\right)+f_{t}\left(x_{i}\right)^{2}\right]
-\end{aligned}</script><p>然后我们回想一下泰勒展开式：</p>
+\begin{align}
+O b j^{(t)} &=\sum_{i=1}^{n}\left(y_{i}-\left(\hat{y}_{i}^{(t-1)}+f_{t}\left(x_{i}\right)\right)\right)^{2} \nonumber \\
+&=\sum_{i=1}^{n}\left[2\left(\hat{y}_{i}^{(t-1)}-y_{i}\right) f_{t}\left(x_{i}\right)+f_{t}\left(x_{i}\right)^{2}\right]\nonumber
+\end{align}</script><p>这个当中 $(\hat{y}_{i}^{(t-1)}-y_{i})$ 表示的就是残差。然后我们回想一下泰勒展开式：</p>
 <script type="math/tex; mode=display">
 f(x+\Delta x) \simeq f(x)+f^{\prime}(x) \Delta x+\frac{1}{2} f^{\prime \prime}(x) \Delta x^{2}</script><p>把泰勒展开中这么进行一下类比，把 $f(x)$ 看成 $l\left(y_{i}, \hat{y}_{i}^{(t-1)}\right)$，然后 $\Delta x$对应 $f_t(x_i)$。所以我们就可以令：$g_{i}=\partial_{\hat{y}^{(t-1)}} l\left(y_{i}, \hat{y}^{(t-1)}\right), \quad h_{i}=\partial_{\hat{y}^{(t-1)}}^{2} l\left(y_{i}, \hat{y}^{(t-1)}\right)$，那么就有：</p>
 <script type="math/tex; mode=display">
 O b j^{(t)} \simeq \sum_{i=1}^{n}\left[l\left(y_{i}, \hat{y}_{i}^{(t-1)}\right)+g_{i} f_{t}\left(x_{i}\right)+\frac{1}{2} h_{i} f_{t}^{2}\left(x_{i}\right)\right]</script><p>这个对函数求导，不太容易看得懂，举个例子，对于平方误差，有：</p>
 <script type="math/tex; mode=display">
 \begin{align}
-g_{i}&=\partial_{\hat{y}^{(t-1)}}\left(\hat{y}^{(t-1)}-y_{i}\right)^{2}=2\left(\hat{y}^{(t-1)}-y_{i}\right) \\
-h_{i}&=\partial_{\hat{y}^{(t-1)}}^{2}\left(y_{i}-\hat{y}^{(t-1)}\right)^{2}=2
-\end{align}</script><p>所以现在的目标是这个东西：</p>
+g_{i}&=\partial_{\hat{y}^{(t-1)}}\left(\hat{y}^{(t-1)}-y_{i}\right)^{2}=2\left(\hat{y}^{(t-1)}-y_{i}\right) \nonumber\\
+h_{i}&=\partial_{\hat{y}^{(t-1)}}^{2}\left(y_{i}-\hat{y}^{(t-1)}\right)^{2}=2\nonumber
+\end{align}</script><p>因为在构建当前树的过程中，前面的树是构建好了的，也就是$l(y_{i}, \hat{y}_{i}^{(t-1)}) $ 是固定大小的，所以现在的目标就是最小化这个东西：</p>
 <script type="math/tex; mode=display">
 \sum_{i=1}^{n}\left[g_{i} f_{t}\left(x_{i}\right)+\frac{1}{2} h_{i} f_{t}^{2}\left(x_{i}\right)\right]</script><p>假如我们已经产生一棵树了，那么这个 $f_t(x_i)$ 就是对应叶子节点的权重了，可以认为：</p>
 <script type="math/tex; mode=display">
@@ -632,8 +635,8 @@ f_t(x) = w_{q(x)}</script><p>其中，$q(x)$ 表示 $x$ 对应的是第几个叶
 <p>因此现在的核心目标可以表示为：</p>
 <script type="math/tex; mode=display">
 \begin{align}
-Obj &= \sum_{i=1}^{n}\left[g_{i} f_{t}\left(x_{i}\right)+\frac{1}{2} h_{i} f_{t}^{2}\left(x_{i}\right)\right]+\Omega\left(f_{t}\right)\\
-&= \sum_{i=1}^{n}\left[g_{i} w_{q\left(x_{i}\right)}+\frac{1}{2} h_{i} w_{q\left(x_{i}\right)}^{2}\right]+\gamma T+\lambda \frac{1}{2} \sum_{j=1}^{T} w_{j}^{2}
+Obj &= \sum_{i=1}^{n}\left[g_{i} f_{t}\left(x_{i}\right)+\frac{1}{2} h_{i} f_{t}^{2}\left(x_{i}\right)\right]+\Omega\left(f_{t}\right)\nonumber\\
+&= \sum_{i=1}^{n}\left[g_{i} w_{q\left(x_{i}\right)}+\frac{1}{2} h_{i} w_{q\left(x_{i}\right)}^{2}\right]+\gamma T+\lambda \frac{1}{2} \sum_{j=1}^{T} w_{j}^{2}\nonumber
 \end{align}</script><p>上面的公式相当于对 $n$ 个数据依次求loss，注意到这 $n$ 个数据是最终分布在 $T$ 个叶子节点上的，所以我们可以把在同一个叶子上的数据放在一起，进行一个 Group，所以有：</p>
 <script type="math/tex; mode=display">
 I_j = \{i | q(x_i)=j\}</script><p>也就是 $I_j$ 表示第 $j$ 个叶子节点上的数据集合。比如 $I_1 = \{1,2,5\}$ 表示 $x_1,x_2,x_5$ 在第一个叶子节点上。然后可以把 Obj 进行一个转换：</p>
@@ -643,8 +646,8 @@ Obj =\sum_{j=1}^{T}\left[\left(\sum_{i \in I_{j}} g_{i}\right) w_{j}+\frac{1}{2}
 w = -\frac{G}{H}, \quad \min\left(Gw+\frac{1}{2}Hw^2\right)=-\frac{1}{2}\frac{G^2}{H}</script><p>所以现在的目标就是：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-O b j^{(t)} &=\sum_{j=1}^{T}\left[\left(\sum_{i \in I_{j}} g_{i}\right) w_{j}+\frac{1}{2}\left(\sum_{i \in I_{j}} h_{i}+\lambda\right) w_{j}^{2}\right]+\gamma T \\
-&=\sum_{j=1}^{T}\left[G_{j} w_{j}+\frac{1}{2}\left(H_{j}+\lambda\right) w_{j}^{2}\right]+\gamma T
+O b j^{(t)} &=\sum_{j=1}^{T}\left[\left(\sum_{i \in I_{j}} g_{i}\right) w_{j}+\frac{1}{2}\left(\sum_{i \in I_{j}} h_{i}+\lambda\right) w_{j}^{2}\right]+\gamma T \nonumber\\
+&=\sum_{j=1}^{T}\left[G_{j} w_{j}+\frac{1}{2}\left(H_{j}+\lambda\right) w_{j}^{2}\right]+\gamma T\nonumber
 \end{aligned}</script><p>其中的最优解是</p>
 <script type="math/tex; mode=display">
 w_j^* = -\frac{G_j}{H_j+\lambda}, \quad Obj=-\frac{1}{2}\sum_{j=1}^{T} \frac{G_{j}^{2}}{H_{i}+\lambda}+\gamma T</script><p>所以现在就相当于：<strong>我们只要知道树的当前结构，我们就知道叶子节点中的权重是多少，也知道当前的Obj是多少了。</strong>比如下面这个图：</p>
@@ -658,8 +661,8 @@ w_j^* = -\frac{G_j}{H_j+\lambda}, \quad Obj=-\frac{1}{2}\sum_{j=1}^{T} \frac{G_{
 <p>想法很美好，现实很残酷，因为第一步的<strong>枚举所有树模型</strong>是不太可能实现的。但是没办法，树还是得去构建，于是我们想到了决策树的四箱，用贪心的方法去一次次找到分裂特征的方法来构建树。我们尝试去看，如果对于把一个叶子节点分开了，那么我们获得了多少所谓的<strong>收益</strong>呢？联合上面的Obj，用$Obj(0),Obj(1)$表示分列前和分裂后的Obj，那么有：</p>
 <script type="math/tex; mode=display">
 \begin{align}
-Obj(0) &= -\frac{1}{2}\frac{G}{H+\lambda} + \gamma\\
-Obj(1) &= -\frac{1}{2}\left(\frac{G_L}{H_L+\lambda} + \frac{G_R}{H_R+\lambda}\right) + 2\gamma
+Obj(0) &= -\frac{1}{2}\frac{G}{H+\lambda} + \gamma\nonumber\\
+Obj(1) &= -\frac{1}{2}\left(\frac{G_L}{H_L+\lambda} + \frac{G_R}{H_R+\lambda}\right) + 2\gamma\nonumber
 \end{align}</script><p>这个当中，有 $G=G_L+G_R$。因为在构建的过程中，这个Obj是要越来越小的，所以这里的收益Gain就是：</p>
 <script type="math/tex; mode=display">
 \begin{align}
@@ -670,20 +673,36 @@ Gain &= Obj(0) - Obj(1)\\
 <p>所以我们不能随便分，我们用一种<strong>线性搜索</strong>的策略：我们把当前叶子节点中的数据进行排序，然后从排好序的数据中找到一个分裂点使得当前Gain最高。这样复杂度就不高了。</p>
 <p>所以目前的构建树的策略是：</p>
 <ul>
-<li>构建根节点，所有的数据都在根节点上</li>
-<li>对于每个节点，按照以下方法枚举每个特征：<ul>
-<li>对于每个特征，对节点的数据进行排序</li>
-<li>采用线性搜索策略找到当前特征下最好的分裂节点</li>
-<li>找到当前节点最好的分裂策略</li>
+<li>（1）构建根节点，所有的数据都在根节点上</li>
+<li>（2）对于每个节点，按照以下方法枚举每个特征：<ul>
+<li>（2.1）对于每个特征，对节点的数据进行排序</li>
+<li>（2.2）采用线性搜索策略找到当前特征下最好的分裂节点</li>
+<li>（2.3）找到当前节点最好的分裂策略</li>
 </ul>
 </li>
-<li>选择最好的节点进行分裂</li>
+<li>（3）选择最好的节点进行分裂</li>
 </ul>
 <p>按照上面的这个方法，我们就可以把树构建出来了。</p>
 <p><strong>复杂度分析</strong>，现在简单分析一下模型的复杂度，每一层我们都需要 $O(n\log n)$进行排序，然后有 $d$个特征，同时我们想要构建的深度是 $K$，所以构建树模型的复杂度是 $O(n\cdot d \cdot K\log n)$。作者的PPT里面说还可以进行优化。然后这个方法对于数据量很大的情况也能很快地进行收敛。</p>
+<h2 id="加速构建模型：Bucket"><a href="#加速构建模型：Bucket" class="headerlink" title="加速构建模型：Bucket"></a>加速构建模型：Bucket</h2><p>为了说明问题，构建树的策略重复描述一遍：</p>
+<ul>
+<li>（1）构建根节点，所有的数据都在根节点上</li>
+<li>（2）对于每个节点，按照以下方法枚举每个特征：<ul>
+<li>（2.1）对于每个特征，对节点的数据进行排序</li>
+<li>（2.2）采用线性搜索策略找到当前特征下最好的分裂节点</li>
+<li>（2.3）找到当前节点最好的分裂策略</li>
+</ul>
+</li>
+<li>（3）选择最好的节点进行分裂</li>
+</ul>
+<p>主要的流程是（2.1）—（2.3）步骤，其核心思想就是要找到一个特征值，并且按照这个特征值把当前的数据分成左右两部分，再看这个分的好不好。因为当前不知道按照什么值分，所有就对所有的数据遍历一遍，看看哪个效果好。假如我们当前的数据表示的是用户的年龄，分布在1-100之间，那么当前的方法就会从1到99依次试一下，然后找到最好的分裂策略。这个方法是没问题的，但是穷举的过程中会消耗较高的计算资源，并且从理解上，人为感觉，以50为分界线和以51为分界线好像也没有很大的区别。</p>
+<p>所以在实现的过程中，有一个叫做分桶的策略：Bucket。在某一个特征的遍历过程中，我们先对这个特征进行分桶，依然以年龄为例，我们可以把年龄分成以下几个部分：</p>
+<script type="math/tex; mode=display">
+\operatorname{Age} = \{0-25, \quad 25-50, \quad 50-75, \quad 75-100\}</script><p>有了这个“背景知识”，所有的数据只需要安心地知道自己在哪个桶就好了，所以也就不需要每次的排序过程了。然后在分裂的时候，只需要尝试三次不同的分裂值，分别是：Age=25, Age=50, Age-75。所以，分桶数量越少，计算越快，但是越不准确，分桶数量越多，数据精度越高，带来的计算也更复杂。值得注意的是，分桶这个操作是可以并行的，桶内的 g 和 h 的求和可以提前算出来。</p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
 <li><a href="https://zhuanlan.zhihu.com/p/162001079" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/162001079</a></li>
 <li><a href="https://zhuanlan.zhihu.com/p/280222403" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/280222403</a></li>
+<li>XGBoost: A Scalable Tree Boosting System</li>
 </ul>
 <hr>
 <p>本篇内容到这里就结束了，欢迎关注公众号《差分隐私》。识别以下二维码可以成为本公众号的小粉丝，关注更多前沿技术。</p>
@@ -757,8 +776,8 @@ Gain &= Obj(0) - Obj(1)\\
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/11/29/技术扫盲-树模型-ForestNeo/" rel="next" title="<span style=" background:green;"=""><font color="#000000">技术扫盲</font>-树模型">
-                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">技术扫盲</font></span>-树模型
+              <a href="/2021/11/20/技术扫盲-OT-ForestNeo/" rel="next" title="<span style=" background:green;"=""><font color="#000000">密码学</font>-不经意传输 Oblivious Transfer">
+                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">密码学</font></span>-不经意传输 Oblivious Transfer
               </a>
             
           </div>
@@ -767,7 +786,7 @@ Gain &= Obj(0) - Obj(1)\\
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/12/06/PAPER-Practical Secure Aggregation for Privacy-Preserving Machine Learning-ForestNeo/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Practical Secure Aggregation for Privacy-Preserving Machine Learning">
+              <a href="/2021/12/06/PAPER-Practical Secure Aggregation for Privacy-Preserving Machine Learning/" rel="prev" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Practical Secure Aggregation for Privacy-Preserving Machine Learning">
                 <span style="background:green;"><font color="#000000">论文阅读</font></span>-Practical Secure Aggregation for Privacy-Preserving Machine Learning <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -1108,7 +1127,7 @@ Gain &= Obj(0) - Obj(1)\\
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#决策树："><span class="nav-number">1.</span> <span class="nav-text">决策树：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CART-回归树"><span class="nav-number">1.1.</span> <span class="nav-text">CART 回归树</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集成学习：Bagging-V-S-Boosting"><span class="nav-number">2.</span> <span class="nav-text">集成学习：Bagging V.S. Boosting</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bagging"><span class="nav-number">2.1.</span> <span class="nav-text">Bagging</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Boosting"><span class="nav-number">2.2.</span> <span class="nav-text">Boosting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bagging-V-S-Boosting"><span class="nav-number">2.3.</span> <span class="nav-text">Bagging V.S. Boosting</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从CART到GBDT"><span class="nav-number">3.</span> <span class="nav-text">从CART到GBDT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#提升树"><span class="nav-number">3.1.</span> <span class="nav-text">提升树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBDT"><span class="nav-number">3.2.</span> <span class="nav-text">GBDT</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XGBoost"><span class="nav-number">4.</span> <span class="nav-text">XGBoost</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#模型设计"><span class="nav-number">4.1.</span> <span class="nav-text">模型设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#树模型的复杂度"><span class="nav-number">4.2.</span> <span class="nav-text">树模型的复杂度</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#决策树"><span class="nav-number">1.</span> <span class="nav-text">决策树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CART-回归树"><span class="nav-number">1.1.</span> <span class="nav-text">CART 回归树</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集成学习：Bagging-V-S-Boosting"><span class="nav-number">2.</span> <span class="nav-text">集成学习：Bagging V.S. Boosting</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bagging"><span class="nav-number">2.1.</span> <span class="nav-text">Bagging</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Boosting"><span class="nav-number">2.2.</span> <span class="nav-text">Boosting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bagging-V-S-Boosting"><span class="nav-number">2.3.</span> <span class="nav-text">Bagging V.S. Boosting</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从CART到GBDT"><span class="nav-number">3.</span> <span class="nav-text">从CART到GBDT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#提升树"><span class="nav-number">3.1.</span> <span class="nav-text">提升树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBDT"><span class="nav-number">3.2.</span> <span class="nav-text">GBDT</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XGBoost"><span class="nav-number">4.</span> <span class="nav-text">XGBoost</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#最优化目标"><span class="nav-number">4.1.</span> <span class="nav-text">最优化目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标之中的-loss"><span class="nav-number">4.2.</span> <span class="nav-text">目标之中的 loss</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#树模型的复杂度"><span class="nav-number">4.3.</span> <span class="nav-text">树模型的复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加速构建模型：Bucket"><span class="nav-number">4.4.</span> <span class="nav-text">加速构建模型：Bucket</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
