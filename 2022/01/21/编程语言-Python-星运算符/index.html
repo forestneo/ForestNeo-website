@@ -104,7 +104,7 @@
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
 <meta property="og:description" content="在Python里面，*和**具备多重含义，目前接触到的有以下几类用法：  代数运算 函数传参 序列解包  代数运算123456&amp;gt;&amp;gt;&amp;gt; a = 3*5&amp;gt;&amp;gt;&amp;gt; a15&amp;gt;&amp;gt;&amp;gt; b = 3**5&amp;gt;&amp;gt;&amp;gt; b243 函数传参*args与**kwargs常见于函数定义，其实写成别的名字也行，大家都习惯而已。写成*a和*ka也可以。Pytho">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2022-01-21T04:10:45.000Z">
+<meta property="og:updated_time" content="2022-02-24T01:55:56.211Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python-*和**运算符">
 <meta name="twitter:description" content="在Python里面，*和**具备多重含义，目前接触到的有以下几类用法：  代数运算 函数传参 序列解包  代数运算123456&amp;gt;&amp;gt;&amp;gt; a = 3*5&amp;gt;&amp;gt;&amp;gt; a15&amp;gt;&amp;gt;&amp;gt; b = 3**5&amp;gt;&amp;gt;&amp;gt; b243 函数传参*args与**kwargs常见于函数定义，其实写成别的名字也行，大家都习惯而已。写成*a和*ka也可以。Pytho">
@@ -405,12 +405,24 @@
                 
               
 
-              <time title="创建时间：2022-01-21 11:11:53 / 修改时间：12:10:45" itemprop="dateCreated datePublished" datetime="2022-01-21T11:11:53+08:00">2022-01-21</time>
+              <time title="创建时间：2022-01-21 11:11:53" itemprop="dateCreated datePublished" datetime="2022-01-21T11:11:53+08:00">2022-01-21</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-02-24 09:55:56" itemprop="dateModified" datetime="2022-02-24T09:55:56+08:00">2022-02-24</time>
               
             
           </span>
@@ -503,6 +515,8 @@
 <h1 id="序列解包"><a href="#序列解包" class="headerlink" title="序列解包"></a>序列解包</h1><p>序列解包目前只接触过 <code>*</code>运算符，没有接触过 <code>**</code>。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a, b, *c = 1, 2, 3, 4</span><br><span class="line">&gt;&gt;&gt; a</span><br><span class="line">1</span><br><span class="line">&gt;&gt;&gt; b</span><br><span class="line">2</span><br><span class="line">&gt;&gt;&gt; c</span><br><span class="line">[3, 4]</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a = [1, 2]</span><br><span class="line">&gt;&gt;&gt; <span class="built_in">print</span>(*a)</span><br><span class="line">1 2</span><br></pre></td></tr></table></figure>
+<p>结合函数传参，<code>*</code>和<code>**</code>运算法可以这么理解：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">**&#123;<span class="string">'a'</span>:1, <span class="string">'b'</span>:2&#125; =&gt; <span class="string">'a'</span>=1,<span class="string">'b'</span>=2</span><br><span class="line">*[1,2] =&gt; 1,2</span><br></pre></td></tr></table></figure>
 <h1 id="疑问-amp-尝试"><a href="#疑问-amp-尝试" class="headerlink" title="疑问&amp;尝试"></a>疑问&amp;尝试</h1><p>其实讲道理，函数传参和解包当中的<code>*</code>应该是同一个用法，所以我在想<code>**</code>为啥不能用到dict上面呢，于是我试了一下下面的代码，不过出错了：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d = &#123;<span class="string">'a'</span>:1,<span class="string">'b'</span>:2,<span class="string">'c'</span>:3&#125;</span><br><span class="line">&gt;&gt;&gt; <span class="built_in">print</span>(**d)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line 1, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">TypeError: <span class="string">'a'</span> is an invalid keyword argument <span class="keyword">for</span> this <span class="keyword">function</span></span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
 <p>看来，<code>**</code>只能在函数传参当中使用了。</p>
@@ -659,7 +673,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-count">110</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -851,7 +865,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">63</span>
+                      
+                    
+                    <span class="site-state-item-count">64</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

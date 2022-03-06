@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="初接触DP的同学阅读文献的时候，通常在提及DP的大范围使用的时候都会提到的一个案例就是美国人口普查局在人口普查的过程中采用DP保护了被调查用户的隐私，本篇文章对其采用的背景做一些简单介绍，同时附带对应的材料提供深入了解。 每10年，美国人口普查局（ US Census Bureau ）都会问每个美国家庭一系列问题，类似于我国的“人口普查”。这些问题包括：有多少人住在这里？他们多大了？他们的种族和民">
+<meta name="keywords" content="Differential Privacy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DP-震惊！美国人口普查局采用DP的真正原因（附资料）">
+<meta property="og:url" content="http://forestneo.top/2022/02/18/技术扫盲-DP美国人口普查局采用DP的原因/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="初接触DP的同学阅读文献的时候，通常在提及DP的大范围使用的时候都会提到的一个案例就是美国人口普查局在人口普查的过程中采用DP保护了被调查用户的隐私，本篇文章对其采用的背景做一些简单介绍，同时附带对应的材料提供深入了解。 每10年，美国人口普查局（ US Census Bureau ）都会问每个美国家庭一系列问题，类似于我国的“人口普查”。这些问题包括：有多少人住在这里？他们多大了？他们的种族和民">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202202220934814.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202202181753229.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202202181736985.svg">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202202181736657.svg">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202202240939216.png">
+<meta property="og:updated_time" content="2022-03-06T12:51:01.350Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DP-震惊！美国人口普查局采用DP的真正原因（附资料）">
+<meta name="twitter:description" content="初接触DP的同学阅读文献的时候，通常在提及DP的大范围使用的时候都会提到的一个案例就是美国人口普查局在人口普查的过程中采用DP保护了被调查用户的隐私，本篇文章对其采用的背景做一些简单介绍，同时附带对应的材料提供深入了解。 每10年，美国人口普查局（ US Census Bureau ）都会问每个美国家庭一系列问题，类似于我国的“人口普查”。这些问题包括：有多少人住在这里？他们多大了？他们的种族和民">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202202220934814.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.top/2022/02/18/技术扫盲-DP美国人口普查局采用DP的原因/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>DP-震惊！美国人口普查局采用DP的真正原因（附资料） | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.top/2022/02/18/技术扫盲-DP美国人口普查局采用DP的原因/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DP-震惊！美国人口普查局采用DP的真正原因（附资料）
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-02-18 00:00:00" itemprop="dateCreated datePublished" datetime="2022-02-18T00:00:00+08:00">2022-02-18</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-03-06 20:51:01" itemprop="dateModified" datetime="2022-03-06T20:51:01+08:00">2022-03-06</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/技术扫盲/" itemprop="url" rel="index"><span itemprop="name">技术扫盲</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/技术扫盲/Differential-Privacy/" itemprop="url" rel="index"><span itemprop="name">Differential Privacy</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>初接触DP的同学阅读文献的时候，通常在提及DP的大范围使用的时候都会提到的一个案例就是美国人口普查局在人口普查的过程中采用DP保护了被调查用户的隐私，本篇文章对其采用的背景做一些简单介绍，同时附带对应的材料提供深入了解。</p>
+<p>每10年，美国人口普查局（ US Census Bureau ）都会问每个美国家庭一系列问题，类似于我国的“人口普查”。这些问题包括：有多少人住在这里？他们多大了？他们的种族和民族是什么？他们彼此之间有什么关系？等等</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202202220934814.png" style="zoom:50%;"></p>
+<p>通常收集的答案质量很高，这里主要有两个原因。首先，法律规定，所有家庭都必须如实回答这些问题。其次，美国人口普查局有法律义务在每次调查后72年内对答案保密。有了法律对普通民众和普查局的约束，公民责任感就比较强，每个人都将如实回答问题。</p>
+<p>那么，收集的数据用于干什么了呢？人口普查局汇总并发布有关美国人口的统计数据，许多的统计数据。比如，2010年，它发布了超过1500亿关于美国人口的统计数据。然后，这些统计数据也发挥了巨大的使用价值：科学研究、为公共政策提供信息、确定选举区域等。</p>
+<p>保密是人口普查局使命的核心。根据美国法律，他们必须确保没有人可以使用他们的数据来查找有关个人的信息。披露此类信息甚至会受到刑事处罚！这导致了整个研究领域的创建：statistical disclosure control，暂且翻译成统计披露控制。甚至在最古老的隐私定义（$k$ 匿名）之前，统计披露控制这个概念就提出来了。</p>
+<p>那么统计披露控制在实践中是如何运作的呢？</p>
+<ul>
+<li>在1990年之前，这种方法相当直截了当：调查人员删除了其中不到五个个人或家庭的数据表。</li>
+<li>从1990年到2010年，人口普查局使用了一种更复杂的技术，称为Swapping。称为Swapping分两步进行。首先，它随机选择小地理区域的家庭：这些家庭是重识别风险最大的家庭。然后，在生成统计数据之前，它会在这些家庭和其他人之间交换记录。这种交换过程的细节是保密的，让人们更难设计攻击。</li>
+</ul>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202202181753229.png" alt="image-20220218175330198" style="zoom:33%;"></p>
+<p>如今，人口普查局正在转向正式的概念：为2020年人口普查发布的统计数据将被差分隐私（Differential Privacy）进行保护。DP旨在解决这个确切的问题：在不泄露个人信息的情况下对统计数据进行发布。但这个选择远非显而易见！在统计数据中添加噪音对数据用户来说相当具备挑战性。将DP用于如此复杂的现实任务也没有其他先例。</p>
+<p>那么，是什么说服了人口普查局做出这个决定的？他们的科学家对2010年的一些数据进行了攻击，以更好地了解隐私风险。他们意识到这次攻击比他们预期的要成功得多。攻击很简单，开销不大，而且相当可怕。然后，科学家也衡量了为了防止攻击，需要做多少次Swapping，同时他们发现数据的效用将会受到灾难性的损失。当然，科学家也尝试了其他的技术（比如 Suppression）发现没有效果。在当时看来，减轻风险和限制准确性损失的唯一方法是差分隐私。</p>
+<p>当然，这个选择还有其他好处。差别隐私提供可量化的保证，甚至可以抵御非常强大的攻击者。这也有利于透明度：人口普查局将首次能够公布其流程的细节。但这些良好的理论属性不是他们决策的主要因素。相反，DP的选择是务实的：它最好在不牺牲太多数据效用的情况下防止现实的攻击。</p>
+<p>在本博客文章中，我们将从这个决定的核心来看这一引人注目的攻击的细节。攻击分为两个阶段：重建（Reconstruction）和重识别（Reidentification）。</p>
+<h1 id="重建"><a href="#重建" class="headerlink" title="重建"></a>重建</h1><p>攻击的第一步是使用统计数据对数据进行重建。统计数据如下。在每个地理区域（如人口普查区块Census_block），我们可以得到以下问题的问题的答案：有多少47岁的人住在那里？有多少25岁至29岁的人自我认同为白人？有多少个有2个成年人和2个孩子的家庭？</p>
+<p>我们如何利用此类信息并重建原始记录？举个例子，假设当前人口普查区块有四个人。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>年龄</th>
+<th>种族</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>17</td>
+<td>白色</td>
+</tr>
+<tr>
+<td>17</td>
+<td>亚洲人</td>
+</tr>
+<tr>
+<td>43</td>
+<td>白色</td>
+</tr>
+<tr>
+<td>47</td>
+<td>亚洲人</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>现在，在对这个人口普查块进行统计之后，我们有以下的统计结果：</p>
+<ol>
+<li>总共有四个人</li>
+<li>两人17岁</li>
+<li>两个人是白人</li>
+<li>两人是亚洲人</li>
+<li>白人的平均年龄为30岁。</li>
+<li>亚洲人的平均年龄为32岁</li>
+</ol>
+<p>这些数据本质上是统计性的：这些数字都是在几个人（这里是两个人）汇总的。然而，根据数字猜测原始表格是什么样子并不难。</p>
+<p>还不清楚吗？以两个17岁的人为例。第1、3和4点告诉我们：</p>
+<ul>
+<li>要么他们都自称是白人，</li>
+<li>要么他们都自称是亚洲人，</li>
+<li>他们一个是白人，另一个是亚洲人。</li>
+</ul>
+<p>第一种选择是不可能的：如果他们都自称是白人，那么他们的平均年龄应该是17岁，而不是30岁（第5点）。出于同样的原因（与第6点），第二个选项也是不可能的。所以第三个选项是正确的。我们现在知道前两条记录，我们可以利用每个种族群体的平均年龄来找到其他两条记录的年龄。这个过程就像对一个有趣的谜题进行解谜一样。</p>
+<p>这就是重建攻击背后的想法：获取统计信息并使用简单的推理来反向推断出原始记录。当然，当面对数十亿个统计数据需要处理时，没人会傻傻手工操作。相反，我们通常将数据转换为一个巨大的方程组（线性方程）。每条个人信息都是一个未知变量。统计结果为我们提供了他们之间的关系。然后，我们可以使用超级计算机来为这个大型系统找到可能的解。这个解决方案反过来有助于重建记录。</p>
+<p>因此，人口普查局的团队正是这样做的，有2010年人口普查的统计数据。他们把它转换为许多方程式，并使用 Gurobi 重建原始数据。<strong>结果发现他们获得的记录与原始记录的有46%完全匹配。</strong>可见攻击的有效性之高。而且这次攻击还只用了统计数据中的一小部分特别是因为攻击中使用的统计数据只有一小部分（1,500亿人中有62亿人）。交换不足以阻止准确的重建。</p>
+<p>乍一看，这个结果看起来很可怕。但让我们重新思考一下：这到底有多糟糕？这个46%的数字实际上告诉我们什么？</p>
+<h1 id="重建有多糟糕？"><a href="#重建有多糟糕？" class="headerlink" title="重建有多糟糕？"></a>重建有多糟糕？</h1><p>想象一下，给定的人口普查区块的人口特别类似：在100名居民中，95人都自我认同为白人，分布均匀，年龄在20岁至39岁之间。这个街区的其他5%的人不属于这个人口统计学，我们没有任何关于他们的信息。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202202181736985.svg" alt=""></p>
+<p>那么我们可以高准确率地“重建”这个数据集吗？是的，这实际上将比我们预期的更容易：只需使用多数群体的数据，而忽略少数群体人口。在实践中，对于20岁至39岁的年龄段，我们输出5张这个年龄段的数据，以白人作为一个种族。</p>
+<p>考虑到这个街区的统计数据，我们很傻很天真的猜测很可能与真实情况非常接近。毕竟，只有5%的人不属于大多数人口，我们知道其他95%的人的分布。回顾上一节的成功指标：真实数据和重建数据之间的匹配记录百分比。根据这个指标，我们天真的策略表现得很好！如果年龄分布非常均匀，那么准确率约为95%。</p>
+<p>这个过程是否泄露了敏感信息？嗯……不是真的，对吗？所有重建的记录在许多人中都是相同的。因此，他们似乎没有透露非常敏感的信息……人口少数群体中的人免受攻击。</p>
+<p>目前还不清楚这些重建的记录有多有问题。我们得到的只是一个与已发布的统计数据兼容的记录列表。但是我们如何知道哪些实际上是正确的？我们如何利用它们来学习关于个人的新敏感事物？</p>
+<p>这个情况表明，人口普查局的46%的数字本身其实并不能告诉我们太多。但人口普查局并没有停止重建。<strong>也就是说从目前来看，所谓的46%攻击结果并不是那么糟糕的。</strong>攻击有第二步，重识别，这次获得更可怕的结果。让我们看看它是如何工作的。</p>
+<h1 id="重识别"><a href="#重识别" class="headerlink" title="重识别"></a>重识别</h1><p>在人口普查局的攻击案例中，重建步骤输出了五个特征的记录：人口普查块、年龄、性别、种族和民族。重识别攻击的想法很简单。首先，他们购买攻击者可以访问的商业数据类型。其次，他们将这些信息与重建的记录联系起来。</p>
+<p>这种“商业数据”听起来就是这样：关于人的信息，由随便哪个公司进行整理，并提供给任何付费（或窃取它）的人。这些公司被称为“数据经纪人”，在美国基本上不受监管。他们的隐私惯例非常糟糕。人口普查从五家不同的公司获得了数据（2010年的数据）。</p>
+<p>这些商业数据集通常包含与人口信息相关的人名：居住地、年龄（或出生日期）和性别。我们将使用这三个特征来重识别重建的记录。</p>
+<p>技术很简单。我们一个接一个地查看商业数据集的每个记录。我们试图将记录的特点与重建的记录相匹配。是否有同一地点、年龄和性别的重建记录？如果是这样，我们将两条记录链接在一起。以下是该过程的可视化（使用化妆数据）。商业数据集为蓝色，重建的人口普查记录为绿色。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202202181736657.svg" alt="商业数据集记录之间的连接的可视化表示，和重建的人口普查记录。商业记录有一个名字，James Link（标记身份）、邮政地址、出生日期和性别。The重建的人口普查记录有五个字段：人口普查块ID、年龄、性别、种族、和种族。位置、年龄和性别构成“加入键”，并允许这两种记录被链接。种族和民族被贴上“新学问”的标签信息”。"></p>
+<p>以这种方式链接数据集可以实现两个目标。</p>
+<ol>
+<li>它确认重建的记录对应于特定个人。事实上，它允许我们重识别重建的记录。在这里，商业数据告诉我们，这个人是James Link。</li>
+<li>它为我们提供了更多关于这个人的信息，而商业数据没有。在这里，我们了解James Link的种族信息。</li>
+</ol>
+<p>我们如何量化这次攻击的成功？我们可以看看两个数字。首先，以这种方式在数据集之间可以链接多少条记录？其次，在这些链接的记录中，有多少是准确的？毕竟，其中一些重新标识可能是错误的：两个数据集可能不完整或不准确。正确答案的百分比是攻击的准确性：即：在链接的记录中，有多少是真正被还原的记录（precision）。</p>
+<p>那么这类攻击的表现如何？人口普查局的科学家将两个数据集之间的1.38亿条记录联系起来。他们的平均精度为38%。这意味着这些攻击成功地重识别了5200万条记录。可怕！</p>
+<p>有人可能会争辩说，攻击者不知道哪些记录被正确重识别。其中一些会是假阳性！毕竟，38%的概率并不大。但人口普查局科学家的分析不止于此。另外两个考虑因素使这次攻击更加引人注目。</p>
+<ol>
+<li>小型人口普查区块中的人的重识别精度提高了：最小的人口普查区块（800万人居住）的准确度为72%。这是有道理的：少数人的统计数据比大群体的汇总更能说明问题。这并不奇怪，但仍然是个坏消息：这意味着少数民族人口中的人更有可能被重识别。但避免信息泄露恰恰是为了保护这些人！</li>
+<li>如果数据质量更好，精度也会提高。人口普查局的科学家使用巧妙的技巧来寻找最坏的情况保证：他们使用原始的人口普查数据本身作为攻击者可能找到的最佳数据的近似值。使用此功能，他们显示全局精度提高到75%，甚至在小型人口普查区块上提高到97%。</li>
+</ol>
+<p>这种高质量数据的假设不现实吗？不，原因有二。</p>
+<ul>
+<li>攻击中使用的商业数据是人们在2010年——十多年前可以访问的。数据经纪人现在有更好的数据可供出售。</li>
+<li>重识别步骤只需要关于我们目标的高质量数据。即使我们试图重识别一个人或少数人，攻击也很好。有了关于他们的高质量信息，精确度将达到较高的情况。</li>
+</ul>
+<p>没有什么能阻止企业对其员工或客户进行这种攻击。在这种背景下，访问高质量数据不是一个乐观的假设：这是一个给定的假设。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>这次攻击是个坏消息。</p>
+<p>这毫无疑问地证明了两点。首先，任何人都可以重建人口普查记录。其中许多重建的记录是准确的，特别是在人口普查的小街区。这不需要巨大的计算能力：您可以在几分钟内利用普通笔记本电脑进行大规模的攻击。其次，关于一些人的高质量数据足以重识别他们的人口普查记录。这种重识别具有很高的准确性，并揭示了以前未知的关于这些人的信息。</p>
+<p>在攻击中，攻击者可以学习种族和民族信息。例如，数据代理可能希望这样做来增强他们的数据集。但风险可能会变得更加明显。请记住：攻击仅使用了所有已发布统计数据的一小部分。目标表格只有人口信息。如果有人攻击家庭表呢？这可能会透露和你住在一起的人的私密细节。你有同性的伴侣吗？不同种族的孩子？任何拥有您基本信息的人——雇主、熟人、数据经纪人……这些都有被发现的风险。</p>
+<p>其中一些信息特别敏感，否则无法通过数据代理获得。例如，重建还致力于儿童数据，这些数据在美国是非法的。有人可以将家庭重建与重识别相结合，并在给定地区找到特定种族、性别和年龄段的孩子。不用详细说也知道这当中有潜在的巨大危害。</p>
+<p>从长远来看，个人的风险可以转化为数据质量的风险。假设人口普查数据不能再被视为机密数据。这在未来将如何影响人们回答人口普查调查的意愿？少数群体已经更有可能对其答案产生隐私问题。如果人口普查局不能再保证数据的机密性，情况会变得更糟。</p>
+<p>这解释了人口普查局为何决定转向差分隐私。我们描述的一切都只是一次可能的攻击，它只使用了发布数据的一小部分。人口普查必须保护人们未来可能想出的所有其他攻击！这正是差分隐私提供的：可证明的隐私保障，即使是针对尚未发明的攻击。</p>
+<p>参考文件：</p>
+<ul>
+<li>2020年人口普查使用DP背后的历史和背景</li>
+<li>隐私专家提供的顾问书，支持人口普查中使用DP</li>
+<li><a href="https://desfontain.es/privacy/us-census-reconstruction-attack.html" target="_blank" rel="noopener">https://desfontain.es/privacy/us-census-reconstruction-attack.html</a></li>
+</ul>
+<hr>
+<p>本篇内容到这里就结束了，欢迎关注公众号《差分隐私》，获取更多前沿技术。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/webimg/202202240939216.png" alt="《差分隐私》"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/02/16/系统配置-Git使用/" rel="next" title="系统配置-Git使用教程">
+                <i class="fa fa-chevron-left"></i> 系统配置-Git使用教程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/02/22/编程语言-Python-Threading/" rel="prev" title="Python-Threading学习">
+                Python-Threading学习 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">110</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#重建"><span class="nav-number">1.</span> <span class="nav-text">重建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重建有多糟糕？"><span class="nav-number">2.</span> <span class="nav-text">重建有多糟糕？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重识别"><span class="nav-number">3.</span> <span class="nav-text">重识别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结论"><span class="nav-number">4.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+

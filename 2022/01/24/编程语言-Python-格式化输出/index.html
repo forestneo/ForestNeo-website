@@ -96,18 +96,18 @@
 
 
 
-  <meta name="description" content="Format 格式化函数123456789101112131415161718192021&amp;gt;&amp;gt;&amp;gt;&quot;&amp;#123;&amp;#125; &amp;#123;&amp;#125;&quot;.format(&quot;hello&quot;, &quot;world&quot;)    # 不设置指定位置，按默认顺序&apos;hello world&apos; &amp;gt;&amp;gt;&amp;gt; &quot;&amp;#123;0&amp;#125; &amp;#123;1&amp;#125;&quot;.format(&quot;hello&quot;,">
+  <meta name="description" content="输出长度控制12import numpy as npnp.set_printoptions(edgeitems=30, linewidth=100000)` Format 格式化函数123456789101112131415161718192021&amp;gt;&amp;gt;&amp;gt;&quot;&amp;#123;&amp;#125; &amp;#123;&amp;#125;&quot;.format(&quot;hello&quot;, &quot;world&quot;)    # 不设置指定位">
 <meta name="keywords" content="Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python-格式化输出">
 <meta property="og:url" content="http://forestneo.top/2022/01/24/编程语言-Python-格式化输出/index.html">
 <meta property="og:site_name" content="ForestNeo&#39;s Space">
-<meta property="og:description" content="Format 格式化函数123456789101112131415161718192021&amp;gt;&amp;gt;&amp;gt;&quot;&amp;#123;&amp;#125; &amp;#123;&amp;#125;&quot;.format(&quot;hello&quot;, &quot;world&quot;)    # 不设置指定位置，按默认顺序&apos;hello world&apos; &amp;gt;&amp;gt;&amp;gt; &quot;&amp;#123;0&amp;#125; &amp;#123;1&amp;#125;&quot;.format(&quot;hello&quot;,">
+<meta property="og:description" content="输出长度控制12import numpy as npnp.set_printoptions(edgeitems=30, linewidth=100000)` Format 格式化函数123456789101112131415161718192021&amp;gt;&amp;gt;&amp;gt;&quot;&amp;#123;&amp;#125; &amp;#123;&amp;#125;&quot;.format(&quot;hello&quot;, &quot;world&quot;)    # 不设置指定位">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2022-01-24T12:15:27.000Z">
+<meta property="og:updated_time" content="2022-02-17T06:13:36.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python-格式化输出">
-<meta name="twitter:description" content="Format 格式化函数123456789101112131415161718192021&amp;gt;&amp;gt;&amp;gt;&quot;&amp;#123;&amp;#125; &amp;#123;&amp;#125;&quot;.format(&quot;hello&quot;, &quot;world&quot;)    # 不设置指定位置，按默认顺序&apos;hello world&apos; &amp;gt;&amp;gt;&amp;gt; &quot;&amp;#123;0&amp;#125; &amp;#123;1&amp;#125;&quot;.format(&quot;hello&quot;,">
+<meta name="twitter:description" content="输出长度控制12import numpy as npnp.set_printoptions(edgeitems=30, linewidth=100000)` Format 格式化函数123456789101112131415161718192021&amp;gt;&amp;gt;&amp;gt;&quot;&amp;#123;&amp;#125; &amp;#123;&amp;#125;&quot;.format(&quot;hello&quot;, &quot;world&quot;)    # 不设置指定位">
 
 
 
@@ -405,12 +405,24 @@
                 
               
 
-              <time title="创建时间：2022-01-24 15:27:53 / 修改时间：20:15:27" itemprop="dateCreated datePublished" datetime="2022-01-24T15:27:53+08:00">2022-01-24</time>
+              <time title="创建时间：2022-01-24 15:27:53" itemprop="dateCreated datePublished" datetime="2022-01-24T15:27:53+08:00">2022-01-24</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-02-17 14:13:36" itemprop="dateModified" datetime="2022-02-17T14:13:36+08:00">2022-02-17</time>
               
             
           </span>
@@ -475,7 +487,8 @@
       
 
       
-        <h1 id="Format-格式化函数"><a href="#Format-格式化函数" class="headerlink" title="Format 格式化函数"></a>Format 格式化函数</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;<span class="string">"&#123;&#125; &#123;&#125;"</span>.format(<span class="string">"hello"</span>, <span class="string">"world"</span>)    <span class="comment"># 不设置指定位置，按默认顺序</span></span><br><span class="line"><span class="string">'hello world'</span></span><br><span class="line"> </span><br><span class="line">&gt;&gt;&gt; <span class="string">"&#123;0&#125; &#123;1&#125;"</span>.format(<span class="string">"hello"</span>, <span class="string">"world"</span>)  <span class="comment"># 设置指定位置</span></span><br><span class="line"><span class="string">'hello world'</span></span><br><span class="line"> </span><br><span class="line">&gt;&gt;&gt; <span class="string">"&#123;1&#125; &#123;0&#125; &#123;1&#125;"</span>.format(<span class="string">"hello"</span>, <span class="string">"world"</span>)  <span class="comment"># 设置指定位置</span></span><br><span class="line"><span class="string">'world hello world'</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; <span class="built_in">print</span>(<span class="string">"网站名：&#123;name&#125;, 地址 &#123;url&#125;"</span>.format(name=<span class="string">"菜鸟教程"</span>, url=<span class="string">"www.runoob.com"</span>))</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 通过字典设置参数</span></span><br><span class="line">&gt;&gt;&gt; site = &#123;<span class="string">"name"</span>: <span class="string">"菜鸟教程"</span>, <span class="string">"url"</span>: <span class="string">"www.runoob.com"</span>&#125;</span><br><span class="line">&gt;&gt;&gt; <span class="built_in">print</span>(<span class="string">"网站名：&#123;name&#125;, 地址 &#123;url&#125;"</span>.format(**site))</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 通过列表索引设置参数</span></span><br><span class="line">&gt;&gt;&gt; my_list = [<span class="string">'菜鸟教程'</span>, <span class="string">'www.runoob.com'</span>]</span><br><span class="line">&gt;&gt;&gt; <span class="built_in">print</span>(<span class="string">"网站名：&#123;0[0]&#125;, 地址 &#123;0[1]&#125;"</span>.format(my_list))  <span class="comment"># "0" 是必须的</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; <span class="built_in">print</span>(<span class="string">"&#123;:.2f&#125;"</span>.format(3.1415926))</span><br><span class="line">3.14</span><br></pre></td></tr></table></figure>
+        <h1 id="输出长度控制"><a href="#输出长度控制" class="headerlink" title="输出长度控制"></a>输出长度控制</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">np.set_printoptions(edgeitems=<span class="number">30</span>, linewidth=<span class="number">100000</span>)`</span><br></pre></td></tr></table></figure>
+<h1 id="Format-格式化函数"><a href="#Format-格式化函数" class="headerlink" title="Format 格式化函数"></a>Format 格式化函数</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;<span class="string">"&#123;&#125; &#123;&#125;"</span>.format(<span class="string">"hello"</span>, <span class="string">"world"</span>)    <span class="comment"># 不设置指定位置，按默认顺序</span></span><br><span class="line"><span class="string">'hello world'</span></span><br><span class="line"> </span><br><span class="line">&gt;&gt;&gt; <span class="string">"&#123;0&#125; &#123;1&#125;"</span>.format(<span class="string">"hello"</span>, <span class="string">"world"</span>)  <span class="comment"># 设置指定位置</span></span><br><span class="line"><span class="string">'hello world'</span></span><br><span class="line"> </span><br><span class="line">&gt;&gt;&gt; <span class="string">"&#123;1&#125; &#123;0&#125; &#123;1&#125;"</span>.format(<span class="string">"hello"</span>, <span class="string">"world"</span>)  <span class="comment"># 设置指定位置</span></span><br><span class="line"><span class="string">'world hello world'</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; <span class="built_in">print</span>(<span class="string">"网站名：&#123;name&#125;, 地址 &#123;url&#125;"</span>.format(name=<span class="string">"菜鸟教程"</span>, url=<span class="string">"www.runoob.com"</span>))</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 通过字典设置参数</span></span><br><span class="line">&gt;&gt;&gt; site = &#123;<span class="string">"name"</span>: <span class="string">"菜鸟教程"</span>, <span class="string">"url"</span>: <span class="string">"www.runoob.com"</span>&#125;</span><br><span class="line">&gt;&gt;&gt; <span class="built_in">print</span>(<span class="string">"网站名：&#123;name&#125;, 地址 &#123;url&#125;"</span>.format(**site))</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 通过列表索引设置参数</span></span><br><span class="line">&gt;&gt;&gt; my_list = [<span class="string">'菜鸟教程'</span>, <span class="string">'www.runoob.com'</span>]</span><br><span class="line">&gt;&gt;&gt; <span class="built_in">print</span>(<span class="string">"网站名：&#123;0[0]&#125;, 地址 &#123;0[1]&#125;"</span>.format(my_list))  <span class="comment"># "0" 是必须的</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; <span class="built_in">print</span>(<span class="string">"&#123;:.2f&#125;"</span>.format(3.1415926))</span><br><span class="line">3.14</span><br></pre></td></tr></table></figure>
 <h2 id="对齐"><a href="#对齐" class="headerlink" title="对齐"></a>对齐</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">"数字是：&#123;:&gt;10d&#125;，很好！"</span>.format(<span class="number">13</span>))</span><br><span class="line">print(<span class="string">"数字是：&#123;:^10d&#125;，很好！"</span>.format(<span class="number">13</span>))</span><br><span class="line">print(<span class="string">"数字是：&#123;:&gt;10d&#125;，很好！"</span>.format(<span class="number">13</span>))</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">数字是：        13，很好！</span><br><span class="line">数字是：    13    ，很好！</span><br><span class="line">数字是：        13，很好！</span><br></pre></td></tr></table></figure>
 
@@ -553,8 +566,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2022/01/24/编程语言-Python-PySpark学习/" rel="prev" title="Python-PySpark学习">
-                Python-PySpark学习 <i class="fa fa-chevron-right"></i>
+              <a href="/2022/01/24/编程语言-Python-grpc工具学习/" rel="prev" title="Python-grpc工具学习">
+                Python-grpc工具学习 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -631,7 +644,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-count">110</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -823,7 +836,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">63</span>
+                      
+                    
+                    <span class="site-state-item-count">64</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -896,7 +911,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Format-格式化函数"><span class="nav-number">1.</span> <span class="nav-text">Format 格式化函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对齐"><span class="nav-number">1.1.</span> <span class="nav-text">对齐</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#输出长度控制"><span class="nav-number">1.</span> <span class="nav-text">输出长度控制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Format-格式化函数"><span class="nav-number">2.</span> <span class="nav-text">Format 格式化函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对齐"><span class="nav-number">2.1.</span> <span class="nav-text">对齐</span></a></li></ol></li></ol></div>
             
 
           </div>
