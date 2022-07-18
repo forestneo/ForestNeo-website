@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文分享自知乎文章：我是如何从头开始写一篇顶级论文的。转载已获得作者授权。作者个人知乎主页为：重剑无锋  最近完成了一篇很满意的论文，不仅整个过程愉快，回味无穷，而且真正做到了“学术有影响 工业有产出” 可以肯定这篇文章会改变差分隐私（differential privacy；DP）深度学习的范式。 因为这次经历实在太过“巧”了，（过程充满巧合 结论极其巧妙，在此和同学们分享一下自己从观察—&amp;gt">
+<meta name="keywords" content="Differential Privacy,Federated Learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;分享&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-我是如何从头开始写一篇顶级论文的">
+<meta property="og:url" content="http://forestneo.top/2022/07/17/分享-我是如何从头开始写一篇顶级论文的/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="本文分享自知乎文章：我是如何从头开始写一篇顶级论文的。转载已获得作者授权。作者个人知乎主页为：重剑无锋  最近完成了一篇很满意的论文，不仅整个过程愉快，回味无穷，而且真正做到了“学术有影响 工业有产出” 可以肯定这篇文章会改变差分隐私（differential privacy；DP）深度学习的范式。 因为这次经历实在太过“巧”了，（过程充满巧合 结论极其巧妙，在此和同学们分享一下自己从观察—&amp;gt">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717214319801.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717214741518.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717215359438.png">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-1869c5cd715b273d018fef74ad35eb22_r.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/v2-ae68c9b6a5ad255ed0616c200333f350_r.jpg">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717215800334.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717215849068.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717215921865.png">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-b241be4efd80ddfee8e108d24399b5da_r.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/v2-c759173eddf56469e19bf8e05e618dc0_r.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/v2-bfbcab90f471c3b288fe13f0026a1ce3_r.jpg">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png">
+<meta property="og:updated_time" content="2022-07-17T16:08:41.903Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;分享&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-我是如何从头开始写一篇顶级论文的">
+<meta name="twitter:description" content="本文分享自知乎文章：我是如何从头开始写一篇顶级论文的。转载已获得作者授权。作者个人知乎主页为：重剑无锋  最近完成了一篇很满意的论文，不仅整个过程愉快，回味无穷，而且真正做到了“学术有影响 工业有产出” 可以肯定这篇文章会改变差分隐私（differential privacy；DP）深度学习的范式。 因为这次经历实在太过“巧”了，（过程充满巧合 结论极其巧妙，在此和同学们分享一下自己从观察—&amp;gt">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717214319801.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.top/2022/07/17/分享-我是如何从头开始写一篇顶级论文的/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title><span style="background:green;"><font color="#000000">分享</font></span>-我是如何从头开始写一篇顶级论文的 | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.top/2022/07/17/分享-我是如何从头开始写一篇顶级论文的/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">分享</font></span>-我是如何从头开始写一篇顶级论文的
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-07-17 14:49:49" itemprop="dateCreated datePublished" datetime="2022-07-17T14:49:49+08:00">2022-07-17</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-07-18 00:08:41" itemprop="dateModified" datetime="2022-07-18T00:08:41+08:00">2022-07-18</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文分享自知乎文章：<a href="https://zhuanlan.zhihu.com/p/538681254" target="_blank" rel="noopener">我是如何从头开始写一篇顶级论文的</a>。转载已获得作者授权。作者个人知乎主页为：<a href="https://www.zhihu.com/people/wufeng99" target="_blank" rel="noopener">重剑无锋</a></p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717214319801.png" alt=""></p>
+<p>最近完成了一篇很满意的论文，不仅整个过程愉快，回味无穷，而且真正做到了“学术有影响 工业有产出” 可以肯定这篇文章会改变差分隐私（differential privacy；DP）深度学习的范式。</p>
+<p>因为这次经历实在太过“巧”了，（过程充满巧合 结论极其巧妙，在此和同学们分享一下自己从观察—&gt;构思—&gt;实证—&gt;理论—&gt;大规模实验的完整流程。尽量保持lightweight不涉及过多技术细节，代码放在底部。</p>
+<p>尤其与paper展现的顺序不同，paper有时会刻意将结论放在开头吸引读者，或者先介绍简化后的定理而将完整的定理放附录，而我想将我的经历按时间顺序写下（也就是流水账） ，比如把走过的弯路和研究中突发的状况写出来，以供刚踏上科研之路的同学参考。</p>
+<h1 id="文献阅读"><a href="#文献阅读" class="headerlink" title="文献阅读"></a>文献阅读</h1><p>我每天都会读 <a href="https://www.zhihu.com/people/54c6cc3570c62b66de5cc719a0e2a123" target="_blank" rel="noopener">@arXivDaily</a> 学术速递（强推这个微信公众号）里所有机器学习和统计的文章标题及简介，大概每天150篇。所以DP的文章基本第一时间就能知道。</p>
+<p>事情的起源是斯坦福的一篇论文，现在已经录了ICLR：<a href="https://arxiv.org/abs/2110.05679" target="_blank" rel="noopener">Large Language Models Can Be Strong Differentially Private Learners</a>。文章写的非常好，总结起来三个主要贡献：</p>
+<ul>
+<li>在NLP任务中 DP模型的accuracy非常高，鼓励了privacy在语言模型的应用（与之相对的是CV中DP会产生非常大的accuracy恶化，比如cifar10目前DP限制下只有80%accuracy，而不考虑DP可以轻松95%；ImageNet当时最好的DP中accuracy不到50%）</li>
+<li>在语言模型上，模型越大性能会越好。比如GPT2中，从4亿参数到8亿参数性能提升很明显，也取得了很多SOTA（但是在CV和推荐系统中，很多时候更大的模型性能会很差，甚至接近random guess，比如CIFAR10的DP best accuracy此前是由四层CNN得到的，而非ResNet）</li>
+<li>在多个任务上取得SOTA的超参数是一致的，都是clipping threshold要设置的足够小，并且learning rate需要大一些（此前所有文章都是一个任务调一个clipping threshold，费时费力，并没有出现过像这篇这样一个clipping threshold=0.1，贯穿所有任务表现还这么好）</li>
+</ul>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717214741518.png" alt=""></p>
+<p>以上总结是我读完paper瞬间理解的，其中括号内的内容并非来此这篇paper而是以往诸多阅读产生的印象，这有赖于长期的阅读积累和高度的概括能力，才能快速联想和对比出来。</p>
+<p>事实上很多同学做文章起步难恰恰就在于看一篇文章只能看到一篇文章的内容，无法和整个领域的知识点形成网络产生联想。这一方面由于刚入门的同学阅读量不够，尚未掌握足够的知识点，尤其是长期从老师手中拿课题不自己独立propose的同学容易有这个问题；另一方面则是阅读量随够但没有时时归纳总结，导致信息没有凝聚成知识或者知识没有串联。</p>
+<p>这里补充下DP deep learning的背景知识，暂且略过DP的定义，不影响阅读。</p>
+<p>所谓DP deep learning 从算法的角度来说其实就是多做两个额外的步骤：per-sample gradiet clipping和Gaussian noise addition；换句话来说，只要你把gradient按照这两步处理完了（处理后的gradient叫做private gradient），之后该怎么用优化器怎么用 SGD/Adam都可以。</p>
+<p>至于最后算法到底多private就是另一个子领域的问题了，称为privacy accounting theory。此领域相对成熟而且需要极强的理论功底，由于本文专注于optimization，按下不表。</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\operatorname{DP} \operatorname{Optimizer}\left(\left\{\boldsymbol{g}_{i}\right\}_{i=1}^{B}\right) &= \operatorname{Optimizer}(\overbrace{\left.\sum_{i} \boldsymbol{g}_{i} \cdot \operatorname{Clip}\left(\left\|\boldsymbol{g}_{i}\right\| ; R\right)+\sigma R \cdot \mathcal{N}(0, \mathbf{I})\right)}^{\text {private gradient }})\\
+\operatorname{Standard} \operatorname{Optimizer}\left(\left\{\boldsymbol{g}_{i}\right\}_{i=1}^{B}\right)&=\operatorname{Optimizer}\left(\sum_{i} \boldsymbol{g}_{i}\right)
+\end{align}</script><p>上式中，Clip叫做clipping function，就跟常规的gradient clipping一样，梯度长于R就剪到R，小于R就不动。比如DP版本的SGD就是：</p>
+<script type="math/tex; mode=display">
+\text{DP-SGD}_{\text {Abadi }}: \quad \boldsymbol{w}_{t+1}=\boldsymbol{w}_{t}-\frac{\eta}{\left|B_{t}\right|}\left(\sum_{i \in B_{t}} \frac{\partial l_{i}}{\partial \boldsymbol{w}_{t}} \min \left(R /\left\|\frac{\partial l_{i}}{\partial \boldsymbol{w}_{t}}\right\|, 1\right)+\sigma R \cdot \mathcal{N}(0, \mathbf{I})\right)</script><p>目前所有paper全都用的是隐私深度学习开山之作（Abadi, Martin, et al. “Deep learning with differential privacy.”）中的clipping function，也称为Abadi’s clipping</p>
+<script type="math/tex; mode=display">
+\text{Clip}_\text{Abadi}(g_i;R)=\min\left(R/||g_i||,1\right)\\</script><p>但这是完全不必要的，遵循第一性原理 。从privacy accounting theory出发，其实clipping function只需要满足$\operatorname{Clip}(g_i)*g_i$的模小于等于$R$就可以了，也就是说Abadi’s clipping只是一种满足这个条件函数，绝非唯一。</p>
+<h2 id="切入点"><a href="#切入点" class="headerlink" title="切入点"></a>切入点</h2><p>一篇文章的闪光点很多，但是并非都能为我所用，要结合自身的需求和擅长去判断最大的贡献是什么。</p>
+<p>这篇文章前两个贡献其实非常empirical，也很难深挖，而最后一个贡献很有意思，我仔细看了看超参数的ablation study，发现一个原作者没有发现的点：在clipping threshold足够小的时候 其实clipping threshold（也就是clipping norm C，在上面的公式中和R是一个变量）没有作用</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717215359438.png" alt="image-20220717215359438" style="zoom:50%;"></p>
+<p>上图中，纵向来看 C=0.1，0.4，1.6对DP-Adam没什么区别 [Xuechen et al. 2021]。这引起了我的兴趣，感觉背后一定有什么原理。于是我手写了他们所用的DP-Adam来看看为什么，其实这很简单：</p>
+<script type="math/tex; mode=display">
+\text{Clip}_\text{Abadi}(g_i;R)=\min\left(R/||g_i||,1\right)\approx R/||g_i||</script><p>如果R足够小，clipping其实等价于normalization！简单代入private gradient 可以将R从clipping的部分和noising的部分分别提出来)</p>
+<script type="math/tex; mode=display">
+\sum_i R\frac{\partial l_i}{\partial w_t}/\|\frac{\partial l_i}{\partial w_t}\|+\sigma R\cdot\mathcal{N}(0,I)=R(\sum_i \frac{\partial l_i}{\partial w_t}/\|\frac{\partial l_i}{\partial w_t}\|+\sigma\cdot\mathcal{N}(0,I))</script><p>而Adam的形式使得R会同时出现在梯度和自适应的步长中，分子分母一抵消，R就没有了。顶会idea就有了！</p>
+<script type="math/tex; mode=display">
+\boldsymbol{w}_{t+1}=\boldsymbol{w}_{t}-\eta\left(\frac{\tilde{\mathbf{m}}_{t} /\left(1-\beta_{1}\right)}{\sqrt{\tilde{\boldsymbol{v}}_{t} /\left(1-\beta_{2}\right)}}+\lambda \boldsymbol{w}_{t}\right)</script><p>就这么简单的代换，就证明了我的第一个定理：在DP-AdamW中，足够小的clipping thresholds是互相等价的，无需调参的。</p>
+<p>毫无疑问，这是一个很简明而且很有趣的观察。但这并没有足够的意义，所以我需要思考这个观察在实际中有什么用途。</p>
+<p>其实，这意味着DP训练减少了一个数量级的调参工作：假设学习率和R各调5个值（如上图），那就要测25种组合才能找到最优超参数。现在只需要调学习率5种可能就好，调参效率提高了数倍。这是对业界来说极有价值的痛点问题。</p>
+<p>立意足够高，数学足够简明，一个好的想法已经初具雏形。</p>
+<h1 id="简单扩展"><a href="#简单扩展" class="headerlink" title="简单扩展"></a>简单扩展</h1><p>只对Adam/AdamW成立的话，这个工作的局限性还是太大了，所以我很快扩展到了AdamW和其他adaptive optimizers，比如AdaGrad。事实上，对于所有的adaptive optimizers，都可以证明clipping threshold会被抵消从而不用调参，大大增加了定理的丰富程度。</p>
+<p>这里面还有一个有趣的小细节，众所周知，Adam with weight decay和AdamW不一样，后者使用的是decoupled weight decay，就这个区别还发了篇ICLR</p>
+<p><img src="https://pic3.zhimg.com/v2-1869c5cd715b273d018fef74ad35eb22_r.jpg" alt=""></p>
+<p>上图为Adam有两种加weight decay的方式。这个区别在DP优化器中也存在，同样是Adam，用decoupled weight decay的话，缩放R不影响weight decay的大小。但是用普通的weight decay的话，放大R两倍等价于缩小两倍的weight decay。</p>
+<h1 id="另有乾坤"><a href="#另有乾坤" class="headerlink" title="另有乾坤"></a>另有乾坤</h1><p>聪明的同学可能已经发现了，我一直再强调自适应优化器。为啥不讲讲SGD呢? 答案是在我写完DP自适应优化器的理论后，Google紧接着就放了一篇DP-SGD用在CV的文章，也做了ablation study。但是规律和在Adam上发现的完全不同，给我留下了一个对角的印象。</p>
+<p><img src="https://pic1.zhimg.com/v2-ae68c9b6a5ad255ed0616c200333f350_r.jpg" alt=""></p>
+<p>对DP-SGD且R足够小的时候，增大10倍lr等于增大10倍R [<a href="https://arxiv.org/abs/2201.12328\]。" target="_blank" rel="noopener">https://arxiv.org/abs/2201.12328\]。</a></p>
+<p>当时我看到这篇文章的时候很兴奋，因为又是一个证明small clipping threshold效果好的论文。</p>
+<p>在科学界，连续的巧合背后往往有着隐藏的规律。</p>
+<p>简单的代换一下，发现SGD比Adam还好分析，DP版本SGD（本文第三个公式）可以近似为：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{w}_{t+1}=\boldsymbol{w}_{t}-\frac{\eta}{\left|B_{t}\right|}\left(\sum_{i \in B_{t}} R \frac{\partial l_{i}}{\partial \boldsymbol{w}_{t}} /\left\|\frac{\partial l_{i}}{\partial \boldsymbol{w}_{t}}\right\|+\sigma R \cdot \mathcal{N}(0, \mathbf{I})\right)</script><p>显然，R又可以提出来，和学习率 $\eta$ 组合在一起。从理论上证明了Google的观察：</p>
+<blockquote>
+<p>“Specifically, when the clipping norm is decreased k times, the learning rate should be increased k times to maintain similar accuracy.”</p>
+</blockquote>
+<p>很可惜，Google只看到现象，没有上升到理论的高度。这里也有一个巧合，那就是上图他们同时画了两种尺度的ablation study，只有左边的尺度能看出对角线，光看右边是没有结论的…</p>
+<p>由于没有自适应步长，SGD不像Adam一样无视R而是把R看作学习率的一部分，所以不需要调节。反正学习率要调参。再将SGD的理论扩充到momentum，所有Pytorch支持的优化器全都分析完毕。</p>
+<h1 id="从直觉到严谨"><a href="#从直觉到严谨" class="headerlink" title="从直觉到严谨"></a>从直觉到严谨</h1><p>一个创新点是有了，但是Abadi’s clipping严格来说只是近似normalization，不能划等号，也就没法确凿的分析收敛性。</p>
+<p>根据多啦A梦铁人兵团原理，我直接命名normalization为新的clipping function，替代了整个领域用了6年的Abadi clipping，这是我的第二个创新点。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717215800334.png" alt="image-20220717215800334" style="zoom:50%;"></p>
+<p>经过刚才的证明，新的clipping严格不需要R，所以称之为automatic clipping （AUTO-V; V for vanilla）。</p>
+<p>既然形式上与Abadi’s clipping有不同，那么accuracy就会有差异，而我的clipping可能有劣势</p>
+<p>所以我需要写代码测试我的新方法。而这，<strong>只需要改动一行代码 (毕竟只是把</strong> $\min\{R/||g||,1\} \to R/||g||$ <strong>)</strong>。</p>
+<p>事实上，DP per-sample gradient clipping这个方向，总共只有三种clipping functions。除了Abadi’s clipping以外的两种都是我提出的，一个是global clipping，还有一个就是这篇automatic clipping。而在先前的工作中，我就已经知道怎么在各个流行的库中改clipping了，我将修改方法放在文章最后一个appendix。</p>
+<p>经过我的测试，我发现斯坦福的文章中GPT2在整个训练过程中，所有itertation所有per-sample gradient都是clip过的。也就是说，至少在这一个实验上Abadi’s clipping完全等价于automatic clipping。虽然后来的实验的确有输于SOTA的情况，但这已经说明了我的新方法有足够的价值：一个不需要调整clipping threshold的clipping function，而且有时accuracy也不会牺牲。</p>
+<h2 id="回归抽象思考"><a href="#回归抽象思考" class="headerlink" title="回归抽象思考"></a>回归抽象思考</h2><p>斯坦福的文章有两大类语言模型的实验，一类是GPT2为模型的生成型任务，另一类是RoBERTa为模型的分类型任务。虽然在生成任务上automatic clipping和Abadi’s clipping等价，但是分类型任务却总是差几个点的准确率。</p>
+<p>出于我自己的学术习惯，这个时候我不会去换数据集然后专门挑我们占优的实验发表，更不会增加trick比如做数据增强和魔改模型之类的。我希望在完全公平的比较中，只比较per-sample gradient clipping的前提下，尽可能做出最好的不含水分的效果。</p>
+<p>事实上，在和合作者讨论中我们发现，纯粹的normalization和Abadi’s clipping比，梯度大小的信息是完全抛弃的。也即是说对于automatic clipping，无论原始的梯度多大，clip后都是R这么大，而Abadi对于比R小的梯度是保留了大小的信息的。</p>
+<p>基于这个想法，我们做了一个微小但极其巧妙的改动，称之为AUTO-S clipping （S代表stable）：</p>
+<script type="math/tex; mode=display">
+\text{Clip}_{\text{AUTO-S}} \left(\boldsymbol{g}_{i} ; R\right):=R /\left(\left\|\boldsymbol{g}_{i}\right\|+\gamma\right)</script><p>将R和学习率融合后变成：</p>
+<script type="math/tex; mode=display">
+\mathrm{Clip}_{\text {AUTO-S }}\left(\boldsymbol{g}_{i}\right):=1 /\left(\left\|\boldsymbol{g}_{i}\right\|+\gamma\right)</script><p>简单一画可以发现，这个小小的 $\gamma$ (一般设为0.01，其实设成别的正数都行，很稳健)就能保留梯度大小的信息</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717215849068.png" alt=""></p>
+<p>基于这个算法，还是只改动一行，把斯坦福的代码重跑一遍，六个NLP数据集的SOTA就到手了。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/image-20220717215921865.png" alt=""></p>
+<h1 id="要做通用算法"><a href="#要做通用算法" class="headerlink" title="要做通用算法"></a>要做通用算法</h1><p>斯坦福文章的一个局限性是只专注于NLP，又很巧合的是，紧接着Google刷了ImageNet的DP，SOTA两个月后 Google子公司DeepMind放出了一篇DP在CV中大放异彩的文章，直接将ImageNet从48%提升到84%！<a href="https://link.zhihu.com/?target=https%3A//arxiv.org/abs/2204.13650" target="_blank" rel="noopener">Unlocking High-Accuracy Differentially Private Image Classification through Scale</a>。</p>
+<p>在这篇文章中，我第一时间去看优化器和clipping threshold的选择，直到我在附录翻到这张图：</p>
+<p><img src="https://pic3.zhimg.com/v2-b241be4efd80ddfee8e108d24399b5da_r.jpg" alt=""></p>
+<p>DP-SGD在ImageNet上的SOTA也是需要clipping threshold足够小。</p>
+<p>依然是small clipping threshold效果最好！有了三篇高质量的文章支撑，automatic clipping已经有了很强的动机了，我越发肯定自己的工作会是非常杰出的。</p>
+<p>巧合的是，DeepMind这篇文章也是纯实验没有理论。这也导致他们差点就领悟出了他们可以从理论上不需要R。事实上他们真的非常接近我的想法了，他们甚至已经发现了R是可以提取出来和学习率融合的（感兴趣的同学可以看看他们的公式（2）和（3））。但是Abadi’s clipping的惯性太大了… 即使他们总结出了规律却没有更进一步。</p>
+<p><img src="https://pic1.zhimg.com/v2-c759173eddf56469e19bf8e05e618dc0_r.jpg" alt=""></p>
+<p>DeepMind也发现了small clipping threshold效果最好，但是没有理解为什么。受这篇新的工作启发，我开始着手做CV的实验，让我的算法能被所有DP研究者使用，而不是NLP搞一套方法CV搞另一套好的算法，就是应该通用好用。事实也证明，automatic clipping在CV数据集上同样能取得SOTA。</p>
+<p><img src="https://pic4.zhimg.com/v2-bfbcab90f471c3b288fe13f0026a1ce3_r.jpg" alt=""></p>
+<h1 id="理论为骨-实验为翼"><a href="#理论为骨-实验为翼" class="headerlink" title="理论为骨 实验为翼"></a>理论为骨 实验为翼</h1><p>纵观以上所有的论文，都是SOTA提升显著，工程效果拔满，但是理论完全空白。</p>
+<p>当我做完所有实验的时候，这份工作的贡献已经超过了一篇顶会的要求：我将经验上small clipping threshold所产生的DP-SGD和DP-Adam的参数影响大大简化；提出了新的clipping function而不牺牲运算效率、隐私性，还不用调参；小小的 $\gamma$ 修复了Abadi’s clipping和normalization对梯度大小信息的破坏；充足的NLP和CV实验都取得了SOTA的准确率。</p>
+<p>我还没有满意，一个没有理论支撑的优化器，还是无法为深度学习做出实质贡献。每年顶会提出的新优化器几十个，第二年全都扫进故纸堆。Pytorch官方支持的、业界真正在用的还是那么几个。</p>
+<p>为此我和合作者们额外花了两个月做了automatic DP-SGD收敛性分析，过程艰难但最后的证明简化到极致，结论也很简单。将batch size、learning rate、model size、sample size等变量对收敛的影响都定量的表达出来，并且符合所有已知的DP训练行为。</p>
+<p>特别的，我们证明了DP-SGD虽然收敛的比标准的SGD慢，但是iteration趋于无穷的话。收敛的速度都是一个数量级的，这为隐私计算提供了信心：DP模型收敛，虽迟但到。</p>
+<h1 id="撞车了…"><a href="#撞车了…" class="headerlink" title="撞车了…"></a>撞车了…</h1><p>终于，写了7个月的文章完稿了。没想到巧合还没停，5月份NeurIPS投稿，6/14内部修改完放arXiv 结果6/27看到微软亚州研究院（MSRA）发表了一篇和我们撞车的文章，提出的clipping和我们的automatic clipping一摸一样：</p>
+<script type="math/tex; mode=display">
+h^{(i)}=\frac{1}{r+\left\|\boldsymbol{g}^{(i)}\right\|}</script><p>和我们的AUTO-S分毫不差。仔细看了看，连收敛性的证明都差不多。而我们两组人又没有交集，可以说隔着太平洋的巧合诞生了。</p>
+<p>这里稍微讲一下两篇文章的不同：对方文章稍偏理论，比如额外分析了Abadi DP-SGD的收（我只证了automatic clipping，也就是他们文中的DP-NSGD，可能我也不知道咋整DP-SGD）。用的假设也有一些不同；而我们实验做的多一些大一些（十几个数据集）更显式地建立了Abadi’s clipping和normalization的等价关系，比如Theorem 1和2解释为什么R可以不用调参。</p>
+<p>既然是同时期的工作，我很开心能有人literally不谋而合，互相能补充共同推动这个算法，让整个社群尽快相信这个结果并从中受益。当然私心来说，也提醒自己下一篇要加速了！</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>回顾这篇文章的创作历程，从起点来看，基本功一定是前提，而另一个重要的前提是自己心中一直念念不忘调参这个痛点问题。正是久旱，所以读到合适的文章才能逢甘露；至于过程，核心在于将观察数学化理论化的习惯，反倒在这个工作中代码实现能力不是最重要的。我会再写一篇专栏着重讲讲另一个硬核代码工作；最后的收敛性分析，也是靠合作者和自己的不将就。所幸好饭不怕晚，继续前进！</p>
+<p>P.S. 我的paper没有公布代码，因为别人的codebase写了几万行，我就改一行实在没有发布的必要。比如Facebook的DP代码库<a href="https://link.zhihu.com/?target=https%3A//github.com/pytorch/opacus" target="_blank" rel="noopener">Opacus</a> （version 1.1.3）只需要把 <a href="https://link.zhihu.com/?target=https%3A//github.com/pytorch/opacus/blob/main/opacus/optimizers/optimizer.py" target="_blank" rel="noopener">https://github.com/pytorch/opacus/blob/main/opacus/optimizers/optimizer.py</a> 第400行的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">per_sample_clip_factor = (self.max_grad_norm / (per_sample_norms + <span class="number">1e-6</span>)).clamp(max=<span class="number">1.0</span>)</span><br></pre></td></tr></table></figure>
+<p>改成下面这行就好了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">per_sample_clip_factor = <span class="number">1</span> / (per_sample_norms + <span class="number">1e-2</span>)</span><br></pre></td></tr></table></figure>
+<p>这等价于斯坦门茨的故事：画一条线价值一万美元 ：）</p>
+<hr>
+<p>本篇内容到这里就结束了，欢迎关注公众号《差分隐私》，获取更多前沿技术。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20200308122411.png" alt="《差分隐私》"></p>
+<p>本文转自 <a href="https://zhuanlan.zhihu.com/p/538681254" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/538681254</a>，如有侵权，请联系删除。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+          
+            <a href="/tags/Federated-Learning/" rel="tag"><i class="fa fa-tag"></i> Federated Learning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/07/12/论文阅读-Differentially Private Federated Learning A Client Level Perspective/" rel="next" title="<span style=" background:green;"=""><font color="#000000">论文阅读</font>-Differentially Private Federated Learning/ A Client Level Perspective">
+                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">论文阅读</font></span>-Differentially Private Federated Learning/ A Client Level Perspective
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">114</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">66</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文献阅读"><span class="nav-number">1.</span> <span class="nav-text">文献阅读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#切入点"><span class="nav-number">1.1.</span> <span class="nav-text">切入点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#简单扩展"><span class="nav-number">2.</span> <span class="nav-text">简单扩展</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#另有乾坤"><span class="nav-number">3.</span> <span class="nav-text">另有乾坤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从直觉到严谨"><span class="nav-number">4.</span> <span class="nav-text">从直觉到严谨</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#回归抽象思考"><span class="nav-number">4.1.</span> <span class="nav-text">回归抽象思考</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#要做通用算法"><span class="nav-number">5.</span> <span class="nav-text">要做通用算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#理论为骨-实验为翼"><span class="nav-number">6.</span> <span class="nav-text">理论为骨 实验为翼</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#撞车了…"><span class="nav-number">7.</span> <span class="nav-text">撞车了…</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
