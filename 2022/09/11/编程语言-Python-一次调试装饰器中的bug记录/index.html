@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文档记录了实现切面当中很长时间发现的一个潜在bug，其实和代码本身无关，而是调试过程中IDE有关。如果没有切面和python装饰器的基础，可以直接看最后一个章节当中bug的复现。 基础功能实现首先，由于业务需求，我们封装了一个自己的数据结构，为了方便，就以spark当中的DataFrame封装为例。首先，我们读取一个简单的表格： 12345from pyspark.sql import Spar">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python-一次调试装饰器中的bug记录">
+<meta property="og:url" content="http://forestneo.top/2022/09/11/编程语言-Python-一次调试装饰器中的bug记录/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="本文档记录了实现切面当中很长时间发现的一个潜在bug，其实和代码本身无关，而是调试过程中IDE有关。如果没有切面和python装饰器的基础，可以直接看最后一个章节当中bug的复现。 基础功能实现首先，由于业务需求，我们封装了一个自己的数据结构，为了方便，就以spark当中的DataFrame封装为例。首先，我们读取一个简单的表格： 12345from pyspark.sql import Spar">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20220909184235.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20220909184151-20220909184214779.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20220909184331.png">
+<meta property="og:updated_time" content="2022-09-11T14:13:08.638Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python-一次调试装饰器中的bug记录">
+<meta name="twitter:description" content="本文档记录了实现切面当中很长时间发现的一个潜在bug，其实和代码本身无关，而是调试过程中IDE有关。如果没有切面和python装饰器的基础，可以直接看最后一个章节当中bug的复现。 基础功能实现首先，由于业务需求，我们封装了一个自己的数据结构，为了方便，就以spark当中的DataFrame封装为例。首先，我们读取一个简单的表格： 12345from pyspark.sql import Spar">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/20220909184235.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.top/2022/09/11/编程语言-Python-一次调试装饰器中的bug记录/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Python-一次调试装饰器中的bug记录 | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.top/2022/09/11/编程语言-Python-一次调试装饰器中的bug记录/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python-一次调试装饰器中的bug记录
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-09-11 15:27:53 / 修改时间：22:13:08" itemprop="dateCreated datePublished" datetime="2022-09-11T15:27:53+08:00">2022-09-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/编程语言/" itemprop="url" rel="index"><span itemprop="name">编程语言</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/编程语言/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文档记录了实现切面当中很长时间发现的一个潜在bug，其实和代码本身无关，而是调试过程中IDE有关。如果没有切面和<code>python</code>装饰器的基础，可以直接看最后一个章节当中bug的复现。</p>
+<h1 id="基础功能实现"><a href="#基础功能实现" class="headerlink" title="基础功能实现"></a>基础功能实现</h1><p>首先，由于业务需求，我们封装了一个自己的数据结构，为了方便，就以<code>spark</code>当中的<code>DataFrame</code>封装为例。首先，我们读取一个简单的表格：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SparkSession</span><br><span class="line"></span><br><span class="line">spark = SparkSession.builder.getOrCreate()</span><br><span class="line">df = spark.read.options(header=<span class="string">'True'</span>, inferScheme=<span class="string">'True'</span>).csv(<span class="string">"test.csv"</span>)</span><br><span class="line">df.show()</span><br></pre></td></tr></table></figure>
+<p>假设这个数据表长这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+---+---+</span><br><span class="line">|  a|  b|</span><br><span class="line">+---+---+</span><br><span class="line">|  1|  2|</span><br><span class="line">|  2| 30|</span><br><span class="line">|  3| 14|</span><br><span class="line">+---+---+</span><br></pre></td></tr></table></figure>
+<p>首先，由于业务需求，我们需要封装一个自己的数据结构，就叫他 <code>MyDataFrame</code> 吧，大致框架如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> DataFrame <span class="keyword">as</span> SparkDataFrame</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyDataFrame</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, sdf: SparkDataFrame)</span>:</span></span><br><span class="line">        self.sdf = sdf</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        print(<span class="string">"in __getattr__, item = "</span>, item)</span><br><span class="line">        <span class="comment"># code here</span></span><br><span class="line">        <span class="keyword">return</span> self.sdf[item]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        print(<span class="string">"in __getitem__, item = "</span>, item)</span><br><span class="line">        <span class="comment"># code here</span></span><br><span class="line">        <span class="keyword">return</span> self.sdf[item]</span><br></pre></td></tr></table></figure>
+<p>在上面的代码中，<code>__getattr__</code>和<code>__getitem__</code>是因为用户可能会通过dataframe获取某一列，即为了满足<code>df.a</code>和<code>df[&#39;a&#39;]</code>这两种用法。因此，到目前为止，就支持以下用法了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    spark = SparkSession.builder.getOrCreate()</span><br><span class="line">    df = spark.read.options(header=<span class="string">'True'</span>, inferScheme=<span class="string">'True'</span>).csv(<span class="string">"write_table.csv"</span>)</span><br><span class="line">    df.show()</span><br><span class="line">    mdf = MyDataFrame(sdf=df)</span><br><span class="line">    <span class="comment"># __getattr__(self, 'a')    </span></span><br><span class="line">    col1 = mdf.a</span><br><span class="line">    <span class="comment"># __getitem__(self, 'a')</span></span><br><span class="line">    col2 = mdf[<span class="string">'a'</span>]</span><br></pre></td></tr></table></figure>
+<p>运行一下，也没有问题，结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">+---+---+</span><br><span class="line">|  a|  b|</span><br><span class="line">+---+---+</span><br><span class="line">|  1|  2|</span><br><span class="line">|  2| 30|</span><br><span class="line">|  3| 14|</span><br><span class="line">+---+---+</span><br><span class="line"></span><br><span class="line">in __getattr__, item =  a</span><br><span class="line">in __getitem__, item =  a</span><br></pre></td></tr></table></figure>
+<h1 id="日志功能添加"><a href="#日志功能添加" class="headerlink" title="日志功能添加"></a>日志功能添加</h1><p>在实现了这个功能之后，产品突然提需求了。说希望给自己的每个 API 都加上日志，查看运行的时间以方便后续进行性能优化。毕竟咱们写代码的是面向产品进行服务，那他说的也合理，就得开干了。但是作为写代码的，我们也得好好思考自己怎么实现则个需求，核心目标就以下几点：</p>
+<ul>
+<li>实现产品要求的功能</li>
+<li>效率要高，要是成千行代码要加这个功能，这得加到哪天，以及哪天加了其他的api，难以保持log功能一致</li>
+<li>还是易维护，哪天产品不要这个功能了，得好剥离掉</li>
+</ul>
+<p>于是就想到了通过装饰器来实现这个功能。首先，需要实现这样一个装饰器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> wraps</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(func)</span>:</span></span><br><span class="line"><span class="meta">    @wraps(func)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">my_loging</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">        op = func.__name__</span><br><span class="line">        print(<span class="string">"in log: op = "</span>, op, args)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 额外的事情</span></span><br><span class="line">        a = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        start_time = time.time()</span><br><span class="line">        result = func(*args, **kwargs)</span><br><span class="line">        end_time = time.time()</span><br><span class="line">        print(<span class="string">"LOGGING:: func=&#123;&#125;, time_used=&#123;:.6f&#125;s\\n"</span>.format(op, end_time-start_time))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    <span class="keyword">return</span> my_loging</span><br></pre></td></tr></table></figure>
+<p>这样的话，核心的<code>MyDataFrame</code>这么写就可以了，精准且优雅，😏~</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyDataFrame</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, sdf: SparkDataFrame)</span>:</span></span><br><span class="line">        self.sdf = sdf</span><br><span class="line"></span><br><span class="line"><span class="meta">    @log</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        print(<span class="string">"in __getattr__, item = "</span>, item)</span><br><span class="line">        <span class="comment"># code here</span></span><br><span class="line">        <span class="keyword">return</span> self.sdf[item]</span><br><span class="line"></span><br><span class="line"><span class="meta">    @log</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        print(<span class="string">"in __getitem__, item = "</span>, item)</span><br><span class="line">        <span class="comment"># code here</span></span><br><span class="line">        <span class="keyword">return</span> self.sdf[item]</span><br></pre></td></tr></table></figure>
+<p>然后我们重新运行一下原有的代码，结果是这么个样子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">in log: op =  __getattr__ (&lt;__main__.MyDataFrame object at 0x7fbfaed66320&gt;, &apos;a&apos;)</span><br><span class="line">in __getattr__, item =  a</span><br><span class="line">LOGGING:: func=__getattr__, time_used=0.000691s</span><br><span class="line"></span><br><span class="line">in log: op =  __getitem__ (&lt;__main__.MyDataFrame object at 0x7fbfaed66320&gt;, &apos;a&apos;)</span><br><span class="line">in __getitem__, item =  a</span><br><span class="line">LOGGING:: func=__getitem__, time_used=0.000326s</span><br></pre></td></tr></table></figure>
+<h1 id="Bug-产生了"><a href="#Bug-产生了" class="headerlink" title="Bug 产生了"></a>Bug 产生了</h1><p>在<code>log(func)</code>的代码中，有的时候并不只是记录时间，还会去干别的事情，这个时候还可能会去对代码进行调试。为了让代码更健壮，我们对可能得异常进行捕获，那现在代码就变成了这个样子了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(func)</span>:</span></span><br><span class="line"><span class="meta">    @wraps(func)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">my_loging</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">        op = func.__name__</span><br><span class="line">        print(<span class="string">"in log: op = "</span>, op, args)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 额外的事情</span></span><br><span class="line">            a = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            start_time = time.time()</span><br><span class="line">            result = func(*args, **kwargs)</span><br><span class="line">            end_time = time.time()</span><br><span class="line">            print(<span class="string">"LOGGING:: func=&#123;&#125;, time_used=&#123;:.6f&#125;s\\n"</span>.format(op, end_time-start_time))</span><br><span class="line">            <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            print(<span class="string">"error"</span>)</span><br><span class="line">            print(e)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> my_loging</span><br></pre></td></tr></table></figure>
+<p>这个时候，代码是可以正常运行的，但是，如果开始调试，就会出现bug。假如我在<code>a=1</code>那里添加了一个断点，然后开始运行：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20220909184235.png" alt=""></p>
+<p>在监控窗口中，如果把<code>args</code>展开，就会报错，报错的信息截图如下：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20220909184151-20220909184214779.png" alt=""></p>
+<p>这个错误只会在展开<code>args</code>的瞬间出发，并且只在调试过程中产生。甚是神奇。</p>
+<h1 id="Bug分析与防范"><a href="#Bug分析与防范" class="headerlink" title="Bug分析与防范"></a>Bug分析与防范</h1><p>在上面的演示过程中，实际上，目前我碰到了两类可导致这个问题的错误：</p>
+<ul>
+<li><code>MyDataFrame.shape</code></li>
+<li><code>len(MyDataFrame)</code></li>
+</ul>
+<p>目前个人的猜测为：在调试的过程中，调试的窗口会对监控的对象执行 len(Object) 和 Object.shape 去获取其信息，这个时候就会触发代码里面的对应操作。而我们在代码中，没有去实现 <code>__getattr__(shape)</code>这个操作，这最终导致了 bug 的产生。对于<code>len(Obj)</code>也同理。</p>
+<h2 id="Bug-复现"><a href="#Bug-复现" class="headerlink" title="Bug 复现"></a>Bug 复现</h2><p>这个问题的本质其实和装饰器没关系，我复现了一下，只需要一下基本的代码，就可以在调试过程中产生意外的信息：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyDataFrame</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, sdf: SparkDataFrame)</span>:</span></span><br><span class="line">        self.sdf = sdf</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        print(<span class="string">"in __getattr__, item = "</span>, item)</span><br><span class="line">        <span class="comment"># code here</span></span><br><span class="line">        <span class="keyword">return</span> self.sdf[item]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        print(<span class="string">"in __getitem__, item = "</span>, item)</span><br><span class="line">        <span class="comment"># code here</span></span><br><span class="line">        <span class="keyword">return</span> self.sdf[item]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    spark = SparkSession.builder.getOrCreate()</span><br><span class="line">    df = spark.read.options(header=<span class="string">'True'</span>, inferScheme=<span class="string">'True'</span>).csv(<span class="string">"write_table.csv"</span>)</span><br><span class="line">    df.show()</span><br><span class="line">    mdf = MyDataFrame(sdf=df)</span><br><span class="line">    col1 = mdf.a</span><br><span class="line">    col2 = mdf[<span class="string">'a'</span>]</span><br></pre></td></tr></table></figure>
+<p>在<code>col1=mdf.a</code>这一行代码添加断点，即可在 console 看到系统调用了<code>mdf.shape</code>了。如下图所示：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/20220909184331.png" alt=""></p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>因此，要想此类问题不产生，我们需要对获取shape和len这两个信息进行额外的处理。在装饰器中可添加以下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> op == <span class="string">'__getattr__'</span> <span class="keyword">and</span> args[<span class="number">1</span>] == <span class="string">'shape'</span>:</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>在自己实现的类中，建议添加<code>__len__()</code>方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyDataFrame</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, sdf: SparkDataFrame)</span>:</span></span><br><span class="line">        self.sdf = sdf</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>当然，最好对<code>.shape</code>操作也单独处理一下。不过这当中会引发一个新的问题，如果dataframe当中，有一列的列名就叫shape，那就导致歧义了。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/07/17/分享-我是如何从头开始写一篇顶级论文的/" rel="next" title="<span style=" background:green;"=""><font color="#000000">分享</font>-我是如何从头开始写一篇顶级论文的">
+                <i class="fa fa-chevron-left"></i> <span style="background:green;"><font color="#000000">分享</font></span>-我是如何从头开始写一篇顶级论文的
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">115</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">66</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础功能实现"><span class="nav-number">1.</span> <span class="nav-text">基础功能实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#日志功能添加"><span class="nav-number">2.</span> <span class="nav-text">日志功能添加</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bug-产生了"><span class="nav-number">3.</span> <span class="nav-text">Bug 产生了</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bug分析与防范"><span class="nav-number">4.</span> <span class="nav-text">Bug分析与防范</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bug-复现"><span class="nav-number">4.1.</span> <span class="nav-text">Bug 复现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法"><span class="nav-number">4.2.</span> <span class="nav-text">解决方法</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
