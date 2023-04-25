@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="标题&amp;amp;地址：Federated Learning With Differential Privacy: Algorithms and Performance Analysis作者：发表会议：TIFS’2020  文章总结联邦学习（FL）作为分布式机器学习的一种方式，能够显著地保护客户端的私有数据不被外部对手揭示。然而，通过分析来自客户端的上传参数的差异（例如深度神经网络中训练的权重），泄露">
+<meta name="keywords" content="Differential Privacy,Federated Learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Federated Learning With Differential Privacy Algorithms and Performance Analysis">
+<meta property="og:url" content="http://forestneo.top/2023/04/24/PAPER-Federated Learning with Differential Privacy/index.html">
+<meta property="og:site_name" content="ForestNeo&#39;s Space">
+<meta property="og:description" content="标题&amp;amp;地址：Federated Learning With Differential Privacy: Algorithms and Performance Analysis作者：发表会议：TIFS’2020  文章总结联邦学习（FL）作为分布式机器学习的一种方式，能够显著地保护客户端的私有数据不被外部对手揭示。然而，通过分析来自客户端的上传参数的差异（例如深度神经网络中训练的权重），泄露">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251944800.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941186.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941563.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941597.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941672.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941937.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941052.png">
+<meta property="og:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941492.png">
+<meta property="og:updated_time" content="2023-04-25T12:16:23.213Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&lt;span style=&quot;background:green;&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;论文阅读&lt;&#x2F;font&gt;&lt;&#x2F;span&gt;-Federated Learning With Differential Privacy Algorithms and Performance Analysis">
+<meta name="twitter:description" content="标题&amp;amp;地址：Federated Learning With Differential Privacy: Algorithms and Performance Analysis作者：发表会议：TIFS’2020  文章总结联邦学习（FL）作为分布式机器学习的一种方式，能够显著地保护客户端的私有数据不被外部对手揭示。然而，通过分析来自客户端的上传参数的差异（例如深度神经网络中训练的权重），泄露">
+<meta name="twitter:image" content="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251944800.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://forestneo.top/2023/04/24/PAPER-Federated Learning with Differential Privacy/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title><span style="background:green;"><font color="#000000">论文阅读</font></span>-Federated Learning With Differential Privacy Algorithms and Performance Analysis | ForestNeo's Space</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ForestNeo's Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">差分隐私小白</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://forestneo.top/2023/04/24/PAPER-Federated Learning with Differential Privacy/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="DPer">
+      <meta itemprop="description" content="仰望星空，追求自由">
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForestNeo's Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"><span style="background:green;"><font color="#000000">论文阅读</font></span>-Federated Learning With Differential Privacy Algorithms and Performance Analysis
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+        
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2023-04-24 20:17:27" itemprop="dateCreated datePublished" datetime="2023-04-24T20:17:27+08:00">2023-04-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2023-04-25 20:16:23" itemprop="dateModified" datetime="2023-04-25T20:16:23+08:00">2023-04-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/论文阅读/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>标题&amp;地址：<a href="https://ieeexplore.ieee.org/document/9069945" target="_blank" rel="noopener">Federated Learning With Differential Privacy: Algorithms and Performance Analysis</a><br>作者：<br>发表会议：TIFS’2020</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251944800.png" alt=""></p>
+<h1 id="文章总结"><a href="#文章总结" class="headerlink" title="文章总结"></a>文章总结</h1><p>联邦学习（FL）作为分布式机器学习的一种方式，能够显著地保护客户端的私有数据不被外部对手揭示。然而，通过分析来自客户端的上传参数的差异（例如深度神经网络中训练的权重），泄露私有信息仍然可能。本文提出了一种基于差分隐私（DP）概念的新框架，其中在聚合之前在客户端的参数中添加噪声，即 noising before model aggregation FL（NbAFL）。首先，我们证明了 NbAFL 可以通过适当调整人工噪声的不同方差来满足不同保护级别的 DP。然后，我们开发了在 NbAFL 中训练的 FL 模型的损失函数的理论收敛界限。具体而言，理论上的收敛界限揭示了以下三个关键特性：1）收敛性能和隐私保护级别之间存在权衡，即更好的收敛性能会导致更低的保护级别；2）在给定的隐私保护级别下，参与 FL 的客户端总数 N 的增加可以提高收敛性能；3）对于给定的收敛性能，存在最大聚合次数（通信轮数）的最优数量。此外，我们提出了一种 K-随机调度策略，在每次聚合中从 $N$ 个客户端中随机选择 $K(1 &lt; K &lt; N)$个客户端参与。我们还开发了在这种情况下损失函数的相应收敛界限，K-随机调度策略也可以保持以上三个特性。此外，我们发现，在固定的隐私级别下，存在最佳的 $K$ 值，可以实现最佳的收敛性能。评估结果表明，我们的理论结果与模拟结果一致，从而有助于设计具有不同收敛性能和隐私保护级别的各种隐私保护 FL 算法。</p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>联邦学习可以认为是这么一个过程，假设 $\mathcal{D}_i$ 是第 $i$ 个用户的本地数据集，那么服务端的总模型为：</p>
+<script type="math/tex; mode=display">
+\mathbf{w}=\sum_{i=1}^N p_i \mathbf{w}_i</script><p>其中 $\mathbf{w}_i$ 是第 $i$ 个用户的本地参数，$p_i$ 是权重（比如用数据量占比表示）。在此基础上，联邦学习可以认为是一个优化问题，即希望求得：</p>
+<script type="math/tex; mode=display">
+\mathbf{w}^*=\arg \min _{\mathbf{w}} \sum_{i=1}^N p_i F_i(\mathbf{w})</script><p>其中，$F_i(\cdot)$ 是本地的 loss 函数。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941186.png" alt=""></p>
+<p>如上图所示，一般来说，联邦模型训练分为以下四步：</p>
+<ul>
+<li>步骤 1：本地训练（Local training）：所有活跃的客户端本地计算训练梯度或参数，并将本地训练的 ML 参数发送到服务器；</li>
+<li>步骤 2：模型聚合（Model aggregating）：服务器对来自 N 个客户端上传的参数进行安全聚合，而不学习本地信息；</li>
+<li>步骤 3：参数广播（Parameters broadcasting）：服务器将聚合参数广播给 N 个客户端；</li>
+<li>步骤 4：模型更新（Model updating）：所有客户端使用聚合参数更新各自的模型，并测试已更新模型的性能。</li>
+</ul>
+<p>虽然联邦学习从流程上保护了用户本地的数据不上传到服务器，但是根据上图，<strong>用户上传过程的本地模型参数</strong>和<strong>服务器下发过程的全局模型参数</strong>依然有可能被攻击者利用。本文总的来说就是利用差分隐私在一定程度上解决上述两个隐私问题，同时使得模型的收敛性不会因为添加了噪声而受到过多影响，也就是常说的 trade-off。</p>
+<p>对于差分隐私，本文采用了高斯机制。todo</p>
+<p>论文中用到的符号如下表所示：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941563.png" alt=""></p>
+<h1 id="FL-with-DP"><a href="#FL-with-DP" class="headerlink" title="FL with DP"></a>FL with DP</h1><p>在开始分析之前，我们有两个假设：</p>
+<ol>
+<li>梯度是进行了裁剪（Gradient Clipping）的，即：$\left|\mathbf{w}_i\right| \leq C$</li>
+<li>每个客户端至少拥有 $m$ 条数据</li>
+<li>用户本地有 $L$ 个参数（原话为：considering $L$ exposures of local parameters）</li>
+</ol>
+<p>首先，客户端本地的权重计算过程为：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+s_{\mathrm{U}}^{\mathcal{D}_i} \triangleq \mathbf{w}_i&=\arg \min _{\mathbf{w}}  F_i\left(\mathbf{w}, \mathcal{D}_i\right) \\
+&=\frac{1}{\left|\mathcal{D}_i\right|} \sum_{j=1}^{\left|\mathcal{D}_i\right|} \arg \min _{\mathbf{w}} F_i\left(\mathbf{w}, \mathcal{D}_{i, j}\right),
+\end{aligned}</script><p>（附带一句，这里的 argmin 应该写到求和符号之前。）那么敏感度就可以这么算：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\Delta s_{\mathrm{U}}^{\mathcal{D}_i}&=  \max _{\mathcal{D}_i, \mathcal{D}_i^{\prime}}\left\|s_{\mathrm{U}}^{\mathcal{D}_i}-s_{\mathrm{U}}^{\mathcal{D}^{\prime}}\right\| \\
+& =\max _{\mathcal{D}_i, \mathcal{D}_i^{\prime}} \| \frac{1}{\left|\mathcal{D}_i\right|} \sum_{j=1}^{\left|\mathcal{D}_i\right|} \arg \min _{\mathbf{w}} F_i\left(\mathbf{w}, \mathcal{D}_{i, j}\right)
+-\frac{1}{\left|\mathcal{D}_i^{\prime}\right|} \sum_{j=1}^{\left|\mathcal{D}_i^{\prime}\right|} \arg \min _{\mathbf{w}} F_i\left(\mathbf{w}, \mathcal{D}_{i, j}^{\prime}\right) \| \\
+&=\frac{2 C}{\left|\mathcal{D}_i\right|}
+\end{aligned}</script><p>然后，结合每个用户本地的数据量，那么全局的敏感度为：</p>
+<script type="math/tex; mode=display">
+\Delta s_{\mathrm{U}} \triangleq \max \left\{\Delta s_{\mathrm{U}}^{\mathcal{D}_i}\right\} = \frac{2C}{m}</script><p>结合参数量为 $L$，那么 DP 的加噪参数为：$\sigma_{\mathrm{U}}=c L \Delta s_{\mathrm{U}} / \epsilon$。每个梯度上加上这个噪声即可。</p>
+<p>对于 Server，其计算的权重参数为：</p>
+<script type="math/tex; mode=display">
+s_{\mathrm{D}}^{\mathcal{D}_i} \triangleq \mathbf{w}=p_1 \mathbf{w}_1+\ldots+p_i \mathbf{w}_i+\ldots+p_N \mathbf{w}_N</script><p>作者接下来在 Lemma 1 中，证明了这个 $\mathcal{D}_i$ 的敏感度为：$\Delta s_{\mathrm{D}}^{\mathcal{D}_i}=\frac{2 C p_i}{m}$。因此，其敏感度为：</p>
+<script type="math/tex; mode=display">
+\Delta s_{\mathrm{D}} \triangleq \max \left\{\Delta s_{\mathrm{D}}^{\mathcal{D}_i}\right\}=\max \left\{\frac{2 C p_i}{m}\right\}</script><p>经过上面的分析，也就是说整个训练过程中有两处加噪：1）客户端对本地梯度加噪（上传通道）；2）Server 对求和结果加噪（下载通道）。所以，总的算法：Noising before Aggregation FL 的流程如算法 1 所示：</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941597.png" alt="image-20230420105422194" style="zoom:50%;"></p>
+<p>这里需要继续考虑一个问题，上面分析了下载通道中的敏感度，虽然高斯机制有了敏感度之后就可以计算方差，但是作者给了一个定理 1，说在 $T$ 次的汇聚当中，给定 $L,N$，下载通道的 DP 参数为：</p>
+<script type="math/tex; mode=display">
+\sigma_{\mathrm{D}}= \begin{cases}\frac{2 c C \sqrt{T^2-L^2 N}}{m N \epsilon}, & T>L \sqrt{N}; \\ 0, & T \leq L \sqrt{N}.\end{cases}</script><p>也就是说，服务端是否添加噪声由：聚合次数 $T$，参数量 $L$ 和客户端数量 $N$ 三个参数共同决定。从上面的公式直接来看，$T$ 越大，那么信息泄露的可能性越大，所以噪声要添加。而 $N$ 越大，则客户端数量越大，单个客户端泄露的可能性就越低。但是这里我一直没太明白 $L$ 的作用，根据上式，$L$ 越大，就约不需要添加噪声了。</p>
+<p>有了上面的算法之后，作者单独写了一章证明 NbAFL 算法的收敛性，这部分我就没有深入了解了。</p>
+<h1 id="K-Client-Random-Scheduling-Policy"><a href="#K-Client-Random-Scheduling-Policy" class="headerlink" title="K-Client Random Scheduling Policy"></a>K-Client Random Scheduling Policy</h1><p>前面介绍了 $N$ 个所有客户端共同参与联邦学习的 NbAFL 算法。在此基础上，作者提出了一个 K-Client 的调度策略。有意思的结论是作者表明：从 $N$ 个客户端中选择 $K$ 个参与训练，实验证明收敛性能更好。</p>
+<p>客户端本地加噪的过程和所有客户端都参与的情况一样。不同的是，在 $K$ 个客户端参与的情况下，下载通道的加噪有点区别。其参数这样设置：</p>
+<script type="math/tex; mode=display">
+\sigma_{\mathrm{D}}= \begin{cases}\frac{2 c C \sqrt{\frac{T^2}{b^2}-L^2 K}}{m K \epsilon}, & T>\frac{\epsilon}{\gamma}; \\ 0, & T \leq \frac{\epsilon}{\gamma}.\end{cases}</script><p>其中的参数值为：$b=-\frac{T}{\epsilon} \ln \left(1-\frac{N}{K}+\frac{N}{K} e^{\frac{-\epsilon}{T}}\right), \gamma=-\ln \left(1-\frac{K}{N}+\frac{K}{N} e^{\frac{-\epsilon}{L \sqrt{K}}}\right)$。</p>
+<p>然后作者在 Remark 5 中表明：存在一个最优的 $K\in[0, N]$ 达到最好的收敛性，使得 K-Client 策略优于所有客户端的情况。</p>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>作者使用的实验设置比较简单，不翻译了直接贴过来：We conduct experiments on the standard MNIST dataset for handwritten digit recognition consisting of 60000 training examples and 10000 testing examples [34]. Each example is a 28 × 28 size gray-level image. Our baseline model uses a a MLP network with a single hidden layer containing 256 hidden units. In this feed-forward neural network, we use a ReLU units and softmax of 10 classes (corresponding to the 10 digits) with the cross-entropy loss function. For the optimizer of networks, we set the learning rate to 0.002.</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941672.png" alt=""></p>
+<p>图 2 和图 3 展现了不同 epsilon 下的 loss，此实验中参数为：$N=50,T=25,\delta=0.01$。这个实验效果也没啥好分析的。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941937.png" alt=""></p>
+<p>图 4 和图 5，展示了 $N=50,K=20$ 下的 K-Client 策略，对比没有图 2 和 3，可以看出收敛速度确实是更快的。</p>
+<p>然后图 6 和图 7 固定 $\epsilon=60,\delta=0.01$，展示了不同参与者数量（参考 Remark.3）下的收敛速度。参与者越多，数据量也就越大，因此收敛更快。</p>
+<p><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941052.png" alt=""></p>
+<p>图 8 和图 9 展示了聚合次数 $T$ 的影响，图 8 展示了理论上界随着 T 的变化情况。图 9 展示了理论和实验结果。此结果和 Remark 4 结论相符合，这部分理论在收敛性分析当中。</p>
+<p>图 11 设定 $N=50$ 下，探求不同客户端数量对收敛的影响，可以验证 K-Client 策略的准确性。</p>
+<hr>
+<p>本篇内容到这里就结束了，欢迎关注公众号《差分隐私》，获取更多前沿技术。<br><img src="https://forest-pic.oss-cn-beijing.aliyuncs.com/202304251941492.png" alt="《差分隐私》"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Thanks for rewarding</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="DPer 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="DPer 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Differential-Privacy/" rel="tag"><i class="fa fa-tag"></i> Differential Privacy</a>
+          
+            <a href="/tags/Federated-Learning/" rel="tag"><i class="fa fa-tag"></i> Federated Learning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/01/27/博客-利用python自动获取WeeklyDP文章/" rel="next" title="技术博客-利用python自动获取WeeklyDP文章">
+                <i class="fa fa-chevron-left"></i> 技术博客-利用python自动获取WeeklyDP文章
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="DPer">
+            
+              <p class="site-author-name" itemprop="name">DPer</p>
+              <p class="site-description motion-element" itemprop="description">仰望星空，追求自由</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">120</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">67</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ForestNeo" title="GitHub &rarr; https://github.com/ForestNeo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:dr.forestneo@gmail.com" title="E-Mail &rarr; mailto:dr.forestneo@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="/350023615" title="QQ &rarr; 350023615"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文章总结"><span class="nav-number">1.</span> <span class="nav-text">文章总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FL-with-DP"><span class="nav-number">3.</span> <span class="nav-text">FL with DP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#K-Client-Random-Scheduling-Policy"><span class="nav-number">4.</span> <span class="nav-text">K-Client Random Scheduling Policy</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验"><span class="nav-number">5.</span> <span class="nav-text">实验</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DPer</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: '0c8ec9e7e3c5573cb8fe',
+          clientSecret: '6ed0cb45c22b829cf3dc3a32976fe70c27228359',
+          repo: 'ForestNeo-website',
+          owner: 'forestneo',
+          admin: ['forestneo'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+
